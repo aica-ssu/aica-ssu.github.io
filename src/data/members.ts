@@ -84,8 +84,8 @@ export const members: Member[] = [
     category: "graduate",
     image: "/images/members/Bang-San Lee.png",
     email: "atks990210@gmail.com",
-    researchShort: "LLM/MoE Optimization",
-    research: "LLM and MoE model optimization",
+    researchShort: "Edge LLM Training, MoE Architecture Optimization",
+    research: "Edge LLM Training, MoE Architecture Optimization",
     background: "B.S. Computer and Information Engineering, Kwangwoon University (2025)",
   },
   {
@@ -113,15 +113,15 @@ export const members: Member[] = [
   {
     name: "Sang-Jun Moon",
     nameKo: "문상준",
-    role: "Undergraduate Intern",
-    category: "undergraduate",
+    role: "M.S. Student (2026~)",
+    category: "graduate",
     image: "/images/members/Sang-Joon Moon.jpg",
-    email: "swxs1111@gmail.com",
+    email: "moonsangjun.bizz@gmail.com",
     researchShort: "Model Quantization",
     research: "Layer-wise model quantization",
     background: "B.S. Software, Soongsil University (Expected 2026)",
   },
-  {
+/*  {
     name: "Jun-Hyeok Lee",
     nameKo: "이준혁",
     role: "Undergraduate Intern",
@@ -130,7 +130,7 @@ export const members: Member[] = [
     researchShort: "Quantization & Edge LLM",
     research: "Model quantization and edge LLM serving",
     background: "B.S. Software, Soongsil University (Expected 2026)",
-  },
+  },*/
   {
     name: "Ye-Bin Kwon",
     nameKo: "권예빈",
@@ -138,6 +138,7 @@ export const members: Member[] = [
     category: "alumni",
     year: "2025",
     current: "DeepX",
+    linkedin: "https://www.linkedin.com/in/yebin-gwon/",
   },
   {
     name: "Woo Hyuck Park",
@@ -146,6 +147,7 @@ export const members: Member[] = [
     category: "alumni",
     year: "2023",
     current: "SK Hynix",
+    linkedin: "https://www.linkedin.com/in/%EC%9A%B0%ED%98%81-%EB%B0%95-321820239/",
   },
   {
     name: "Ryoonki Hong",
@@ -153,7 +155,8 @@ export const members: Member[] = [
     role: "B.S. 2025",
     category: "alumni",
     year: "2025",
-    current: "USC (Graduate Studies)",
+    current: "Univ. Southern California (M.S in CS)",
+    linkedin: "https://www.linkedin.com/in/ryoonkihong/",
   },
   {
     name: "Dong-Woo Kim",
@@ -170,5 +173,13 @@ export const members: Member[] = [
     category: "alumni",
     year: "2023",
     current: "Samsung Foundry",
+  },
+  {
+    name: "Jun-Hyeok Lee",
+    nameKo: "이준혁",
+    role: "B.S. 2027 (Expected)",
+    category: "alumni",
+    year: "2026",
+    current: "TBD",
   },
 ];
