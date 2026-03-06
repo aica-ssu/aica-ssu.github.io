@@ -13,8 +13,8 @@ export const researchAreas: ResearchArea[] = [
     titleKo: "Edge AI 시스템 설계 및 최적화",
     description: "Developing lightweight AI models and optimization techniques for resource-constrained edge devices, including pruning, quantization, knowledge distillation, and PIM/CIM-based acceleration.",
     descriptionKo: "Pruning, Quantization, Knowledge Distillation 등의 기법을 통해 제한된 자원의 디바이스에서 효율적인 AI 추론 및 학습이 가능하도록 합니다.",
-    image: "/images/research/edge-ai.jpg",
-    topics: ["Model Quantization", "Processing-in-Memory", "Computing-in-Memory", "Edge LLM Optimization"],
+    image: "/images/research/edge-ai.png",
+    topics: ["Model Quantization", "Edge Devices", "Neural Processing Unit", "Edge LLM Optimization"],
   },
   {
     title: "Robust Memory Systems",

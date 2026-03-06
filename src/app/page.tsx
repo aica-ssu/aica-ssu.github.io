@@ -5,19 +5,19 @@ import { news } from "@/data/news";
 import { publications } from "@/data/publications";
 
 export default function Home() {
-  const currentYear = new Date().getFullYear();
-  const featuredPubs = publications
-    .filter((p) => p.type === "conference" && p.year >= currentYear - 2)
-    .slice(0, 6);
+  const featuredKeys = ["lee2026date", "chung2026cal", "kwon2025access", "kim2025ksc", "moon2025ksc"];
+  const featuredPubs = featuredKeys
+    .map((key) => publications.find((p) => p.bibtexKey === key))
+    .filter(Boolean);
   const latestNews = news.slice(0, 5);
 
   return (
     <div>
       {/* Hero Section */}
-      <section className="py-20 md:py-28" style={{ backgroundColor: "var(--bg-secondary)" }}>
-        <div className="max-w-5xl mx-auto px-4 text-center">
-          <div className="flex justify-center mb-6">
-            <Image src="/images/logo.png" alt="AICA Lab" width={80} height={80} />
+      <section className="py-12 md:py-16" style={{ backgroundColor: "var(--bg-secondary)" }}>
+        <div className="max-w-6xl mx-auto px-4 text-center">
+          <div className="flex justify-center mb-4">
+            <Image src="/images/logo.png" alt="AICA Lab" width={72} height={72} />
           </div>
           <h1 className="text-2xl md:text-3xl font-bold mb-4" style={{ color: "var(--text-primary)" }}>
             <span style={{ color: "var(--accent)" }}>A</span>dvanced{" "}
@@ -49,9 +49,9 @@ export default function Home() {
 
       {/* Research Highlights */}
       <section className="py-14">
-        <div className="max-w-5xl mx-auto px-4">
+        <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-2xl font-bold mb-1" style={{ color: "var(--text-primary)" }}>
-            Research Highlights
+            Research Interests
           </h2>
           <p className="text-sm mb-8" style={{ color: "var(--text-secondary)" }}>연구 분야</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-px" style={{ backgroundColor: "var(--border)" }}>
@@ -86,7 +86,7 @@ export default function Home() {
 
       {/* Latest News */}
       <section className="py-14" style={{ backgroundColor: "var(--bg-secondary)" }}>
-        <div className="max-w-5xl mx-auto px-4">
+        <div className="max-w-6xl mx-auto px-4">
           <div className="flex justify-between items-end mb-6">
             <div>
               <h2 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
@@ -111,13 +111,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Publications */}
+      {/* Selected Publications */}
       <section className="py-14">
-        <div className="max-w-5xl mx-auto px-4">
+        <div className="max-w-6xl mx-auto px-4">
           <div className="flex justify-between items-end mb-6">
             <div>
               <h2 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
-                Featured Publications
+                Selected Publications
               </h2>
               <p className="text-sm mt-0.5" style={{ color: "var(--text-secondary)" }}>주요 논문</p>
             </div>
@@ -130,7 +130,7 @@ export default function Home() {
               <div key={i} className="py-4" style={{ borderColor: "var(--border)" }}>
                 {pub.award && (
                   <span className="text-[10px] font-semibold px-1.5 py-0.5 mr-2" style={{ backgroundColor: "rgba(245,158,11,0.15)", color: "#f59e0b" }}>
-                    {pub.award}
+                    🏆 {pub.award}
                   </span>
                 )}
                 <h3 className="font-semibold text-sm mt-1" style={{ color: "var(--text-primary)" }}>

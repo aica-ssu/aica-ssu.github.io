@@ -142,7 +142,7 @@ export default function PublicationsPage() {
                     </span>
                     {pub.award && (
                       <span className="text-[10px] font-semibold px-1.5 py-0.5" style={{ backgroundColor: "rgba(245,158,11,0.15)", color: "#f59e0b" }}>
-                        {pub.award}
+                        🏆 {pub.award}
                       </span>
                     )}
                   </div>

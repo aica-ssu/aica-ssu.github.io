@@ -48,18 +48,18 @@ export default async function MemberPage({ params }: { params: Promise<{ id: str
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row gap-6 mb-12">
-        <div className="w-32 h-32 flex-shrink-0 overflow-hidden relative" style={{ backgroundColor: "var(--bg-secondary)" }}>
+        <div className="w-20 h-20 flex-shrink-0 rounded-full overflow-hidden" style={{ backgroundColor: "var(--bg-secondary)" }}>
           {member.image ? (
-            <Image src={member.image} alt={member.name} fill className="object-cover" />
+            <Image src={member.image} alt={member.name} width={80} height={80} className="w-full h-full object-cover" />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-5xl" style={{ color: "var(--text-muted)" }}>&#128100;</div>
+            <div className="w-full h-full flex items-center justify-center text-2xl" style={{ color: "var(--text-muted)" }}>&#128100;</div>
           )}
         </div>
         <div>
-          <h1 className="text-3xl font-bold" style={{ color: "var(--text-primary)" }}>
-            {isPI && "Prof. "}{member.name} <span className="text-xl font-normal" style={{ color: "var(--text-secondary)" }}>({member.nameKo})</span>
+          <h1 className="text-xl font-bold" style={{ color: "var(--text-primary)" }}>
+            {isPI && "Prof. "}{member.name} <span className="text-base font-normal" style={{ color: "var(--text-secondary)" }}>({member.nameKo})</span>
           </h1>
-          <p className="text-lg font-medium mt-1" style={{ color: "var(--accent)" }}>{member.role}</p>
+          <p className="text-sm font-medium mt-1" style={{ color: "var(--accent)" }}>{member.role}</p>
           {member.background && (
             <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>{member.background}</p>
           )}
@@ -72,7 +72,7 @@ export default async function MemberPage({ params }: { params: Promise<{ id: str
       {/* Education (PI) */}
       {member.education && (
         <section className="mb-10">
-          <h2 className="text-lg font-bold mb-3 pb-1 border-b" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>
+          <h2 className="text-base font-bold mb-3 pb-1 border-b" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>
             Education
           </h2>
           <ul className="space-y-2">
@@ -86,7 +86,7 @@ export default async function MemberPage({ params }: { params: Promise<{ id: str
       {/* Career (PI) */}
       {member.career && (
         <section className="mb-10">
-          <h2 className="text-lg font-bold mb-3 pb-1 border-b" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>
+          <h2 className="text-base font-bold mb-3 pb-1 border-b" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>
             Career
           </h2>
           <ul className="space-y-2">
@@ -100,7 +100,7 @@ export default async function MemberPage({ params }: { params: Promise<{ id: str
       {/* Research Interests */}
       {member.research && (
         <section className="mb-10">
-          <h2 className="text-lg font-bold mb-3 pb-1 border-b" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>
+          <h2 className="text-base font-bold mb-3 pb-1 border-b" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>
             Research Interests
           </h2>
           <div className="flex flex-wrap gap-2">
@@ -120,7 +120,7 @@ export default async function MemberPage({ params }: { params: Promise<{ id: str
       {/* Teaching (PI) */}
       {member.teaching && (
         <section className="mb-10">
-          <h2 className="text-lg font-bold mb-3 pb-1 border-b" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>
+          <h2 className="text-base font-bold mb-3 pb-1 border-b" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>
             Teaching
           </h2>
           <div className="space-y-4">
@@ -143,7 +143,7 @@ export default async function MemberPage({ params }: { params: Promise<{ id: str
       {/* Awards (PI) */}
       {member.awards && member.awards.length > 0 && (
         <section className="mb-10">
-          <h2 className="text-lg font-bold mb-3 pb-1 border-b" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>
+          <h2 className="text-base font-bold mb-3 pb-1 border-b" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>
             Awards
           </h2>
           <ul className="space-y-1">
@@ -157,7 +157,7 @@ export default async function MemberPage({ params }: { params: Promise<{ id: str
       {/* Technical Services (PI) */}
       {member.services && (
         <section className="mb-10">
-          <h2 className="text-lg font-bold mb-3 pb-1 border-b" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>
+          <h2 className="text-base font-bold mb-3 pb-1 border-b" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>
             Professional Services
           </h2>
           <ul className="space-y-1">
@@ -171,7 +171,7 @@ export default async function MemberPage({ params }: { params: Promise<{ id: str
       {/* Education (non-PI) */}
       {!isPI && member.background && !member.education && (
         <section className="mb-10">
-          <h2 className="text-lg font-bold mb-3 pb-1 border-b" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>
+          <h2 className="text-base font-bold mb-3 pb-1 border-b" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>
             Education
           </h2>
           <p className="text-sm" style={{ color: "var(--text-secondary)" }}>{member.background}</p>
@@ -181,7 +181,7 @@ export default async function MemberPage({ params }: { params: Promise<{ id: str
       {/* Publications (non-PI only) */}
       {!isPI && (
         <section className="mb-10">
-          <h2 className="text-lg font-bold mb-3 pb-1 border-b" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>
+          <h2 className="text-base font-bold mb-3 pb-1 border-b" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>
             Publications
           </h2>
           {memberPubs.length > 0 ? (

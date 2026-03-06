@@ -41,7 +41,7 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center gap-2" style={{ color: "var(--text-primary)" }}>
-            <Image src="/images/logo.png" alt="AICA Lab" width={48} height={48} />
+            <Image src="/images/logo.png" alt="AICA Lab" width={64} height={64} />
           </Link>
           <div className="hidden lg:flex items-center gap-6">
             {navItems.map((item) => (

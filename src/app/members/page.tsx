@@ -58,36 +58,28 @@ export default function MembersPage() {
         <h2 className="text-lg font-bold mb-5 pb-1 border-b" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>
           Principal Investigator
         </h2>
-        {pi.map((member, i) => (
-          <div key={i} className="flex flex-col sm:flex-row gap-5">
-            <Link href={`/members/${slugify(member.name)}`} className="w-32 h-32 flex-shrink-0 rounded-full overflow-hidden relative block" style={{ backgroundColor: "var(--bg-secondary)" }}>
-              {member.image ? (
-                <Image src={member.image} alt={member.name} fill className="object-cover" />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-4xl" style={{ color: "var(--text-muted)" }}>&#128100;</div>
-              )}
-            </Link>
-            <div>
-              <h3 className="text-xl font-bold" style={{ color: "var(--text-primary)" }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {pi.map((member, i) => (
+            <div key={i} className="text-center">
+              <Link href={`/members/${slugify(member.name)}`} className="w-20 h-20 rounded-full mx-auto mb-3 overflow-hidden relative block" style={{ backgroundColor: "var(--bg-secondary)" }}>
+                {member.image ? (
+                  <Image src={member.image} alt={member.name} fill className="object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-2xl" style={{ color: "var(--text-muted)" }}>&#128100;</div>
+                )}
+              </Link>
+              <h3 className="font-semibold text-sm" style={{ color: "var(--text-primary)" }}>
                 <Link href={`/members/${slugify(member.name)}`} className="hover:underline" style={{ color: "var(--text-primary)" }}>
                   {member.name}
                 </Link>
                 <SocialIcons member={member} />
-                {" "}<span className="text-base font-normal" style={{ color: "var(--text-secondary)" }}>({member.nameKo})</span>
               </h3>
-              <p className="font-medium text-sm mt-1" style={{ color: "var(--accent)" }}>{member.role}</p>
-              <p className="text-sm mt-2" style={{ color: "var(--text-secondary)" }}>{member.background}</p>
-              {member.research && (
-                <p className="text-sm mt-1" style={{ color: "var(--text-secondary)", whiteSpace: "pre-line" }}>
-                  Research: {member.research}
-                </p>
-              )}
-              <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
-                {member.email}
-              </p>
+              <p className="text-xs" style={{ color: "var(--text-secondary)" }}>{member.nameKo}</p>
+              <p className="text-xs mt-1" style={{ color: "var(--accent)" }}>{member.role}</p>
+              <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>{member.email}</p>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </section>
 
       {/* Graduate Students */}
