@@ -56,13 +56,41 @@ export default function PhotosPage() {
               className="rounded-xl border overflow-hidden transition-shadow hover:shadow-lg text-left"
               style={{ backgroundColor: "var(--bg-card)", borderColor: "var(--border)" }}
             >
-              <div className="aspect-video relative">
-                <Image
-                  src={`/images/photos/${album.folder}/${album.photos[album.cover ?? 0]}`}
-                  alt={album.title}
-                  fill
-                  className="object-cover"
-                />
+              <div className="aspect-video relative overflow-hidden">
+                {album.photos.length >= 4 ? (
+                  <div className="grid grid-cols-2 grid-rows-2 absolute inset-0">
+                    {[0, 1, 2, 3].map((idx) => (
+                      <div key={idx} className="relative">
+                        <Image
+                          src={`/images/photos/${album.folder}/${album.photos[idx]}`}
+                          alt={album.title}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ) : album.photos.length >= 2 ? (
+                  <div className="grid grid-cols-2 absolute inset-0">
+                    {[0, 1].map((idx) => (
+                      <div key={idx} className="relative">
+                        <Image
+                          src={`/images/photos/${album.folder}/${album.photos[idx]}`}
+                          alt={album.title}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <Image
+                    src={`/images/photos/${album.folder}/${album.photos[0]}`}
+                    alt={album.title}
+                    fill
+                    className="object-cover"
+                  />
+                )}
               </div>
               <div className="p-4">
                 <h3 className="font-semibold" style={{ color: "var(--text-primary)" }}>{album.title}</h3>
