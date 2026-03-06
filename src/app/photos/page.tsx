@@ -1,12 +1,44 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { albums } from "@/data/photos";
 
 export default function PhotosPage() {
-  const [selectedAlbum, setSelectedAlbum] = useState<number | null>(null);
-  const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
+  const [selectedAlbum, setSelectedAlbumState] = useState<number | null>(null);
+  const [selectedPhoto, setSelectedPhotoState] = useState<string | null>(null);
+
+  const setSelectedAlbum = useCallback((idx: number | null) => {
+    setSelectedAlbumState(idx);
+    setSelectedPhotoState(null);
+    if (idx !== null) {
+      window.history.pushState({ album: idx }, "");
+    } else {
+      window.history.pushState({ album: null }, "");
+    }
+  }, []);
+
+  const setSelectedPhoto = useCallback((src: string | null) => {
+    setSelectedPhotoState(src);
+    if (src) {
+      window.history.pushState({ album: selectedAlbum, photo: src }, "");
+    }
+  }, [selectedAlbum]);
+
+  useEffect(() => {
+    const onPopState = (e: PopStateEvent) => {
+      const state = e.state;
+      if (state && state.album !== undefined) {
+        setSelectedAlbumState(state.album);
+        setSelectedPhotoState(state.photo ?? null);
+      } else {
+        setSelectedAlbumState(null);
+        setSelectedPhotoState(null);
+      }
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-16">
@@ -26,7 +58,7 @@ export default function PhotosPage() {
             >
               <div className="aspect-video relative">
                 <Image
-                  src={`/images/photos/${album.folder}/${album.photos[0]}`}
+                  src={`/images/photos/${album.folder}/${album.photos[album.cover ?? 0]}`}
                   alt={album.title}
                   fill
                   className="object-cover"
@@ -44,7 +76,7 @@ export default function PhotosPage() {
       ) : (
         <div>
           <button
-            onClick={() => setSelectedAlbum(null)}
+            onClick={() => window.history.back()}
             className="mb-6 text-sm font-medium flex items-center gap-1"
             style={{ color: "var(--accent)" }}
           >
@@ -79,11 +111,11 @@ export default function PhotosPage() {
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
           style={{ backgroundColor: "rgba(0,0,0,0.85)" }}
-          onClick={() => setSelectedPhoto(null)}
+          onClick={() => window.history.back()}
         >
           <button
             className="absolute top-4 right-4 text-white text-3xl font-light hover:opacity-80"
-            onClick={() => setSelectedPhoto(null)}
+            onClick={() => window.history.back()}
           >
             &times;
           </button>

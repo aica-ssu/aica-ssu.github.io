@@ -3,6 +3,7 @@ export interface PhotoAlbum {
   date: string;
   folder: string;
   photos: string[];
+  cover?: number; // 대표사진 index (0부터 시작, 미지정 시 첫 번째 사진)
 }
 
 export const albums: PhotoAlbum[] = [
