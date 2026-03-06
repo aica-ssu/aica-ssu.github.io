@@ -1,10 +1,15 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
-html {
-  font-size: 125%;
+@media (min-width: 768px) {
+  html {
+    font-size: 125%;
+  }
 }
 
 :root {
+  color-scheme: light;
+
   --accent: #2563eb;
   --accent-hover: #1d4ed8;
   --bg-primary: #ffffff;
@@ -18,6 +23,7 @@ html {
 }
 
 .dark {
+  color-scheme: dark;
   --accent: #60a5fa;
   --accent-hover: #93bbfd;
   --bg-primary: #0f172a;
