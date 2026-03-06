@@ -60,7 +60,7 @@ export default function MembersPage() {
         </h2>
         {pi.map((member, i) => (
           <div key={i} className="flex flex-col sm:flex-row gap-5">
-            <Link href={`/members/${slugify(member.name)}`} className="w-32 h-32 flex-shrink-0 overflow-hidden relative block" style={{ backgroundColor: "var(--bg-secondary)" }}>
+            <Link href={`/members/${slugify(member.name)}`} className="w-32 h-32 flex-shrink-0 rounded-full overflow-hidden relative block" style={{ backgroundColor: "var(--bg-secondary)" }}>
               {member.image ? (
                 <Image src={member.image} alt={member.name} fill className="object-cover" />
               ) : (
