@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "gen-photos": "node scripts/gen-photos.js",
+    "dev": "node scripts/gen-photos.js && next dev",
+    "build": "node scripts/gen-photos.js && next build",
     "start": "next start",
     "lint": "eslint"
   },

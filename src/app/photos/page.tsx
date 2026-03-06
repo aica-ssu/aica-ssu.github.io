@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { albums } from "@/data/photos";
+import { albums } from "@/data/photos.generated";
 
 export default function PhotosPage() {
   const [selectedAlbum, setSelectedAlbumState] = useState<number | null>(null);
