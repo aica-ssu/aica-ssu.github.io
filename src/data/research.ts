@@ -27,10 +27,10 @@ export const researchAreas: ResearchArea[] = [
   {
     title: "Next-Generation Memory Architecture",
     titleKo: "차세대 메모리 아키텍처",
-    description: "Exploring monolithic 3D integration, hybrid SRAM/MRAM memories, and emerging non-volatile memory technologies for advanced computing systems.",
-    descriptionKo: "Monolithic 3D 집적, SRAM/MRAM 하이브리드 메모리, 차세대 비휘발성 메모리 기반 시스템을 연구합니다.",
+    description: "Exploring monolithic 3D integration, hybrid SRAM/MRAM memories, Processing-in-Memory (PIM), Computing-in-Memory (CIM), and emerging non-volatile memory technologies for advanced computing systems.",
+    descriptionKo: "Monolithic 3D 집적, SRAM/MRAM 하이브리드 메모리, PIM/CIM 기반 연산 가속, 차세대 비휘발성 메모리 기반 시스템을 연구합니다.",
     image: "/images/research/3d-memory.jpg",
-    topics: ["Monolithic 3D Integration", "SRAM/MRAM Hybrid", "FeRAM, STT-MRAM, ReRAM"],
+    topics: ["Monolithic 3D Integration", "Processing-in-Memory (PIM)", "Computing-in-Memory (CIM)", "SRAM/MRAM Hybrid", "FeRAM, STT-MRAM, ReRAM"],
   },
   {
     title: "Thermal-Aware System Optimization",

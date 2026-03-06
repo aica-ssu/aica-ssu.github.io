@@ -136,7 +136,7 @@ export default function RecruitingPage() {
           <li>&#x2022; 성적 증명서</li>
         </ul>
         <div className="mt-6 pt-3 border-t text-sm" style={{ borderColor: "var(--border)", color: "var(--text-muted)" }}>
-          <p>Office: 정보과학관 327호 &middot; Lab: 정보과학관 306호</p>
+          <p>Lab: 창의관 306호 지능형컴퓨팅구조연구실</p>
         </div>
       </section>
     </div>
