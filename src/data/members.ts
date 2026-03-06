@@ -26,7 +26,7 @@ export const members: Member[] = [
     nameKo: "공영호",
     role: "Assistant Professor",
     category: "pi",
-    image: "/images/members/Young-Ho Gong.png",
+    image: "/images/members/Young-Ho Gong.jpg",
     email: "yhgong@ssu.ac.kr",
     linkedin: "https://www.linkedin.com/in/young-ho-gong-453b86118/",
     googleScholar: "https://scholar.google.com/citations?user=j_7MT9kAAAAJ&hl=en",
