@@ -39,7 +39,7 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 border-b backdrop-blur-sm" style={{ backgroundColor: "color-mix(in srgb, var(--bg-primary) 90%, transparent)", borderColor: "var(--border)" }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-12">
           <Link href="/" className="flex items-center gap-2" style={{ color: "var(--text-primary)" }}>
             <Image src="/images/logo.png" alt="AICA Lab" width={64} height={64} />
           </Link>
