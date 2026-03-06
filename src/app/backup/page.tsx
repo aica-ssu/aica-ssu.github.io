@@ -2,8 +2,13 @@
 
 import { useState } from "react";
 
-function check(input: string) {
-  return input === "aica306!";
+const HASH = "d9b50b0d9f7a1d7beeb753f4e2ed0ef7eb4a99128eaae9bdbafd50847be9b018";
+
+async function check(input: string) {
+  const encoded = new TextEncoder().encode(input);
+  const buf = await crypto.subtle.digest("SHA-256", encoded);
+  const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+  return hex === HASH;
 }
 
 function ExtLink({ href, children }: { href: string; children: React.ReactNode }) {
@@ -19,9 +24,9 @@ export default function BackupPage() {
   const [unlocked, setUnlocked] = useState(false);
   const [error, setError] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (check(password)) {
+    if (await check(password)) {
       setUnlocked(true);
       setError(false);
     } else {
