@@ -145,6 +145,16 @@ export default function MembersPage() {
               <p className="text-xs mt-2" style={{ color: "var(--text-muted)" }}>{member.researchShort || member.research}</p>
             </div>
           ))}
+          {/* Recruiting Card */}
+          <Link href="/recruiting" className="text-center group">
+            <div className="w-20 h-20 rounded-full mx-auto mb-3 flex items-center justify-center border-2 border-dashed transition-colors group-hover:border-[var(--accent)]" style={{ borderColor: "var(--border)" }}>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: "var(--text-muted)" }}>
+                <path d="M12 5v14M5 12h14" strokeLinecap="round" />
+              </svg>
+            </div>
+            <h3 className="font-semibold text-sm" style={{ color: "var(--text-muted)" }}>Join Us!</h3>
+            <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>학부연구생 / 학석사연계 / 대학원생 모집중</p>
+          </Link>
         </div>
       </section>
 
