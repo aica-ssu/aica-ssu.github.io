@@ -8,7 +8,7 @@ export default function Home() {
   const featuredKeys = ["lee2026date", "chung2026cal", "kwon2025access", "kim2025ksc", "moon2025ksc"];
   const featuredPubs = featuredKeys
     .map((key) => publications.find((p) => p.bibtexKey === key))
-    .filter(Boolean);
+    .filter((p): p is NonNullable<typeof p> => p != null);
   const latestNews = news.slice(0, 5);
 
   return (
