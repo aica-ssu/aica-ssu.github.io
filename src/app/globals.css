@@ -49,3 +49,8 @@ a {
 a:hover {
   color: var(--accent-hover);
 }
+
+.hero-btn:hover {
+  background-color: var(--accent) !important;
+  color: #ffffff !important;
+}

@@ -33,22 +33,22 @@ export default function Home() {
           <div className="flex flex-wrap justify-center gap-3">
             <Link
               href="/members"
-              className="px-5 py-2.5 text-sm font-medium transition-colors"
-              style={{ backgroundColor: "var(--accent)", color: "#ffffff" }}
+              className="hero-btn px-5 py-2.5 text-sm font-medium border transition-colors"
+              style={{ borderColor: "var(--accent)", color: "var(--accent)" }}
             >
               Meet Our Team
             </Link>
             <Link
               href="/publications"
-              className="px-5 py-2.5 text-sm font-medium border transition-colors"
+              className="hero-btn px-5 py-2.5 text-sm font-medium border transition-colors"
               style={{ borderColor: "var(--accent)", color: "var(--accent)" }}
             >
               View Publications
             </Link>
             <Link
               href="/recruiting"
-              className="px-5 py-2.5 text-sm font-medium transition-colors"
-              style={{ backgroundColor: "color-mix(in srgb, var(--accent) 12%, transparent)", color: "var(--accent)" }}
+              className="hero-btn px-5 py-2.5 text-sm font-medium border transition-colors"
+              style={{ borderColor: "var(--accent)", color: "var(--accent)" }}
             >
               Join Our Lab
             </Link>
