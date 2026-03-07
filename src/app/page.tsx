@@ -47,8 +47,8 @@ export default function Home() {
             </Link>
             <Link
               href="/recruiting"
-              className="px-5 py-2.5 text-sm font-medium border transition-colors"
-              style={{ borderColor: "var(--accent)", color: "var(--accent)" }}
+              className="px-5 py-2.5 text-sm font-medium transition-colors"
+              style={{ backgroundColor: "color-mix(in srgb, var(--accent) 12%, transparent)", color: "var(--accent)" }}
             >
               Join Our Lab
             </Link>
