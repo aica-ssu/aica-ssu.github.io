@@ -45,6 +45,13 @@ export default function Home() {
             >
               View Publications
             </Link>
+            <Link
+              href="/recruiting"
+              className="px-5 py-2.5 text-sm font-medium border transition-colors"
+              style={{ borderColor: "var(--accent)", color: "var(--accent)" }}
+            >
+              Join Our Lab
+            </Link>
           </div>
         </div>
       </section>
