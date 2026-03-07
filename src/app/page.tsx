@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import NeuralBg from "@/components/NeuralBg";
 import { researchAreas } from "@/data/research";
 import { news } from "@/data/news";
 import { publications } from "@/data/publications";
@@ -14,8 +15,9 @@ export default function Home() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="py-12 md:py-16" style={{ backgroundColor: "var(--bg-secondary)" }}>
-        <div className="max-w-6xl mx-auto px-4 text-center">
+      <section className="py-12 md:py-16 relative overflow-hidden" style={{ backgroundColor: "var(--bg-secondary)" }}>
+        <NeuralBg />
+        <div className="max-w-6xl mx-auto px-4 text-center relative z-10">
           <div className="flex justify-center mb-4">
             <Image src="/images/logo.png" alt="AICA Lab" width={72} height={72} />
           </div>
@@ -104,7 +106,10 @@ export default function Home() {
                 <span className="text-xs font-mono font-medium whitespace-nowrap" style={{ color: "var(--accent)" }}>
                   {item.date}
                 </span>
-                <p className="text-sm" style={{ color: "var(--text-primary)" }}>{item.contentKo}</p>
+                <div>
+                  <p className="text-sm" style={{ color: "var(--text-primary)" }}>{item.content}</p>
+                  <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>{item.contentKo}</p>
+                </div>
               </div>
             ))}
           </div>
