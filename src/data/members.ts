@@ -24,7 +24,7 @@ export const members: Member[] = [
   {
     name: "Young-Ho Gong",
     nameKo: "공영호",
-    role: "Assistant Professor",
+    role: "Associate Professor",
     category: "pi",
     image: "/images/members/Young-Ho Gong.jpg",
     email: "yhgong@ssu.ac.kr",
@@ -37,8 +37,9 @@ export const members: Member[] = [
       "B.S., Computer Science & Engineering, Korea University (2012)",
     ],
     career: [
-      "VPP Consulting Professor, SK Hynix (Apr.–Sep. 2025)",
-      "Assistant Professor, Soongsil University (Mar. 2023–Present)",
+      "Associate Professor, Soongsil University (Mar. 2026–Present)",
+      "Assistant Professor, Soongsil University (Mar. 2023–Feb. 2026)",
+      "VPP Consulting Professor, SK Hynix (Apr. 2025–Sep. 2025)",
       "Assistant Professor, Kwangwoon University (Mar. 2020–Feb. 2023)",
       "Staff Engineer, Samsung Electronics Memory Division (Sep. 2018–Feb. 2020)",
       "Research Assistant, Korea University (Mar. 2012–Aug. 2018)",

@@ -94,11 +94,11 @@ export default async function MemberPage({ params }: { params: Promise<{ id: str
         </section>
       )}
 
-      {/* Career (PI) */}
+      {/* Professional Experience (PI) */}
       {member.career && (
         <section className="mb-10">
           <h2 className="text-base font-bold mb-3 pb-1 border-b" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>
-            Career
+            Professional Experience
           </h2>
           <ul className="space-y-2">
             {member.career.map((item, i) => (
