@@ -65,7 +65,7 @@ export const publications: Publication[] = [
   {
     title: "ReAx: Resource-efficient Asynchronous Execution for Accelerating LLM Fine-tuning at the Edge",
     authors: "Hyukju Na, Daeseon Choi, Young-Ho Gong, Young Geun Kim",
-    venue: "IEEE Embedded System Letters, 2026",
+    venue: "IEEE Embedded Systems Letters, 2026",
     year: 2026, type: "journal",
     tags: ["AI", "Edge"],
     doi: "10.1109/LES.2025.3640585",
@@ -99,7 +99,7 @@ export const publications: Publication[] = [
     venue: "IEEE/ACM International Symposium on Low Power Electronics and Design (ISLPED), Reykjavik, Iceland, Aug. 2025",
     year: 2025, type: "conference",
     tags: ["ECC", "Memory", "AI"],
-    doi: "10.1145/3665314.3670825",
+    doi: "10.1109/ISLPED65674.2025.11261803",
     bibtexKey: "lee2025islped",
     correspondingAuthors: ["Sung Woo Chung"],
   },
@@ -315,7 +315,7 @@ export const publications: Publication[] = [
   {
     title: "An Efficient Trade-Off between Yield and Energy for eDRAM Caches under Process Variations",
     authors: "Joonho Kong, Young-Ho Gong",
-    venue: "Microprocessors & Microsystems, vol. 55, Nov. 2017",
+    venue: "Microprocessors and Microsystems, vol. 55, Nov. 2017",
     year: 2017, type: "journal",
     tags: ["Memory"],
     doi: "10.1016/j.micpro.2017.09.003",

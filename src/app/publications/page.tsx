@@ -25,7 +25,7 @@ function renderAuthors(authorStr: string, correspondingAuthors: string[]) {
 export default function PublicationsPage() {
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
-  const [expandedBib, setExpandedBib] = useState<string | null>(null);
+  // const [expandedBib, setExpandedBib] = useState<string | null>(null);
 
   const filtered = publications.filter((p) => {
     if (selectedYear && p.year !== selectedYear) return false;
@@ -171,13 +171,13 @@ export default function PublicationsPage() {
                       );
                     })}
                     <span className="flex-1" />
-                    <button
+                    {/* <button
                       onClick={() => setExpandedBib(expandedBib === pub.bibtexKey ? null : pub.bibtexKey)}
                       className="text-[11px] font-medium px-1.5 py-0.5 hover:underline"
                       style={{ color: "var(--accent)" }}
                     >
                       BibTeX
-                    </button>
+                    </button> */}
                     {pub.doi && (
                       <a
                         href={`https://doi.org/${pub.doi}`}
@@ -190,7 +190,7 @@ export default function PublicationsPage() {
                       </a>
                     )}
                   </div>
-                  {/* BibTeX expanded */}
+                  {/* BibTeX expanded - disabled
                   {expandedBib === pub.bibtexKey && (
                     <pre
                       className="mt-2 p-3 text-xs overflow-x-auto"
@@ -204,6 +204,7 @@ export default function PublicationsPage() {
 }`}
                     </pre>
                   )}
+                  */}
                 </div>
               ))}
             </div>
