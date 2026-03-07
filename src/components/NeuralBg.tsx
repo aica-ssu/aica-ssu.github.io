@@ -21,8 +21,9 @@ export default function NeuralBg() {
 
     let animId: number;
     const nodes: Node[] = [];
-    const NODE_COUNT = 50;
-    const CONNECT_DIST = 160;
+    const isMobile = window.innerWidth < 768;
+    const NODE_COUNT = isMobile ? 35 : 80;
+    const CONNECT_DIST = isMobile ? 140 : 170;
 
     const resize = () => {
       const parent = canvas.parentElement;
@@ -39,11 +40,11 @@ export default function NeuralBg() {
         y: Math.random() * canvas.height,
         vx: (Math.random() - 0.5) * 0.4,
         vy: (Math.random() - 0.5) * 0.4,
-        radius: Math.random() * 1.5 + 1,
+        radius: Math.random() * 1.2 + 0.8,
       });
     }
 
-    // Random active zone that drifts around
+    // Drifting active zone
     const zone = { x: 0, y: 0, targetX: 0, targetY: 0, radius: 280 };
     const pickTarget = () => {
       zone.targetX = Math.random() * canvas.width;
@@ -61,10 +62,9 @@ export default function NeuralBg() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const dark = isDark();
       const accentRGB = dark ? [96, 165, 250] : [37, 99, 235];
-      const sparkRGB = dark ? [147, 197, 253] : [96, 165, 250];
       time += 0.016;
 
-      // Drift the active zone smoothly
+      // Drift zone
       zone.x += (zone.targetX - zone.x) * 0.008;
       zone.y += (zone.targetY - zone.y) * 0.008;
       if (time > nextTarget) {
@@ -72,7 +72,7 @@ export default function NeuralBg() {
         nextTarget = time + 2.5 + Math.random() * 2;
       }
 
-      // Update node positions
+      // Update positions
       for (const node of nodes) {
         node.x += node.vx;
         node.y += node.vy;
@@ -80,11 +80,13 @@ export default function NeuralBg() {
         if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
       }
 
-      // Draw connections near the active zone
+      const [r, g, b] = accentRGB;
+
+      // Draw connections with directional glow
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
-          const dx = nodes[i].x - nodes[j].x;
-          const dy = nodes[i].y - nodes[j].y;
+          const dx = nodes[j].x - nodes[i].x;
+          const dy = nodes[j].y - nodes[i].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist > CONNECT_DIST) continue;
 
@@ -96,53 +98,45 @@ export default function NeuralBg() {
           if (influence < 0.01) continue;
 
           const proximityAlpha = 1 - dist / CONNECT_DIST;
-          const pulse = 0.7 + 0.3 * Math.sin(time * 5 + dist * 0.05);
-          const alpha = influence * influence * proximityAlpha * pulse * 0.8;
-          const [r, g, b] = accentRGB;
+          const baseAlpha = influence * influence * proximityAlpha * 0.7;
+
+          // Animated pulse traveling along the line
+          // Phase based on time + unique offset per pair
+          const phase = (time * 1.2 + (i * 7 + j * 13) * 0.1) % 1;
 
           const grad = ctx.createLinearGradient(nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
-          grad.addColorStop(0, `rgba(${sparkRGB[0]},${sparkRGB[1]},255,${alpha * 0.7})`);
-          grad.addColorStop(0.5, `rgba(${r},${g},${b},${alpha})`);
-          grad.addColorStop(1, `rgba(${sparkRGB[0]},${sparkRGB[1]},255,${alpha * 0.7})`);
+
+          // Build gradient: dim → bright peak → dim (peak moves along line)
+          const peakPos = phase;
+          const spread = 0.25;
+          const dimAlpha = baseAlpha * 0.3;
+          const brightAlpha = baseAlpha;
+
+          grad.addColorStop(0, `rgba(${r},${g},${b},${dimAlpha})`);
+          if (peakPos - spread > 0) {
+            grad.addColorStop(Math.max(0, peakPos - spread), `rgba(${r},${g},${b},${dimAlpha})`);
+          }
+          grad.addColorStop(Math.max(0, Math.min(1, peakPos)), `rgba(${r},${g},${b},${brightAlpha})`);
+          if (peakPos + spread < 1) {
+            grad.addColorStop(Math.min(1, peakPos + spread), `rgba(${r},${g},${b},${dimAlpha})`);
+          }
+          grad.addColorStop(1, `rgba(${r},${g},${b},${dimAlpha})`);
 
           ctx.beginPath();
           ctx.moveTo(nodes[i].x, nodes[i].y);
           ctx.lineTo(nodes[j].x, nodes[j].y);
           ctx.strokeStyle = grad;
-          ctx.lineWidth = 0.5 + influence * 2.5;
+          ctx.lineWidth = 0.5 + influence * 1.5;
           ctx.stroke();
-
-          // Sparks
-          if (influence > 0.2 && Math.random() < influence * 0.2) {
-            const t = Math.random();
-            const sx = nodes[i].x + (nodes[j].x - nodes[i].x) * t + (Math.random() - 0.5) * 12;
-            const sy = nodes[i].y + (nodes[j].y - nodes[i].y) * t + (Math.random() - 0.5) * 12;
-            ctx.beginPath();
-            ctx.arc(sx, sy, Math.random() * 2.5 + 0.5, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(${sparkRGB[0]},${sparkRGB[1]},255,${0.4 + Math.random() * 0.6})`;
-            ctx.fill();
-          }
         }
       }
 
-      // Draw nodes
+      // Draw nodes (subtle)
       for (const node of nodes) {
         const zoneDist = Math.sqrt((node.x - zone.x) ** 2 + (node.y - zone.y) ** 2);
         const influence = Math.max(0, 1 - zoneDist / zone.radius);
-        const [r, g, b] = accentRGB;
-        const alpha = 0.12 + influence * 0.7;
-        const radius = node.radius + influence * 2;
-
-        if (influence > 0.1) {
-          const glowR = radius + 5 * influence;
-          const glow = ctx.createRadialGradient(node.x, node.y, radius * 0.3, node.x, node.y, glowR);
-          glow.addColorStop(0, `rgba(${sparkRGB[0]},${sparkRGB[1]},255,${influence * 0.2})`);
-          glow.addColorStop(1, "rgba(0,0,0,0)");
-          ctx.beginPath();
-          ctx.arc(node.x, node.y, glowR, 0, Math.PI * 2);
-          ctx.fillStyle = glow;
-          ctx.fill();
-        }
+        const alpha = 0.1 + influence * 0.5;
+        const radius = node.radius + influence * 1;
 
         ctx.beginPath();
         ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
