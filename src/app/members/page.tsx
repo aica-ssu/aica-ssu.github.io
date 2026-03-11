@@ -163,7 +163,7 @@ export default function MembersPage() {
                 <SocialIcons member={member} />
               </span>
               <span style={{ color: "var(--text-secondary)" }}>{member.role}</span>
-              <span className="font-medium" style={{ color: "var(--accent)" }}>{member.current}</span>
+              <span className="font-medium" style={{ color: "var(--accent)" }}>Now at {member.current}</span>
             </div>
           ))}
         </div>

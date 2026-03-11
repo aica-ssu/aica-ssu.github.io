@@ -81,7 +81,7 @@ export const members: Member[] = [
   {
     name: "Bang-San Lee",
     nameKo: "이방산",
-    role: "M.S./Ph.D. Integrated Student (2025~)",
+    role: "Integrated M.S./Ph.D. Student (2025~)",
     category: "graduate",
     image: "/images/members/Bang-San Lee.png",
     email: "atks990210@gmail.com",
