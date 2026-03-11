@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const HASH = "d9b50b0d9f7a1d7beeb753f4e2ed0ef7eb4a99128eaae9bdbafd50847be9b018";
+const HASH = "cadb3b36d671925c7bd64e0edbf12be56ec715dae56e759e33d7445f73bdc8a2";
 
 async function check(input: string) {
   const encoded = new TextEncoder().encode(input);
