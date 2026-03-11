@@ -151,6 +151,13 @@ export const members: Member[] = [
     linkedin: "https://www.linkedin.com/in/%EC%9A%B0%ED%98%81-%EB%B0%95-321820239/",
   },
   {
+    name: "Jun-Hyeok Lee",
+    nameKo: "이준혁",
+    role: "B.S. 2027 (Expected)",
+    category: "alumni",
+    year: "2026",
+  },
+  {
     name: "Ryoonki Hong",
     nameKo: "홍륜기",
     role: "B.S. 2025",
@@ -174,13 +181,5 @@ export const members: Member[] = [
     category: "alumni",
     year: "2023",
     current: "Samsung Foundry",
-  },
-  {
-    name: "Jun-Hyeok Lee",
-    nameKo: "이준혁",
-    role: "B.S. 2027 (Expected)",
-    category: "alumni",
-    year: "2026",
-    current: "TBD",
   },
 ];
