@@ -89,7 +89,7 @@ Common tech → Target 중요성 → 약점 → 기존 노력 → Gap → Gap이
 
 - **Introduction과 다르게 쓴다.** Intro = novelty 강조, Conclusion = 결과의 의의 강조.
 - 가장 인상적인 수치 1~2개만 언급한다 (전체 나열 금지).
-- **Limitation + Future Work 반드시 포함.**
+- **Future Work 반드시 포함.** Limitation을 직접 나열하지 말고, 기존 기법과 orthogonal하게 적용 가능함을 강조하거나, 확장 가능성(opportunity)으로 자연스럽게 전환한다.
 
 ---
 
@@ -127,7 +127,7 @@ Common tech → Target 중요성 → 약점 → 기존 노력 → Gap → Gap이
 | 7 | 숫자 나열식 결과 | Figure가 있으면 대표 사례만 텍스트로 |
 | 8 | Ablation 누락 | 설계 결정 당 ablation 필수 |
 | 9 | 약한 결과를 변명으로 처리 | 분석적 reasoning 또는 맥락화 |
-| 10 | Conclusion = Introduction 복사 | 관점을 달리하고 Limitation/Future Work 포함 |
+| 10 | Conclusion = Introduction 복사 | 관점을 달리하고, limitation은 확장 가능성으로 전환 |
 
 ---
 

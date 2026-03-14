@@ -467,7 +467,6 @@ Evaluation
 #### 필수 포함 요소
 - Contribution 요약 (Introduction과 다른 관점에서)
 - 가장 인상적인 결과 (전체가 아닌 대표 수치만)
-- **Limitations** (반드시 포함)
 - **Future work** (반드시 포함)
 
 #### 흔한 실수와 주의사항
@@ -484,9 +483,28 @@ Evaluation
 - **Introduction**: "본 논문에서는 expert 활용 패턴의 temporal locality를 활용한 adaptive placement 알고리즘을 제안한다."
 - **Conclusion**: "실험 결과, adaptive placement를 통해 기존 GPU-only 대비 최대 2.1배의 throughput 향상을 달성하였으며, 이는 MoE 모델의 실용적 배포에 있어 이기종 시스템 활용의 가능성을 보여준다."
 
+**Limitation 처리 전략:**
+
+Conclusion에서 limitation을 직접적으로 나열하는 것은 위험하다. Reviewer에게 약점을 스스로 부각하는 꼴이 되기 때문이다. 대신, limitation을 **확장 가능성(extensibility)이나 future work로 자연스럽게 전환**하여 서술한다.
+
+```
+(X) "본 연구는 single-GPU 환경만을 대상으로 하였으며, multi-GPU 환경에서는
+     검증하지 못하였다."
+    → 약점을 직접 노출
+
+(O) "제안 기법은 기존의 multi-GPU 병렬화 기법과 orthogonal하게 적용 가능하며,
+     향후 multi-GPU 환경으로의 확장을 통해 추가적인 성능 향상이 기대된다."
+    → 한계를 확장 가능성으로 전환
+
+(O) "본 연구는 MoE 모델에 초점을 맞추었으나, 제안하는 adaptive placement의
+     핵심 원리는 다른 sparse model에도 적용 가능하다."
+    → 한계를 범용성 논의로 전환
+```
+
+**핵심 원칙:** Limitation을 언급해야 할 때는, (1) 기존 기법과 orthogonal하게 적용 가능함을 강조하거나, (2) future work에서 자연스럽게 해결될 방향으로 서술하거나, (3) 현재 scope를 명확히 하되 확장 가능성을 함께 제시한다. 약점을 나열하는 것이 아니라, **남은 기회(opportunity)**로 프레이밍하는 것이 핵심이다.
+
 **추가 주의사항:**
 - 결과 section의 모든 숫자를 나열하지 않는다. 가장 인상적인 결과만 언급한다.
-- Limitation과 future work를 빠뜨리면 reviewer가 "저자들이 한계를 인식하지 못하고 있다"고 판단한다.
 
 #### Bullet Level 가이드
 
@@ -494,10 +512,9 @@ Evaluation
 Conclusion
 ├── [1~2문단] Contribution 요약 (결과/의의 관점)
 │   └── 핵심 결과 수치 (대표 1~2개만)
-├── [1문단] Limitations
-│   └── 솔직하게, 그러나 건설적으로
-└── [1문단] Future Work
-    └── 구체적인 방향 제시
+└── [1문단] Future Work + 확장 가능성
+    ├── 기존 기법과의 orthogonality / 호환성 언급
+    └── 구체적인 확장 방향 제시 (limitation을 opportunity로 전환)
 ```
 
 ---
@@ -889,7 +906,7 @@ Reasoning이 어려운 경우, 전체적인 gain이 좋다면 약한 케이스�
 
 ### 실수 10: Conclusion에서 Introduction 복사
 
-Conclusion은 Introduction의 복사본이 아니다. Introduction에서는 "무엇을 제안하는가 (novelty)"를, Conclusion에서는 "그 결과가 가지는 의의 (impact)"를 중심으로 쓴다. 그리고 **Limitation과 Future Work를 반드시 포함**한다.
+Conclusion은 Introduction의 복사본이 아니다. Introduction에서는 "무엇을 제안하는가 (novelty)"를, Conclusion에서는 "그 결과가 가지는 의의 (impact)"를 중심으로 쓴다. Future work는 반드시 포함하되, limitation을 직접 나열하지 말고 **확장 가능성이나 기존 기법과의 orthogonality**로 자연스럽게 전환한다.
 
 ---
 
