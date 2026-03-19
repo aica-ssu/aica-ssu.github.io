@@ -211,3 +211,36 @@ a:hover {
   max-width: 100%;
   box-sizing: border-box;
 }
+
+.md-content details {
+  margin: 1em 0;
+  padding: 0.75em 1em;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-secondary);
+}
+
+.md-content details[open] {
+  padding-bottom: 0.5em;
+}
+
+.md-content details summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9em;
+  color: var(--accent);
+  padding: 0.25em 0;
+  list-style: revert;
+}
+
+.md-content details summary:hover {
+  opacity: 0.8;
+}
+
+.md-content details > *:not(summary) {
+  margin-top: 0.5em;
+}
+
+.md-content details summary::marker {
+  color: var(--text-muted);
+}

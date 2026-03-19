@@ -7,6 +7,12 @@ export const metadata: Metadata = {
 
 const guides = [
   {
+    title: "논문 Outline 작성 가이드라인 (v2)",
+    description: "요약본 + 클릭하면 펼쳐지는 상세 설명이 통합된 버전",
+    href: "/guides/paper-outline-v2",
+    tag: "통합",
+  },
+  {
     title: "논문 Outline 작성 가이드라인 (요약본)",
     description: "핵심 원칙과 Section별 요약을 한눈에 볼 수 있는 요약 버전",
     href: "/guides/paper-outline-summary",

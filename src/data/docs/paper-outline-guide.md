@@ -17,7 +17,7 @@
 5. [그림 및 표 계획](#5-그림-및-표-계획)
 6. [Reviewer를 고려한 Outline 검토](#6-reviewer를-고려한-outline-검토)
 7. [분야별 특수 고려사항 (Computer Architecture / AI Systems)](#7-분야별-특수-고려사항-computer-architecture--ai-systems)
-8. [흔한 실수 Top 10](#8-흔한-실수-top-10)
+8. [흔한 실수 Top 12](#8-흔한-실수-top-12)
 
 ---
 
@@ -53,6 +53,84 @@
 ```
 
 이 원칙은 이후 모든 section별 작성법에서 반복적으로 적용된다.
+
+### 두괄식과 함께 지켜야 할 문장 원칙: 주어·목적어·동사를 명확히
+
+두괄식 서술만큼 중요한 것이 **문장 단위의 명확성**이다. 한국어 논문 초고에서 가장 흔한 문제는 주어, 목적어, 동사가 불명확한 문장이다.
+
+**원칙: 모든 문장에서 "누가(주어) — 무엇을(목적어) — 어떻게 한다(동사)"가 한눈에 보여야 한다.**
+
+영어로 논문을 쓰는 것이지만, outline 단계에서 한국어로 메모할 때도 이 습관을 들여야 한다. 한국어에서는 주어와 목적어를 생략하기 쉽고, 동사가 문장 끝에 오기 때문에 의미가 뒤늦게 전달된다. 논문에서는 이것이 치명적이다.
+
+```
+(X) "활용 패턴을 분석하여 효율적으로 처리한다."
+    → 누가 분석하는가? 무엇을 처리하는가? 어떻게 효율적인가?
+
+(O) "제안 기법은 expert의 활용 패턴을 실시간으로 분석하고,
+     분석 결과를 기반으로 expert를 GPU에 동적 배치한다."
+    → 주어(제안 기법), 목적어(활용 패턴, expert), 동사(분석한다, 배치한다) 모두 명확
+```
+
+이 원칙이 중요한 이유는 단순히 문장 하나의 가독성 때문이 아니다. **각 문장의 의도가 뚜렷해지면, 그 문장들이 모인 문단에서 무엇에 집중하는지가 자연스럽게 드러난다.** 반대로, 주어·목적어가 흐릿한 문장이 쌓이면 문단 전체가 무엇을 말하려는지 알 수 없게 된다.
+
+| 확인 항목 | 나쁜 예 | 좋은 예 |
+|-----------|---------|---------|
+| **주어 누락** | "분석을 통해 성능이 향상된다" | "제안 기법은 profiling을 통해 throughput을 향상시킨다" |
+| **목적어 불분명** | "이를 기반으로 최적화한다" | "profiling 결과를 기반으로 expert 배치를 최적화한다" |
+| **동사 모호** | "~에 대해 고려한다" | "~의 overhead를 측정하고, trade-off를 분석한다" |
+
+> **자가 점검법**: 각 문장을 읽고 "**누가, 무엇을, 어떻게**"를 즉시 답할 수 있는가? 답할 수 없다면 문장을 다시 쓴다.
+
+### Claim의 강도를 evidence에 맞출 것
+
+**논문에서 가장 위험한 것은 과장된 표현(overclaiming)이다.** Reviewer는 claim의 강도와 실제 evidence 사이의 괴리를 즉시 감지하며, 이는 탑티어 학회에서 rejection의 대표적 사유 중 하나다.
+
+핵심 원칙: **모든 claim은 실험 결과가 뒷받침할 수 있는 범위 안에서만 서술한다.**
+
+```
+(X) "GPU stall을 원천적으로 제거한다."
+    → "원천적으로 제거"하면 GPU-only 대비 1.0x가 되어야 하는데, 실제로 그렇지 않다면?
+    → Reviewer: "Figure 3을 보면 stall이 완전히 제거되지 않았는데, 이 claim은 거짓이다."
+
+(O) "GPU stall을 대부분 제거하여 near-optimal throughput을 달성한다."
+    → 결과와 일치하는 정직한 표현
+```
+
+| 위험한 표현 | 왜 위험한가 | 대안 |
+|------------|-----------|------|
+| "원천적으로 제거" | 100% 제거가 아니면 거짓 | "대부분 제거", "최소화" |
+| "완전히 해소" | 반례 하나로 무너짐 | "크게 완화", "효과적으로 해소" |
+| "세계 최초" | 누락된 선행연구 하나로 무너짐 | "최초"를 쓰려면 범위를 한정: "A에 대해 B를 적용한 최초의 연구" |
+| "significant improvement" | 구체적 수치 없으면 의미 없음 | "Up to 2.1x throughput 향상" |
+| "크게/현저히 향상" | 구체적 수치를 써야 함 | 정확한 배수 또는 % |
+
+**이런 표현은 reviewer의 "먹잇감"이 된다.** 과장된 claim은 reviewer가 reject 사유로 삼기 가장 쉬운 대상이다. Tone을 약간 낮추는 것이 논문의 신뢰도를 높인다.
+
+> **자가 점검법**: 각 claim에 대해 "이 표현을 뒷받침하는 정확한 수치가 어디 있는가?"를 물어본다. 답할 수 없으면 표현을 수정한다.
+
+### 논문 전체에서 설명 순서를 일관되게 유지할 것
+
+**Introduction에서 Contribution A → B → C 순서로 소개했다면, Method에서도, Evaluation에서도, Conclusion에서도 동일한 순서를 따른다.**
+
+```
+(X) Introduction: ACE caching → Time-budgeted skipping
+    Method: Time-budgeted skipping → ACE caching
+    → 순서가 뒤바뀌면 reader가 혼란
+
+(O) Introduction: ACE caching → Time-budgeted skipping
+    Method: ACE caching → Time-budgeted skipping
+    → 동일한 순서. Reader가 자연스럽게 따라감
+```
+
+이 원칙은 다음 단위에 모두 적용된다:
+
+| 단위 | 적용 |
+|------|------|
+| Contribution 순서 | Introduction에서 나열한 순서 = Method subsection 순서 = Evaluation 순서 |
+| Figure vs 본문 | 그림에서 A → B 순서라면, 본문에서도 A → B 순서로 설명 |
+| Phase 순서 | Prefill → Decoding이 실제 실행 순서라면, 설명도 그 순서를 따름 |
+
+> **자가 점검법**: Outline에서 각 section의 subsection 순서를 나란히 놓고, 순서가 일관되는지 확인한다.
 
 ---
 
@@ -256,6 +334,23 @@ Introduction
 
 **주의:** 핵심 contribution이나 결정이 하위 bullet에 묻혀서는 안 된다. 가장 중요한 내용은 최상위 레벨에 위치시킨다.
 
+**Contribution 작성 원칙:**
+
+- **각 contribution bullet은 그 자체로 완결적이어야 한다.** 부연 설명을 읽지 않아도 "무엇을, 왜, 어떻게"가 한 문장 안에서 전달되어야 한다. Reviewer는 contribution bullet만 읽고 novelty를 판단하는 경우가 많다.
+- **Contribution은 3개 내외로 제한한다.** 5개 이상 나열하면 "unfocused" 또는 "incremental의 나열"이라는 인상을 준다.
+- **Contribution이 장황해지면 focus를 잃는다.** 하위 bullet의 결과 설명은 최소화하고, 핵심 기여만 상위 레벨에서 명확히 드러낸다.
+
+```
+(X) "Expert의 중요도를 분석하여 효율적인 caching을 수행한다."
+    → "효율적인 caching"이 무엇인지, "분석"이 어떤 방식인지 불명확.
+    → Reviewer: "이게 contribution인가, background인가?"
+
+(O) "Cross-layer global scoring을 통해 accuracy-critical expert를
+     식별하고, 이를 GPU에 우선 배치하는 caching 정책을 제안한다."
+    → 방법(cross-layer global scoring), 대상(accuracy-critical expert),
+      행위(GPU 우선 배치)가 한 문장에 모두 담김
+```
+
 ---
 
 ### 3.3 Background / Motivation
@@ -382,6 +477,32 @@ Method section은 코드의 README가 아니다. **알고리즘을 서술하는 
     → 아이디어 중심 서술
 ```
 
+**Subsection 제목은 핵심 메시지를 담아야 한다:**
+
+Section/subsection 제목은 내용의 핵심을 반영하는 informative title이어야 한다. 모호하거나 내용과 동떨어진 제목은 reader가 논문의 구조를 파악하기 어렵게 만든다.
+
+```
+(X) "3.2 Expert Skip이 필요해지게 되는 때"
+    → 무엇이 문제인지, 어떤 방향인지 전혀 드러나지 않음
+
+(O) "3.2 Limitation of Token-level Expert Selection"
+    → 기존 방식(token-level)의 한계를 논의한다는 것이 제목에서 드러남
+```
+
+**Implementation detail은 novelty가 아니면 줄인다:**
+
+기존 논문들에서 이미 다뤄진 저수준 구현 세부사항(e.g., fused kernel 사용, quantization scheme 선택)은 novelty가 없다면 간략히 언급하고 넘어간다. 단, **systems 분야(ISCA, MICRO 등)에서는 구현 자체가 contribution인 경우도 있으므로**, venue와 논문의 성격에 따라 판단한다.
+
+```
+(X) "단일 fused CUDA kernel을 구현하여 dequantization과 GEMM을
+     하나의 kernel에서 수행하도록 하였다." (2문단에 걸쳐 상세 설명)
+    → 기존 논문들이 이미 채택하는 standard practice라면 novelty 아님
+
+(O) "Dequantization과 GEMM을 fused kernel로 처리하여 kernel launch
+     overhead를 줄였다 [ref]." (한 문장으로 간결하게)
+    → Novelty가 아닌 구현은 reference와 함께 간략히 언급
+```
+
 **추가 주의사항:**
 - **이 section에서 overhead를 기술하지 않는다.** 논문의 목적은 제안 기법의 novelty를 알리는 것이 우선이다. Overhead는 Evaluation에서 다룬다.
 - Pipeline 순서대로 설명할 필요가 없다. **핵심 component부터 먼저 설명**한다.
@@ -421,7 +542,7 @@ Proposed Method
 |------|------|
 | Experimental setup | HW/SW 환경, dataset, baseline, metric |
 | 주요 결과 | Baseline 대비 성능 비교 (가장 인상적인 것 먼저) |
-| Ablation study | 각 핵심 설계 결정의 효과 검증 (**비협상 사항**) |
+| Ablation study | 자명하지 않은 설계 결정의 효과 검증 |
 | Sensitivity analysis | 주요 parameter에 대한 민감도 분석 |
 | Overhead analysis | 제안 기법의 overhead (간략하게) |
 
@@ -431,7 +552,7 @@ Proposed Method
 - **숫자를 무분별하게 나열하지 않는다.** 그림이 있으면 텍스트에서는 대표 사례만 언급한다. "Figure 5에서 보이는 바와 같이, 제안 기법은 평균 35%의 에너지 절감을 달성하며, 특히 memory-intensive workload에서 최대 52%까지 절감된다."
 - **약한 결과는 분석적으로 다룬다.** 결과가 약한 케이스가 있을 때, 변명 톤("어쩔 수 없다")은 안 되지만 논리적 reasoning("이 조건에서는 ~이므로 이득이 제한적이다")은 괜찮다. 또한 workload grouping 등으로 전체 맥락 안에서 자연스럽게 제시하는 것도 효과적이다.
 - **강한 주장에는 구체적 근거를 제시한다.** "GPU-only보다 빠르다" → 정확한 조건 (어떤 모델, 어떤 batch size, 어떤 hardware에서)을 명시한다.
-- **Ablation은 필수이다.** 모든 핵심 설계 결정에 대해 "이 component가 없으면 어떻게 되는가"를 보여야 한다.
+- **Ablation은 필수이다.** 단, 모든 설계 요소에 대해 ablation이 필요한 것은 아니다. **그 요소를 포함/제외함에 따라 결과가 좋아질 수도, 나빠질 수도 있는 — 즉, 선택의 타당성이 자명하지 않은 — 설계 결정**에 대해 ablation을 수행한다.
 
 #### Bullet Level 가이드
 
@@ -529,6 +650,7 @@ Outline 작성 후, 제출/확장 전에 다음을 검토한다.
 - [ ] 각 bullet은 정확히 하나의 아이디어만 담고 있는가?
 - [ ] Bullet의 계층 구조가 논리적인가? (상위 bullet이 하위 bullet을 포괄하는가?)
 - [ ] 한 section 내에서 bullet 수가 적절한가? (너무 많으면 subsection으로 분리)
+- [ ] 같은 section 내에서 동일한 내용을 중복 서술하고 있지 않은가? (특히 contribution의 상위/하위 bullet 간 중복에 주의)
 
 ### 4.2 Logic Flow 검증
 
@@ -560,7 +682,7 @@ Outline 작성 후, 제출/확장 전에 다음을 검토한다.
 ### 4.6 글쓰기 기본 사항 (확장 시 확인)
 
 - [ ] 동사 시제: 과거형은 Introduction/Related Work에서만 사용 (Evaluation 등에서는 현재형)
-- [ ] 주어 일관성: 같은 paragraph 내에서 주어를 자주 바꾸지 않는가?
+- [ ] 주어 일관성: 같은 paragraph 내에서 주어를 자주 바꾸지 않는가? (특히 "We"와 시스템명을 혼용하면 행위 주체가 불명확해질 수 있다)
 - [ ] 핵심 용어가 전체에서 통일되어 있는가?
 - [ ] Filler words (can, in order to, shall 등)를 제거했는가?
 - [ ] 첫 draft 작성 후 약 1/3을 삭제할 수 있는가? (그만큼 불필요한 내용이 있다는 의미)
@@ -598,7 +720,21 @@ Outline 작성 후, 제출/확장 전에 다음을 검토한다.
 | 분포나 패턴을 보여줄 때 | **그림** (scatter, heatmap) |
 | 실험 setup 요약 | **표** |
 
-### 5.4 그림 분석 체크리스트 (Outline 단계)
+### 5.4 그래프는 데이터가 아니라 Story를 보여줘야 한다
+
+그래프는 단순히 숫자를 시각화하는 것이 아니다. **Reader가 그래프를 보고 즉시 "이 논문의 기법이 왜 좋은가"를 파악할 수 있어야 한다.**
+
+- **Baseline 기준선을 시각적으로 표시한다.** 예: 1.0x 위치에 점선을 긋고 "GPU-only baseline" 라벨을 붙인다. 기준선이 없으면 reader가 수치의 의미를 즉시 파악하지 못한다.
+- **가장 중요한 takeaway를 그래프 안에 annotation으로 표시한다.** 예: "최대 2.1x" 화살표, 특정 구간에 대한 설명 라벨 등.
+- **그래프에서 실제 결과보다 과장된 인상을 주지 않는다.** 예: 실제로 baseline과 비슷한 구간이 있다면 그래프에서도 비슷하게 그려야 한다. Reviewer는 그래프와 숫자를 대조한다.
+
+### 5.5 Figure와 본문의 순서를 일치시킬 것
+
+그림에서 A → B 순서로 보여주면, 본문에서도 A → B 순서로 설명한다. 그림은 Prefill → Decoding 순인데 본문이 Decoding → Prefill 순으로 설명하면 reader가 혼란스럽다.
+
+이 원칙은 multi-panel figure (a), (b), (c)에도 적용된다. 본문에서 (b)를 먼저 설명하고 (a)를 나중에 설명하는 것은 피한다.
+
+### 5.6 그림 분석 체크리스트 (Outline 단계)
 
 Outline 단계에서 각 계획된 그림에 대해 다음을 판단한다:
 
@@ -707,7 +843,7 @@ Worst-case reviewer의 상태:
 | Reviewer 질문 | Outline에서 확인할 것 |
 |-------------|---------------------|
 | "Baseline이 공정한가?" | 동일한 framework, 동일한 조건에서 비교하는가? |
-| "Ablation은?" | 모든 핵심 설계 결정에 대한 ablation이 있는가? |
+| "Ablation은?" | 자명하지 않은 설계 결정에 대한 ablation이 있는가? |
 | "왜 이 benchmark/workload만 사용했는가?" | Benchmark 선택의 근거가 있는가? |
 | "Overhead는?" | Overhead 분석이 포함되어 있는가? |
 | "이 숫자는 통계적으로 유의미한가?" | 여러 번 실행한 평균인가? Confidence interval이 있는가? |
@@ -766,14 +902,19 @@ Computer architecture 및 AI systems 분야에서는 일반적인 논문 작성 
 | Precision | FP16 / BF16 / INT8 |
 | 측정 방식 | Warm-up 후 100회 반복의 평균 |
 
-### 7.4 Ablation은 비협상 사항
+### 7.4 Ablation Study
 
-Architecture/AI systems 논문에서 ablation이 없으면 거의 확실히 reject 사유가 된다.
+Architecture/AI systems 논문에서 ablation이 없으면 거의 확실히 reject 사유가 된다. 단, **모든 설계 요소에 대해 ablation이 필요한 것은 아니다.**
 
-**모든 핵심 설계 결정**에 대해 ablation을 수행한다:
-- "이 component를 제거하면 성능이 얼마나 떨어지는가?"
-- "이 parameter를 다르게 설정하면 어떻게 되는가?"
-- "이 대안적 설계를 사용하면 어떻게 되는가?"
+Ablation이 필요한 설계 결정은 **그 요소의 포함/제외에 따라 결과가 좋아질 수도, 나빠질 수도 있는 것** — 즉, reviewer가 "왜 이렇게 했는가?"라고 물을 수 있는 결정이다.
+
+| Ablation 필요 | Ablation 불필요 |
+|--------------|----------------|
+| 제안하는 scoring 방식 (다른 scoring도 가능) | 이미 검증된 표준 기법의 채택 (e.g., Adam optimizer) |
+| Global vs per-layer selection (둘 다 합리적) | Quantization bit-width (sensitivity로 충분) |
+| 특정 threshold 값의 선택 | 자명하게 필요한 component |
+
+**핵심 질문**: "이 설계 결정 대신 다른 선택을 했을 때 결과가 어떻게 달라지는가?"에 답해야 하는 경우 ablation이 필요하다.
 
 ### 7.5 Overhead는 별도 Discussion으로
 
@@ -785,7 +926,7 @@ Architecture/AI systems 논문에서 ablation이 없으면 거의 확실히 reje
 
 ---
 
-## 8. 흔한 실수 Top 10
+## 8. 흔한 실수 Top 12
 
 실제 논문 리뷰 경험에 기반한, 학생들이 가장 자주 범하는 실수 10가지이다.
 
@@ -802,9 +943,9 @@ Architecture/AI systems 논문에서 ablation이 없으면 거의 확실히 reje
 
 "한편(On the other hand)"은 논리적으로 대조되는 내용을 연결할 때 사용한다. 그러나 학생들은 관련 없는 문단을 연결할 때도 습관적으로 사용하여, 논리의 흐름이 끊어진다. 문단 간 전환은 앞 문단의 내용을 자연스럽게 이어받아야 한다.
 
-### 실수 3: 한 문장에 너무 많은 개념 압축
+### 실수 3: 한 문장에 너무 많은 개념 압축 + 주어·목적어 실종
 
-4개 이상의 개념을 한 문장에 넣으면 읽기 어렵다.
+4개 이상의 개념을 한 문장에 넣으면 읽기 어렵다. 더 큰 문제는, 긴 문장일수록 주어와 목적어가 사라지기 쉽다는 것이다. **문장을 나누되, 나눈 각 문장에서 "누가 무엇을 어떻게 한다"가 명확해야 한다.**
 
 ```
 (X) "제안하는 기법은 expert의 활용 빈도를 실시간으로 모니터링하여
@@ -829,6 +970,8 @@ Architecture/AI systems 논문에서 ablation이 없으면 거의 확실히 reje
 (O) "Expert의 배치는 inference 시작 전 profiling 단계에서, 각 expert의
      평균 활용 빈도를 기준으로 결정된다."
 ```
+
+> **Tip**: "적극적으로", "효율적으로", "효과적으로" 같은 수식어도 비슷한 문제를 일으킨다. 대부분의 경우 삭제하고 구체적 행위로 대체하면 문장이 더 강해진다. 단, "aggressive prefetching" 등 분야에서 통용되는 표현은 그대로 사용해도 된다.
 
 ### 실수 5: 반복을 강조로 착각
 
@@ -859,7 +1002,7 @@ Figure나 table이 있는데도 텍스트에서 모든 숫자를 나열하면, �
 
 ### 실수 8: Ablation Study 누락
 
-"시간이 부족해서 ablation을 못 넣었다"는 변명은 통하지 않는다. Architecture/AI systems 분야에서 ablation이 없으면 핵심 설계 결정의 타당성을 검증할 수 없으므로, reviewer는 이를 major weakness로 지적한다.
+Ablation이 아예 없으면 reviewer는 major weakness로 지적한다. **자명하지 않은 설계 결정** — 포함/제외에 따라 결과가 좋아질 수도 나빠질 수도 있는 요소 — 에 대해서는 반드시 ablation을 수행한다. 반면, 누구나 동의할 수 있는 표준적 설계까지 ablation할 필요는 없다.
 
 ### 실수 9: 약한 결과를 적절히 다루지 못함
 
@@ -908,6 +1051,22 @@ Reasoning이 어려운 경우, 전체적인 gain이 좋다면 약한 케이스�
 
 Conclusion은 Introduction의 복사본이 아니다. Introduction에서는 "무엇을 제안하는가 (novelty)"를, Conclusion에서는 "그 결과가 가지는 의의 (impact)"를 중심으로 쓴다. Future work는 반드시 포함하되, limitation을 직접 나열하지 말고 **확장 가능성이나 기존 기법과의 orthogonality**로 자연스럽게 전환한다.
 
+### 실수 11: 과장된 표현으로 reviewer에게 공격 빌미 제공
+
+"원천적으로 제거", "완전히 해소", "획기적으로 향상" 같은 표현은 실제 결과와 조금이라도 괴리가 있으면 reviewer의 신뢰를 잃는다. **Claim의 강도는 evidence가 뒷받침할 수 있는 범위 내에서 설정한다.** 표현을 약간 낮추는 것이 논문의 신뢰도를 높인다.
+
+```
+(X) "GPU stall을 원천적으로 제거한다."
+    → Reviewer: "Figure를 보면 stall이 남아있는데?"
+
+(O) "GPU stall을 대부분 제거하여 near-optimal throughput을 달성한다."
+    → 정직하고 방어 가능한 표현
+```
+
+### 실수 12: Section 간 설명 순서 불일치
+
+Introduction에서 A → B → C 순서로 contribution을 소개해놓고, Method에서 B → A → C 순서로 설명하면 reader가 혼란스럽다. **논문 전체에서 핵심 개념의 등장 순서를 일관되게 유지한다.**
+
 ---
 
 ## 부록: Outline 작성 순서 권장 사항
@@ -947,6 +1106,44 @@ Outline 확장 후, 제출 전 반드시 점검할 기본 규칙이다.
 - [ ] Acronym을 정의 전에 사용하지 않았는가
 - [ ] 인용 시 arXiv 버전이 아닌 conference/journal 버전을 인용했는가
 - [ ] Page limit을 초과하지 않았는가 (초과 시 supplementary로 이동, 삭제하지 않음)
+
+---
+
+## 부록: 한글로 Outline 작성 시 주의사항
+
+Outline을 한글로 먼저 작성하는 것은 자연스러운 과정이다. 그러나 한국어의 문법적 특성이 그대로 영어 논문에 옮겨지면 문제를 일으킬 수 있다. 다음은 **한글 outline 단계에서부터 의식해야 할 사항**이다.
+
+### 한국어식 지시어/대명사를 기술 용어로 대체
+
+한국어에서는 "바깥", "양쪽", "이것", "그쪽" 같은 지시어가 자연스럽지만, 이를 그대로 영어로 옮기면 모호해진다. Outline 단계에서부터 정확한 기술 용어를 사용하는 습관을 들인다.
+
+| 한국어 습관 | 문제 | 수정 |
+|------------|------|------|
+| "Top-k **바깥**의 expert" | "바깥"이 영어로 어색 (outside top-k?) | "top-k+α 범위의 expert" 또는 "pre-routing stage의 expert score를 고려하여" 등 구체적으로 풀어쓴다 |
+| "**양쪽** phase에서" | "양쪽"이 무엇을 가리키는지 불명확 | "Prefill phase와 decoding phase 모두에서" |
+| "**이를** 기반으로 최적화" | "이"가 무엇인지 앞 문장을 다시 봐야 함 | "Profiling 결과를 기반으로 배치를 최적화" |
+| "**그만큼** 성능이 올라간다" | 구체성 없음 | "Cache hit rate에 비례하여 throughput이 증가한다" |
+
+### 한국어 문장 구조의 영어 전환 시 함정
+
+한국어는 동사가 문장 끝에 오므로, 긴 수식절이 동사 앞에 쌓이기 쉽다. 이 구조를 그대로 영어로 옮기면 읽기 어려운 문장이 된다.
+
+```
+한국어 outline:
+"Expert의 활용 빈도를 실시간으로 모니터링하여 temporal locality를
+분석하고, 이를 기반으로 CPU-GPU 간 migration 비용을 고려한
+ILP를 풀어 최적의 배치를 결정한다."
+→ 동사("결정한다")가 끝에 와서 한국어로는 자연스럽지만,
+  영어로 옮기면 한 문장에 4개 이상의 개념이 들어감
+
+수정:
+"제안 기법은 expert 활용 빈도의 temporal locality를 분석한다.
+분석 결과를 기반으로, migration 비용을 고려한 ILP를 통해
+최적의 CPU-GPU 배치를 결정한다."
+→ 한 문장 = 한 행위. 영어로 옮겨도 자연스러움
+```
+
+> **Tip**: 한글 outline에서 한 bullet이 3줄 이상이면, 영어로 쓸 때 거의 확실히 한 문장이 너무 길어진다. Outline 단계에서 미리 나눈다.
 
 ---
 
