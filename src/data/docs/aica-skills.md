@@ -55,8 +55,8 @@ cd ~/.claude/skills/aica-writing-assistant && git pull
 
 | 스킬 | 용도 | 사용 시점 |
 |------|------|----------|
-| **Outline Assistant** | 아웃라인 구조, 서사, 기여점, 논리 흐름 리뷰 | 초안 작성 **전** |
-| **Writing Assistant** | 문장/문단 편집, Anti-AI 패턴 제거, 최종 검토 | 초안 작성 **후** |
+| **Outline Assistant** | 아웃라인 구조, 서사, 기여점, 논리 흐름 리뷰 | 논문 컨셉 및 실험결과가 있는 상태에서 **아웃라인 작성 시** |
+| **Writing Assistant** | 초안 작성, 문장/문단 편집, Anti-AI 패턴 제거, 최종 검토 | **아웃라인 확정 후** |
 
 ### 권장 워크플로우
 
