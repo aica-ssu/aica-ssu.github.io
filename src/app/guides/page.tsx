@@ -7,6 +7,12 @@ export const metadata: Metadata = {
 
 const guides = [
   {
+    title: "AICA Skills for Claude Code",
+    description: "Outline Assistant + Writing Assistant 설치 및 사용법, Decision Log 운영 가이드",
+    href: "/guides/aica-skills",
+    tag: "AI Skills",
+  },
+  {
     title: "논문 Outline 작성 가이드라인 (v2)",
     description: "요약본 + 클릭하면 펼쳐지는 상세 설명이 통합된 버전",
     href: "/guides/paper-outline-v2",
