@@ -162,20 +162,52 @@ cd ~/.claude/skills/aica-writing-assistant && git pull
 <details>
 <summary><strong>✍️ Writing Assistant — 논문 작성/편집 스킬</strong></summary>
 
-### 단계별 추천 커맨드
+> **전제**: 아웃라인이 확정된 상태에서 사용합니다. 아웃라인 리뷰가 필요하면 Outline Assistant를 먼저 사용하세요.
 
-#### 섹션 초안 작성
+### 전체 워크플로우 (7단계)
+
+```
+확정된 아웃라인
+  → Step 1. 프로젝트 셋업 (아웃라인 + LaTeX 등록)
+  → Step 2. 섹션별 초안 작성
+  → Step 3. 문장/문단 편집
+  → Step 4. Full Draft Review (3-Phase)
+  → Step 5. 개별 이슈 수정
+  → Step 6. Finalization Review (as-is / to-be)
+  → Step 7. 수치 일관성 감사 → 제출
+```
+
+### Step 1. 프로젝트 셋업
+
+논문 프로젝트 폴더에서 Claude Code를 실행하고 아웃라인을 등록합니다:
+
+```
+이 프로젝트는 [학회명] 제출용 논문이야.
+아웃라인은 outline.docx에 있고, LaTeX 메인 파일은 main.tex야.
+아웃라인을 읽고 전체 구조를 파악해줘.
+```
+
+### Step 2. 아웃라인 기반 섹션 초안 작성
+
+**권장 순서**: Evaluation → Design → Motivation → Background → Introduction → Abstract → Conclusion (결과부터 작성하면 주장이 구체적이 됩니다.)
 
 | 섹션 | 커맨드 |
 |------|--------|
-| Introduction | `Introduction 섹션을 작성해줘. 핵심 주제는 [X], 기존 연구의 한계는 [Y].` |
-| Background | `Background 섹션을 작성해줘. [개념 A], [개념 B]를 정의하고 관련 연구를 카테고리별로.` |
-| Motivation | `Motivation 섹션을 작성해줘. Fig. X의 실험 결과를 기반으로.` |
-| Design | `Proposed Design 섹션을 작성해줘. [기법 A], [기법 B] 순서로.` |
-| Evaluation | `Evaluation 섹션을 작성해줘. Fig. X와 Table Y의 데이터를 정량적으로.` |
-| Conclusion | `Conclusion을 작성해줘. 핵심 기여와 결과 수치, future work는 기회 중심으로.` |
+| Evaluation | `아웃라인의 Evaluation을 기반으로 초안을 작성해줘. Fig. X와 Table Y 데이터를 정량적으로.` |
+| Design | `아웃라인의 Proposed Design을 기반으로 초안을 작성해줘. [기법 A], [기법 B] 순서로.` |
+| Motivation | `아웃라인의 Motivation을 기반으로 초안을 작성해줘. Fig. X 기반으로 문제점을 보여줘.` |
+| Background | `아웃라인의 Background를 기반으로 초안을 작성해줘. [개념 A], [개념 B] 정의 + 관련 연구.` |
+| Introduction | `아웃라인의 Introduction을 기반으로 초안을 작성해줘. 핵심 주제는 [X], 한계는 [Y].` |
+| Abstract | `본문 내용을 기반으로 Abstract을 작성해줘. 2문단 구조, 핵심 개념 + 주요 수치만.` |
+| Conclusion | `Conclusion을 작성해줘. 핵심 기여 + 결과 수치, future work는 기회 중심으로.` |
 
-#### 문장/문단 편집
+섹션 작성 후 아웃라인 대조:
+
+```
+방금 작성한 [섹션] 초안이 아웃라인의 핵심 포인트를 모두 포함하는지 대조해줘.
+```
+
+### Step 3. 문장/문단 편집
 
 | 상황 | 커맨드 |
 |------|--------|
@@ -188,7 +220,7 @@ cd ~/.claude/skills/aica-writing-assistant && git pull
 | Em-dash 제거 | `모든 em-dash(---)를 세미콜론/마침표/각주로 교체해줘.` |
 | Caption 수정 | `figure/table caption에서 콜론 제거하고 첫 문장 정리해줘.` |
 
-#### 전체 리뷰 (3-Phase)
+### Step 4. 전체 리뷰 (3-Phase)
 
 ```
 이 논문 전체를 Full Draft Review 워크플로우로 리뷰해줘.
@@ -216,6 +248,23 @@ Phase 1(학술 품질) → Phase 2(Anti-AI) → Phase 3(무결성 검증) 순서
 | 2 | L.107 | (D) AI-like | "highlighting the effectiveness" | (삭제) |
 
 Categories: **(A)** Logic hole, **(B)** Numeric/grammar, **(C)** Tone/misleading, **(D)** AI-like
+
+### Step 5. 개별 이슈 수정
+
+| 상황 | 커맨드 |
+|------|--------|
+| Abstract 구조 개선 | `Abstract을 2문단 구조로 재구성해줘. 핵심 개념 + 주요 수치만.` |
+| Reference 추가 | `이 문장 "[주장]"을 뒷받침하는 논문을 찾아줘. claim-driven으로.` |
+| 수식 정리 | `불필요한 수식을 식별해줘. 자명한 수식은 제거 후보.` |
+| 페이지 부족 | `논리 jump 사이에 bridging sentence 추가, 기술적 reasoning 보강해줘. 필러는 넣지 마.` |
+| 아웃라인 대조 | `현재 초안이 아웃라인의 모든 핵심 포인트를 커버하는지 대조해줘.` |
+
+### Step 6-7. 수치 일관성 감사
+
+```
+Abstract, Introduction, Conclusion의 모든 headline 수치를
+Evaluation 테이블/그림의 원본 수치와 대조해줘. 불일치가 있으면 테이블로 정리해줘.
+```
 
 ### 핵심 메트릭
 
