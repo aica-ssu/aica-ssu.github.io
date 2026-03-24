@@ -44,8 +44,6 @@ Claude Code에서 `/skills`를 입력하면 두 스킬이 목록에 나타나야
 
 ### 5. 업데이트
 
-스킬이 업데이트되면 아래 명령으로 최신 버전을 받을 수 있습니다:
-
 ```bash
 cd ~/.claude/skills/aica-outline-assistant && git pull
 cd ~/.claude/skills/aica-writing-assistant && git pull
@@ -71,7 +69,10 @@ cd ~/.claude/skills/aica-writing-assistant && git pull
 
 ---
 
-## Outline Assistant 사용법
+## 스킬 상세
+
+<details>
+<summary><strong>📋 Outline Assistant — 아웃라인 리뷰 스킬</strong></summary>
 
 ### 전체 리뷰
 
@@ -97,6 +98,10 @@ cd ~/.claude/skills/aica-writing-assistant && git pull
 | 논리 전환 | `섹션 간 논리적 연결을 검토해줘. 약한 연결 찾아줘.` |
 | 리뷰어 관점 | `worst-case reviewer 관점에서 이 아웃라인을 공격해줘.` |
 | Ablation 체크 | `모든 설계 결정에 ablation이 계획되어 있는지 대조해줘.` |
+| Abstract 검토 | `Abstract가 독립적으로 읽히는지 검토해줘.` |
+| Conclusion 검토 | `Conclusion이 Introduction의 복붙이 아닌지 검토해줘.` |
+| Figure/Table | `빠진 figure/table을 추천해줘.` |
+| Claim 검증 | `모든 주장에 근거가 있는지 검토해줘.` |
 
 ### 리뷰 결과 우선순위
 
@@ -114,10 +119,48 @@ cd ~/.claude/skills/aica-writing-assistant && git pull
 4. **모든 설계 결정에 검증 필요** — Ablation 없으면 정당화 안 됨
 5. **Method에서 overhead 논하지 않기** — overhead는 Evaluation에서
 6. **약한 결과는 분석적으로** — 변명이 아닌 논리적 분석
+7. **불릿 1개 = 아이디어 1개** — 각 불릿은 초안에서 1개 문단이 됨
 
----
+### 흔한 아웃라인 문제
 
-## Writing Assistant 사용법
+| 문제 | 신호 | 수정 |
+|------|------|------|
+| 기여점 매몰 | 핵심 insight가 ilvl>=2 | ilvl=0~1로 승격 |
+| Motivation bridge 부재 | "한편"으로 method 전환 | "이 문제를 해결하기 위해" bridge 추가 |
+| Conclusion 복붙 | Introduction과 거의 동일 | 결과 의의 + limitation + future work |
+| 불릿 과밀 | 1개 불릿에 4+ 개념 | 별도 불릿으로 분리 |
+| 모호한 주장 | "성능이 향상됨" | 정확한 조건과 수치 추가 |
+| Ablation 누락 | 설계 결정 검증 계획 없음 | Evaluation에 ablation 추가 |
+| Method에 overhead | Proposed Method에서 비용 논의 | Evaluation으로 이동 |
+| 계층 건너뛰기 | ilvl=0 → ilvl=2 | ilvl=1 그룹핑 추가 |
+| Related Work 나열식 | 설명만, 비교 없음 | 제안 방법과의 대조 추가 |
+
+### Related Work 원칙
+
+| 원칙 | 나쁜 예 | 좋은 예 |
+|------|---------|---------|
+| 문단 첫 문장 = 주제 | "[논문A]는 X를 제안했다." | "메모리 최적화는 세 가지 접근으로 나뉜다." |
+| 카테고리별 조직 | 시간순 나열 | 접근법별 분류 |
+| 비교와 대조 | "A는 X를 했다. B는 Y를 했다." | "A는 X를 했으나, 우리의 Z 특성에는 적용 불가." |
+| 파생 느낌 금지 | "Similar to [A], our~" | "Unlike [A] which targets X, our~" |
+| 비판 금지 | "[A]의 방법은 비효율적이다." | "[A]는 다른 목표(Y)에 최적화되어 있다." |
+
+### Evaluation 체크리스트 (CS Arch / AI Systems)
+
+| 항목 | 필수 여부 |
+|------|----------|
+| HW 사양 (GPU, 메모리, interconnect) | 필수 |
+| SW 버전 (Framework, CUDA, driver) | 필수 |
+| Baseline 공정성 (동일 조건) | 필수 |
+| 수치 context (batch, seq len, model, precision) | 필수 |
+| 모든 설계 결정 Ablation | 필수 |
+| 트렌드 (단일 포인트가 아닌 추세) | 권장 |
+| 재현성 (다른 그룹 재현 가능?) | 권장 |
+
+</details>
+
+<details>
+<summary><strong>✍️ Writing Assistant — 논문 작성/편집 스킬</strong></summary>
 
 ### 단계별 추천 커맨드
 
@@ -141,20 +184,38 @@ cd ~/.claude/skills/aica-writing-assistant && git pull
 | 문단 병합 | `모델별 bold heading 마이크로 문단을 flowing prose로 병합해줘.` |
 | 용어 통일 | `[개념]에 대해 사용된 모든 표현을 [통일 용어]로 맞춰줘.` |
 | "This" 주어 수정 | `"This"로 시작하는 문장을 구체적인 주어로 교체해줘.` |
+| Figure 참조 정리 | `Figure 참조 순서를 정리해줘.` |
+| Em-dash 제거 | `모든 em-dash(---)를 세미콜론/마침표/각주로 교체해줘.` |
+| Caption 수정 | `figure/table caption에서 콜론 제거하고 첫 문장 정리해줘.` |
 
-#### 전체 리뷰
+#### 전체 리뷰 (3-Phase)
 
 ```
 이 논문 전체를 Full Draft Review 워크플로우로 리뷰해줘.
 Phase 1(학술 품질) → Phase 2(Anti-AI) → Phase 3(무결성 검증) 순서로.
 ```
 
-#### 최종 검토
+| Phase | 체크 항목 |
+|-------|----------|
+| **Phase 1 (학술 품질)** | 주제 일관성, 문장 메트릭, 논리 흐름, 문단 파편화, 한계점 프레이밍, Bold 사용, 주장 검증 |
+| **Phase 2 (Anti-AI)** | 콘텐츠 패턴, 언어 패턴, 스타일 패턴, 필러/헤징, Self-audit |
+| **Phase 3 (무결성)** | 문장 메트릭 재검증, 용어 일관성 재검증, Figure 참조 재검증 |
+
+#### 최종 검토 (Finalization Review)
 
 ```
 이 논문을 Finalization Review 워크플로우로 검토해줘.
 수정 사항은 직접 적용하지 말고 as-is / to-be 테이블로 정리해줘.
 ```
+
+출력 형식:
+
+| # | Location | Category | As-Is | To-Be |
+|---|----------|----------|-------|-------|
+| 1 | L.42 | (B) Numeric | "achieves 86%" | "achieves 86.5% for GPT-2 Medium" |
+| 2 | L.107 | (D) AI-like | "highlighting the effectiveness" | (삭제) |
+
+Categories: **(A)** Logic hole, **(B)** Numeric/grammar, **(C)** Tone/misleading, **(D)** AI-like
 
 ### 핵심 메트릭
 
@@ -162,10 +223,11 @@ Phase 1(학술 품질) → Phase 2(Anti-AI) → Phase 3(무결성 검증) 순서
 |--------|--------|
 | 문장 길이 | 15-20 단어 |
 | 문장당 쉼표 | 최대 1-2개 |
-| 문단 길이 | 3-7 문장 |
+| 문단 길이 | 3-7 문장 (다양하게) |
 | -ing 분사구 | 문장당 최대 1개 |
-| Bold 사용 | 페이지당 3회 이하 |
-| Em-dash | 사용 금지 |
+| Bold 사용 | 페이지당 3회 이하 (heading 제외) |
+| Em-dash | 사용 금지 (세미콜론/마침표/각주로 대체) |
+| Bullet list | Introduction contributions에서만 |
 
 ### Anti-AI 패턴 (절대 사용 금지)
 
@@ -174,10 +236,40 @@ Phase 1(학술 품질) → Phase 2(Anti-AI) → Phase 3(무결성 검증) 순서
 | 과장 | "pivotal moment", "testament to" | 삭제, 사실만 기술 |
 | 홍보성 | "groundbreaking", "showcasing" | 삭제 또는 중립 표현 |
 | 모호 인용 | "experts argue" | 구체적 논문 인용 |
-| 꼬리 -ing | "highlighting the effectiveness" | 삭제 |
+| 꼬리 -ing | "highlighting the effectiveness" | 삭제 (수치가 스스로 증명) |
 | Copula 회피 | "serves as", "stands as" | "is" 사용 |
+| 부정 병렬 | "Not only X, but also Y" | "X and Y" |
+| 3의 법칙 남용 | "A, B, and C" 반복 | 실제 관련 있는 것만 |
+| Em-dash | "---" | 세미콜론, 마침표, 각주 |
 | AI 어휘 | "delve", "landscape", "crucial" | "analyze", "recent work", "important" |
 | 필러 | "It is important to note that" | 삭제 |
+
+### 허용되는 예외
+
+| 패턴 | 조건 |
+|------|------|
+| "In this paper" | Introduction/Conclusion에서 범위 설정 목적 |
+| 단일 -ing 분사구 | 문장당 1개는 허용 (2개부터 수정) |
+| "First" 주장 | 적절한 프레이밍과 함께 사용 가능 |
+
+### 41개 Core Principles 요약
+
+| # | 원칙 | 핵심 |
+|---|------|------|
+| 1 | Active voice | "CPU updates" not "is updated" |
+| 2 | Figure 참조 순서 | 첫 언급: figure as subject, 이후: parenthetical |
+| 3 | 문장당 1 아이디어 | 쉼표 2+ 이면 분리 |
+| 4 | 용어 일관성 | 동의어 금지, 표준 동사 반복 |
+| 5 | Anti-AI 어휘 | 약간의 반복 > 부자연스러운 다양성 |
+| 6-10 | 구조 원칙 | Design에서 설명, Evaluation에서 참조만 |
+| 11-15 | 스타일 원칙 | Em-dash 금지, Caption 콜론 금지, 용어 통일 |
+| 16-20 | 참조/평가 원칙 | Claim-driven reference, 정량 evaluation |
+| 21-25 | 프레이밍 원칙 | 제안 기법이 주어, 겸손한 기여 주장 |
+| 26-30 | 용어/문장 원칙 | General→Specific, "This" 주어 금지 |
+| 31-35 | 일관성 원칙 | 동일 개념 = 동일 용어, Subject-verb 정합 |
+| 36-41 | 최종 검토 원칙 | 수식 절약, -ing 제한, 수치 일관성, 표 축약 |
+
+</details>
 
 ---
 
