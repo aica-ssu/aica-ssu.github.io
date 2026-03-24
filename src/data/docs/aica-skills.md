@@ -97,7 +97,7 @@ cd ~/.claude/skills/aica-writing-assistant && git pull
 | 불릿 계층 | `bullet hierarchy를 검토해줘. 핵심 결정이 sub-point에 묻혀있지 않은지.` |
 | 논리 전환 | `섹션 간 논리적 연결을 검토해줘. 약한 연결 찾아줘.` |
 | 리뷰어 관점 | `worst-case reviewer 관점에서 이 아웃라인을 공격해줘.` |
-| Ablation 체크 | `모든 설계 결정에 ablation이 계획되어 있는지 대조해줘.` |
+| Ablation 체크 | `논쟁 가능한 설계 결정에 ablation이 계획되어 있는지 대조해줘.` |
 | Abstract 검토 | `Abstract가 독립적으로 읽히는지 검토해줘.` |
 | Conclusion 검토 | `Conclusion이 Introduction의 복붙이 아닌지 검토해줘.` |
 | Figure/Table | `빠진 figure/table을 추천해줘.` |
@@ -116,7 +116,7 @@ cd ~/.claude/skills/aica-writing-assistant && git pull
 1. **반복 ≠ 강조** — 같은 내용 반복은 구조 문제
 2. **기여점을 먼저 정의** — 상세 섹션 전에 crystal clear
 3. **Introduction ≠ Conclusion** — 다른 관점 필요
-4. **모든 설계 결정에 검증 필요** — Ablation 없으면 정당화 안 됨
+4. **논쟁 가능한 설계 결정에 검증 필요** — 표준적 선택은 불필요, 의심될 수 있는 선택에는 ablation 권장
 5. **Method에서 overhead 논하지 않기** — overhead는 Evaluation에서
 6. **약한 결과는 분석적으로** — 변명이 아닌 논리적 분석
 7. **불릿 1개 = 아이디어 1개** — 각 불릿은 초안에서 1개 문단이 됨
@@ -130,7 +130,7 @@ cd ~/.claude/skills/aica-writing-assistant && git pull
 | Conclusion 복붙 | Introduction과 거의 동일 | 결과 의의 + limitation + future work |
 | 불릿 과밀 | 1개 불릿에 4+ 개념 | 별도 불릿으로 분리 |
 | 모호한 주장 | "성능이 향상됨" | 정확한 조건과 수치 추가 |
-| Ablation 누락 | 설계 결정 검증 계획 없음 | Evaluation에 ablation 추가 |
+| Ablation 누락 | 논쟁 가능한 설계 결정에 검증 없음 | 해당 결정에 ablation 또는 정당화 추가 |
 | Method에 overhead | Proposed Method에서 비용 논의 | Evaluation으로 이동 |
 | 계층 건너뛰기 | ilvl=0 → ilvl=2 | ilvl=1 그룹핑 추가 |
 | Related Work 나열식 | 설명만, 비교 없음 | 제안 방법과의 대조 추가 |
@@ -153,7 +153,7 @@ cd ~/.claude/skills/aica-writing-assistant && git pull
 | SW 버전 (Framework, CUDA, driver) | 필수 |
 | Baseline 공정성 (동일 조건) | 필수 |
 | 수치 context (batch, seq len, model, precision) | 필수 |
-| 모든 설계 결정 Ablation | 필수 |
+| 논쟁 가능한 설계 결정 Ablation | 권장 (표준 선택은 불필요) |
 | 트렌드 (단일 포인트가 아닌 추세) | 권장 |
 | 재현성 (다른 그룹 재현 가능?) | 권장 |
 
