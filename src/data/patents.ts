@@ -14,7 +14,7 @@ export const internationalPatents: Patent[] = [
 ];
 
 export const domesticPatents: Patent[] = [
-  { title: "계층별 민감도를 고려한 Binary-Ternary 하이브리드 양자화 기반 엣지 객체 감지 모델 최적화", inventors: "Young-Ho Gong, Seok-Hwan Kim, Dong Gyu Sim", number: "10-2025-0187646", date: "Dec. 2025", status: "Applied" },
+  { title: "객체 감지 모델 최적화 장치 및 방법", inventors: "Young-Ho Gong, Seok-Hwan Kim, Dong Gyu Sim", number: "10-2026-0059664", date: "Dec. 2025", status: "Applied" },
   { title: "강건도 기반 가지치기 및 양자화를 통한 Vision Transformer 최적화 방법", inventors: "Young-Ho Gong, Sang-Jun Moon", number: "10-2025-0187383", date: "Dec. 2025", status: "Applied" },
   { title: "이기종 프로세싱이 적용된 통합 메모리 시스템 기반의 인공지능 모델 훈련 방법 및 이를 수행하는 장치", inventors: "Young-Ho Gong, Bang-San Lee, Dong Gyu Sim", number: "10-2025-0082144", date: "Jun. 2025", status: "Applied" },
   { title: "다중 워드라인 및 수직 비트라인 기반 최댓값 탐색 가능한 3차원 프로세싱인메모리", inventors: "Young-Ho Gong", number: "10-2889341", date: "Nov. 2025", status: "Registered" },
