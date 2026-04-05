@@ -10,7 +10,7 @@ const resources = [
     items: [
       {
         title: "The RISC-V Instruction Set Manual, Volume I: User-Level ISA (v2.2)",
-        href: "https://github.com/magicpan-risc-v/doc/blob/master/riscv-spec-v2.2.pdf",
+        href: "/resources/riscv-spec-v2.2.pdf",
         description: "RISC-V user-level ISA specification",
       },
     ],
