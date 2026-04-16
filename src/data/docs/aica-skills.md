@@ -120,6 +120,11 @@ cd ~/.claude/skills/aica-writing-assistant && git pull
 5. **Method에서 overhead 논하지 않기** — overhead는 Evaluation에서
 6. **약한 결과는 분석적으로** — 변명이 아닌 논리적 분석
 7. **불릿 1개 = 아이디어 1개** — 각 불릿은 초안에서 1개 문단이 됨
+8. **열거 후 구조화** — "two strategies" 후 First/Second 필수
+9. **Intro 섹션 참조 금지** — "(Section 3.1)" forward reference 금지
+10. **대조 도입** — Background/RW에서 연속 개념은 대조로 연결
+11. **Conclusion = 종합** — 1-2문단, 재작성 아닌 간결한 종합
+12. **Eval figure 4단계 분석** — baseline 경향→제안 경향→비교→특정 케이스
 
 ### 흔한 아웃라인 문제
 
@@ -134,6 +139,11 @@ cd ~/.claude/skills/aica-writing-assistant && git pull
 | Method에 overhead | Proposed Method에서 비용 논의 | Evaluation으로 이동 |
 | 계층 건너뛰기 | ilvl=0 → ilvl=2 | ilvl=1 그룹핑 추가 |
 | Related Work 나열식 | 설명만, 비교 없음 | 제안 방법과의 대조 추가 |
+| 열거 미구조화 | "two strategies" 후 번호 없음 | First/Second로 구조화 |
+| Intro 섹션 참조 | "(Section 3.1)" forward ref | 삭제, 서사 흐름으로 유도 |
+| 개념 간 대조 부재 | 연속 개념이 연결 없이 나열 | "Unlike A, B..." 대조 추가 |
+| Conclusion 과잉 | 3문단+, 방법론 재설명 | 1-2문단 종합으로 축약 |
+| Eval 분석 평면화 | 결과를 한 줄로 요약 | 4단계 구조 계획 |
 
 ### Related Work 원칙
 
