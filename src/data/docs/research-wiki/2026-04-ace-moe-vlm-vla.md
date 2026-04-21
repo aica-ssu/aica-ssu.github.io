@@ -242,4 +242,4 @@ ACE-MoE의 cumulative expert score를 **modality dimension(visual/text)**으로 
 
 ## 문의
 
-각 주제에 대한 진행 희망, 수정 제안, 혹은 PoC 구현 합류 의사는 고용후 교수에게 전달 바랍니다. 본 문서는 hidden link 형태로 공유되며, 홈페이지 일반 네비게이션에는 노출되지 않습니다.
+각 주제에 대한 진행 희망, 수정 제안, 혹은 PoC 구현 합류 의사는 공영호 교수에게 전달 바랍니다. 본 문서는 hidden link 형태로 공유되며, 홈페이지 일반 네비게이션에는 노출되지 않습니다.
