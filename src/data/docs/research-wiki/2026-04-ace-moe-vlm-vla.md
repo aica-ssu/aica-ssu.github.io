@@ -14,7 +14,7 @@ ACE-MoE(ICCAD'26 submission)의 결론부에는 다음이 명시되어 있습니
 
 > "We expect ACE-MoE to further optimize the trade-off between performance, accuracy, and memory efficiency in emerging **Vision-Language or Vision-Language-Action models**, where inference involves significantly higher token counts."
 
-이 future direction은 (a) VLM의 visual token이 sequence의 86.2%를 차지하면서 attention 기여는 11.4%에 그치는 극단적 비대칭, (b) VLM prefill이 LLM 대비 6~22× 길어지는 TTFT explosion, (c) VLA의 closed-loop 30~100Hz 실시간 제약 등 **ACE-MoE의 메커니즘(ACE caching, time-budgeted skipping/prefetching, fused kernel)이 직접 가치를 창출할 영역**이 뚜렷하게 존재한다는 관찰에서 나왔습니다.
+이 future direction은 (a) VLM의 visual token이 sequence의 86.2%를 차지하면서 attention 기여는 11.4%에 그치는 극단적 비대칭, (b) VLM prefill이 LLM 대비 6-22× 길어지는 TTFT explosion, (c) VLA의 closed-loop 30-100Hz 실시간 제약 등 **ACE-MoE의 메커니즘(ACE caching, time-budgeted skipping/prefetching, fused kernel)이 직접 가치를 창출할 영역**이 뚜렷하게 존재한다는 관찰에서 나왔습니다.
 
 최근 6개월 arxiv 조사 결과:
 - **VLA serving 최적화** 관심이 2025-09 이후 집중 연구 분야로 부상 (ActionFlow, HyperVLA, CogVLA NeurIPS'25, A1, SemanticVLA 등)
@@ -32,7 +32,7 @@ ACE-MoE(ICCAD'26 submission)의 결론부에는 다음이 명시되어 있습니
 - **리뷰 점수 (refined, post-arxiv augmentation)**: Novelty 8 · Differentiation 9 · Impact 9 · **평균 8.5 / 10**
 
 ### 핵심 가설
-VLA 모델은 robotics control loop의 **hard real-time(30~100 Hz)** 제약을 가집니다. ACE-MoE의 time-budgeted skipping을 **action chunk별 hard latency budget**(예: 33 ms = 30 Hz)으로 재정의하고 visual context와 action prediction expert에 modality-aware ACE를 적용하면, action decoding latency를 30~50% 단축하면서 task success rate를 95% 이상 유지할 수 있습니다.
+VLA 모델은 robotics control loop의 **hard real-time(30-100 Hz)** 제약을 가집니다. ACE-MoE의 time-budgeted skipping을 **action chunk별 hard latency budget**(예: 33 ms = 30 Hz)으로 재정의하고 visual context와 action prediction expert에 modality-aware ACE를 적용하면, action decoding latency를 30-50% 단축하면서 task success rate를 95% 이상 유지할 수 있습니다.
 
 ### 접근법
 1. **Hard budget = `1/control_freq`** 명시적 설정 (예: 33 ms).
@@ -46,10 +46,10 @@ VLA 모델은 robotics control loop의 **hard real-time(30~100 Hz)** 제약을 �
 ### 예상 개선 (보수적)
 | 지표 | Baseline | 목표 | 적용 조건 |
 |------|---------|------|---------|
-| Per-action latency | OpenVLA+ACE-MoE direct port ≈ 50 ms | **25~35 ms** | RTX 4090, 7B class |
-| Task success rate (SimplerEnv) | direct port 대비 -5~-10% | **-1~-3%** | manipulation |
-| Throughput (actions/sec/GPU) | 1.0× | **1.4~2.0×** | mixed batch |
-| Memory footprint | 100% | **50~65%** | 50% expert cache |
+| Per-action latency | OpenVLA+ACE-MoE direct port ≈ 50 ms | **25-35 ms** | RTX 4090, 7B class |
+| Task success rate (SimplerEnv) | direct port 대비 −5% ~ −10% | **−1% ~ −3%** | manipulation |
+| Throughput (actions/sec/GPU) | 1.0× | **1.4-2.0×** | mixed batch |
+| Memory footprint | 100% | **50-65%** | 50% expert cache |
 
 **적용 범위**: VLA (OpenVLA, RT-2-X, Octo, Pi-0) + MoE 변형. Manipulation/navigation.
 **미적용**: pure simulation only, language-only robots.
@@ -62,13 +62,13 @@ VLA 모델은 robotics control loop의 **hard real-time(30~100 Hz)** 제약을 �
 - **Datasets**: SimplerEnv (Bridge / RoboCasa), LIBERO
 - **Metrics**: end-to-end latency, control frequency 달성도, task success rate, action chunk consistency
 - **Baselines**: vanilla OpenVLA, ACE-MoE direct port, FlexGen-style offloading
-- **Expected runtime**: ~6 days (sim 평가 포함)
+- **Expected runtime**: ≈6 days (sim 평가 포함)
 - **Fallback**: simulator only, real robot은 향후 협력
 
 ### 최신 관련 연구 (Closest competitors)
 | Paper | arXiv / Venue | Date | 관계 | 차별점 |
 |-------|-------------|------|------|------|
-| **AdaMoE-VLA** | [2510.14300](https://arxiv.org/abs/2510.14300) · [OpenReview](https://openreview.net/forum?id=cNZ5W1f4tE) · [GitHub](https://github.com/swjTheDad/AdaMoE-VLA) | 2025-10 | **가장 직접적 VLA-MoE 선례** (training-time) | Dense VLA의 FFN을 sparse MoE로 대체. **Scale Adapter**로 expert selection/weighting decouple → "collaborative" utilization. 4 routed experts example, top-K=1~N 설정 가능. LIBERO +1.8%, RoboTwin +9.3%, real-world +21.5%. Base: OpenPI(Pi-0) 기반. **Inference serving 최적화는 미제시** — ACE-VLA와 orthogonal하게 결합. 상세는 아래 Implementation Roadmap 섹션 참조. |
+| **AdaMoE-VLA** | [2510.14300](https://arxiv.org/abs/2510.14300) · [OpenReview](https://openreview.net/forum?id=cNZ5W1f4tE) · [GitHub](https://github.com/swjTheDad/AdaMoE-VLA) | 2025-10 | **가장 직접적 VLA-MoE 선례** (training-time) | Dense VLA의 FFN을 sparse MoE로 대체. **Scale Adapter**로 expert selection/weighting decouple → "collaborative" utilization. 4 routed experts example, top-K=1-N 설정 가능. LIBERO +1.8%, RoboTwin +9.3%, real-world +21.5%. Base: OpenPI(Pi-0) 기반. **Inference serving 최적화는 미제시** — ACE-VLA와 orthogonal하게 결합. 상세는 아래 Implementation Roadmap 섹션 참조. |
 | **ActionFlow** | 2512.20276 | 2025-12 | strong competitor (pipeline) | Cross-Request Pipelining으로 2.55× FPS on OpenVLA-7B. **Expert-level skip/cache 없음**. ACE-VLA는 expert axis 추가 |
 | **HyperVLA** | 2510.04898 | 2025-10 | alternative | Hypernetwork로 90× param, 120× speedup. 아키텍처 변경 vs runtime scheduling — orthogonal |
 | **CogVLA** | 2508.21046 | 2025-08 (**NeurIPS'25**) | related | Instruction-driven sparsification 2.8× latency. ACE-VLA는 runtime expert scheduling — 결합 가능 |
@@ -86,7 +86,7 @@ VLA 모델은 robotics control loop의 **hard real-time(30~100 Hz)** 제약을 �
 
 AdaMoE-VLA 공식 checkpoint 미공개 상태이므로, 본 lab에서 직접 훈련 후 ACE-VLA inference 최적화를 얹는 2단계 계획을 권장합니다.
 
-#### Step A. AdaMoE-VLA base 재현 (2~4주 추정)
+#### Step A. AdaMoE-VLA base 재현 (2-4주 추정)
 
 **Starting point 선택지 (권장 순)**:
 1. **공식 GitHub + Pi-0 base** (권장):
@@ -102,22 +102,22 @@ AdaMoE-VLA 공식 checkpoint 미공개 상태이므로, 본 lab에서 직접 훈
 **Base 모델 크기 & 자원**:
 | 옵션 | Base 파라미터 | Active 추정 | Training 가능 서버 |
 |------|-------------|-----------|-----------------|
-| Pi-0 + AdaMoE 4 experts | ~3B dense → ~6-8B total | ~3B | #5 (RTX Pro 6000 96GB) 단일 GPU + LoRA |
-| Pi-0 + AdaMoE 8 experts | ~3B dense → ~12-15B total | ~3-4B | #5 with 4-bit optimizer state |
-| OpenVLA-7B + AdaMoE 4 experts | ~7B dense → ~14-18B total | ~7B | #4 (4090×2) with FSDP, 또는 #5 with LoRA |
+| Pi-0 + AdaMoE 4 experts | ≈3B dense → ≈6-8B total | ≈3B | #5 (RTX Pro 6000 96GB) 단일 GPU + LoRA |
+| Pi-0 + AdaMoE 8 experts | ≈3B dense → ≈12-15B total | ≈3-4B | #5 with 4-bit optimizer state |
+| OpenVLA-7B + AdaMoE 4 experts | ≈7B dense → ≈14-18B total | ≈7B | #4 (4090×2) with FSDP, 또는 #5 with LoRA |
 
 **Training time 추정** (LIBERO 기준, full finetune):
-- 논문이 H100 기준 시간 미공개 — 유사 VLA 훈련(OpenVLA LIBERO finetune = 8×H100, 1~2일 기준)을 기준으로 scaling:
-- **#5 단일 RTX Pro 6000 96GB + LoRA**: 5~10일 (보수적)
-- **#4 4090×2 + FSDP + gradient checkpointing**: 10~15일
+- 논문이 H100 기준 시간 미공개 — 유사 VLA 훈련(OpenVLA LIBERO finetune = 8×H100, 1-2일 기준)을 기준으로 scaling:
+- **#5 단일 RTX Pro 6000 96GB + LoRA**: 5-10일 (보수적)
+- **#4 4090×2 + FSDP + gradient checkpointing**: 10-15일
 - **#5 full finetune (no LoRA)**: 8-12일
-- *위험 요소*: RoboTwin 데이터는 LeRobot format 변환 비용 추가 (~2-3일 engineering)
+- *위험 요소*: RoboTwin 데이터는 LeRobot format 변환 비용 추가 (-2-3일 engineering)
 
 **재현 시 우선 검증 metric**:
 - LIBERO Goal/Object/Spatial task success rate가 AdaMoE-VLA paper 수치(+1.8% over dense baseline) 수준에 도달하는지
 - Scale Adapter 제거 시 accuracy degradation 재현 (ablation)
 
-#### Step B. ACE-VLA 적용 (2~3주 추정)
+#### Step B. ACE-VLA 적용 (2-3주 추정)
 
 AdaMoE-VLA base 위에 ACE-VLA의 7가지 기법 구현:
 1. Hard budget 33ms 설정 + measurement infrastructure (1주)
@@ -125,7 +125,7 @@ AdaMoE-VLA base 위에 ACE-VLA의 7가지 기법 구현:
 3. Visual freshness scoring + safety whitelist + schedulability analysis (0.5주)
 4. SimplerEnv/LIBERO inference latency/success rate 측정 (0.5주)
 
-**총 소요 (Step A + B)**: 보수적으로 5~7주 (1인 집중 연구 기준).
+**총 소요 (Step A + B)**: 보수적으로 5-7주 (1인 집중 연구 기준).
 
 #### 구현 리스크 & 완화
 
@@ -162,7 +162,7 @@ AdaMoE-VLA base 위에 ACE-VLA의 7가지 기법 구현:
 - **리뷰 점수 (refined, post-arxiv augmentation)**: Novelty 7.5 · Differentiation 8 · Impact 8.5 · **평균 8.0 / 10**
 
 ### 핵심 가설
-VLM-MoE에서 **visual token skip**과 **expert skip**은 공유된 PCIe/HBM bandwidth budget을 두고 경쟁합니다. 두 axis를 joint하게 layer-wise budget allocation으로 풀면, 단일 axis 최적화 대비 latency를 추가 20~30% 단축하면서 iso-accuracy Pareto 15~25% gain을 얻을 수 있습니다.
+VLM-MoE에서 **visual token skip**과 **expert skip**은 공유된 PCIe/HBM bandwidth budget을 두고 경쟁합니다. 두 axis를 joint하게 layer-wise budget allocation으로 풀면, 단일 axis 최적화 대비 latency를 추가 20-30% 단축하면서 iso-accuracy Pareto 15-25% gain을 얻을 수 있습니다.
 
 ### 접근법
 1. **Layer별 (token attention compute + expert transfer)** 두 cost 모델링, 총 layer budget `T_layer`.
@@ -175,10 +175,10 @@ VLM-MoE에서 **visual token skip**과 **expert skip**은 공유된 PCIe/HBM ban
 ### 예상 개선 (보수적)
 | 지표 | Baseline | 목표 | 적용 조건 |
 |------|---------|------|---------|
-| TTFT (FHD VLM-MoE) | ACE-MoE 단일 ≈ 800 ms | **500~650 ms** | BS=4-8 |
-| Decode throughput | 단일 ≈ 600 tok/s | **700~800 tok/s** | BS=1 |
-| Accuracy (MMMU / ChartQA) | baseline | **-0.5~-1.0%** | 50% combined retention |
-| Pareto gain vs naive I1+I2 | — | **15~25%** | iso-accuracy |
+| TTFT (FHD VLM-MoE) | ACE-MoE 단일 ≈ 800 ms | **500-650 ms** | BS=4-8 |
+| Decode throughput | 단일 ≈ 600 tok/s | **700-800 tok/s** | BS=1 |
+| Accuracy (MMMU / ChartQA) | baseline | **-0.5--1.0%** | 50% combined retention |
+| Pareto gain vs naive I1+I2 | — | **15-25%** | iso-accuracy |
 
 **적용 범위**: VLM-MoE + dense VLM에서 ACE-MoE-style 동시 적용 시나리오.
 **미적용**: 단일 modality LLM(불필요), VLA closed-loop(별도 budget).
@@ -190,12 +190,12 @@ VLM-MoE에서 **visual token skip**과 **expert skip**은 공유된 PCIe/HBM ban
 - **Datasets**: MMMU, ChartQA, MS-COCO captioning
 - **Metrics**: latency-accuracy Pareto curve vs 각 baseline
 - **Baselines**: I1 alone, I2 alone, I1+I2 naive stack, ACE-MoE original, SARATHI
-- **Expected runtime**: ~5 days (Pareto 측정 포함)
+- **Expected runtime**: ≈5 days (Pareto 측정 포함)
 
 ### 최신 관련 연구 (Closest competitors)
 | Paper | arXiv / Venue | Date | 관계 | 차별점 |
 |-------|-------------|------|------|------|
-| **DyMoE** | 2603.19172 | 2026-03 | strongest competitor | depth-adaptive + importance + mixed-precision + look-ahead prefetching. **Edge TTFT 3.44~22.7× 개선**. **Token axis 미포함** — 본 idea의 차별 포인트 |
+| **DyMoE** | 2603.19172 | 2026-03 | strongest competitor | depth-adaptive + importance + mixed-precision + look-ahead prefetching. **Edge TTFT 3.44-22.7× 개선**. **Token axis 미포함** — 본 idea의 차별 포인트 |
 | **Dynamic Expert Quantization** | 2511.15015 | 2025-11 | budget-constrained formulation 선례 | "online budget-constrained precision allocation" 정식화. Single-axis (precision only) |
 | **Context-Aware MoE on CXL-NDP** | 2512.04476 | 2025-12 | per-expert 1-4 bit | 8.7× decoding. CXL-NDP specific |
 | **SliceMoE** | 2512.12990 | 2025-12 | bit-sliced caching | slice-level granularity, 2.37-2.85× energy |
@@ -235,10 +235,10 @@ ACE-MoE의 cumulative expert score를 **modality dimension(visual/text)**으로 
 ### 예상 개선 (보수적)
 | 지표 | Baseline | 목표 | 적용 조건 |
 |------|---------|------|---------|
-| Cache ratio (iso-accuracy) | 50% (ACE-MoE) | **25~35%** | VLM-MoE, batch ≥ 4 |
-| Prefill latency vs ACE-MoE single | 1.0× | **0.85~0.95×** | cache ratio matched |
-| Memory footprint | 100% | **60~75%** | 50% cache ratio |
-| Accuracy (MMMU / VQAv2) | baseline | **-0.5~-1.0%** | 50% cache |
+| Cache ratio (iso-accuracy) | 50% (ACE-MoE) | **25-35%** | VLM-MoE, batch ≥ 4 |
+| Prefill latency vs ACE-MoE single | 1.0× | **0.85-0.95×** | cache ratio matched |
+| Memory footprint | 100% | **60-75%** | 50% cache ratio |
+| Accuracy (MMMU / VQAv2) | baseline | **-0.5--1.0%** | 50% cache |
 
 **적용 범위**: VLM-MoE (MoE-LLaVA, Uni-MoE, DeepSeek-VL2, LLaVA-Mixtral, future Qwen3-VL-MoE), batch ≥ 4.
 **미적용**: Dense VLM (다른 idea), 단일 modality LLM.
@@ -251,7 +251,7 @@ ACE-MoE의 cumulative expert score를 **modality dimension(visual/text)**으로 
 - **Datasets**: MMMU, ScienceQA, VQAv2, ChartQA
 - **Metrics**: cache ratio별 accuracy curve, TTFT, per-layer expert miss rate
 - **Baselines**: ACE-MoE direct port, MoE-LLaVA original serving, Edge-MoE, vLLM Mixtral default
-- **Expected runtime**: ~5-7 days
+- **Expected runtime**: ≈5-7 days
 
 ### 최신 관련 연구 (Closest competitors)
 | Paper | arXiv / Venue | Date | 관계 | 차별점 |
