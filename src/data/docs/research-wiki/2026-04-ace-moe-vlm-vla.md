@@ -68,24 +68,91 @@ VLA 모델은 robotics control loop의 **hard real-time(30~100 Hz)** 제약을 �
 ### 최신 관련 연구 (Closest competitors)
 | Paper | arXiv / Venue | Date | 관계 | 차별점 |
 |-------|-------------|------|------|------|
-| **ActionFlow** | 2512.20276 | 2025-12 | strongest competitor | Cross-Request Pipelining으로 2.55× FPS on OpenVLA-7B. **Expert-level skip/cache 없음**. ACE-VLA는 expert axis 추가 |
+| **AdaMoE-VLA** | [2510.14300](https://arxiv.org/abs/2510.14300) · [OpenReview](https://openreview.net/forum?id=cNZ5W1f4tE) · [GitHub](https://github.com/swjTheDad/AdaMoE-VLA) | 2025-10 | **가장 직접적 VLA-MoE 선례** (training-time) | Dense VLA의 FFN을 sparse MoE로 대체. **Scale Adapter**로 expert selection/weighting decouple → "collaborative" utilization. 4 routed experts example, top-K=1~N 설정 가능. LIBERO +1.8%, RoboTwin +9.3%, real-world +21.5%. Base: OpenPI(Pi-0) 기반. **Inference serving 최적화는 미제시** — ACE-VLA와 orthogonal하게 결합. 상세는 아래 Implementation Roadmap 섹션 참조. |
+| **ActionFlow** | 2512.20276 | 2025-12 | strong competitor (pipeline) | Cross-Request Pipelining으로 2.55× FPS on OpenVLA-7B. **Expert-level skip/cache 없음**. ACE-VLA는 expert axis 추가 |
 | **HyperVLA** | 2510.04898 | 2025-10 | alternative | Hypernetwork로 90× param, 120× speedup. 아키텍처 변경 vs runtime scheduling — orthogonal |
 | **CogVLA** | 2508.21046 | 2025-08 (**NeurIPS'25**) | related | Instruction-driven sparsification 2.8× latency. ACE-VLA는 runtime expert scheduling — 결합 가능 |
 | **A1** | 2604.05672 | 2026-04 | budget-aware baseline | 72% per-episode latency reduction via budget-aware truncated flow matching. Episode-level vs chunk-level budget 차별 |
-| **HEX** | 2604.07993 | 2026-04 | VLA-MoE 선례 | Mixture-of-Experts for humanoid. **VLA에 MoE 적용 가능성 입증**, ACE-VLA의 retrofit recipe 근거 |
+| **HEX** | 2604.07993 | 2026-04 | humanoid MoE | Mixture-of-Experts Unified Proprioceptive Predictor for humanoid. 전체 VLA stack이 아닌 proprioceptive 전용 MoE |
 | **HY-Embodied-0.5** | 2604.07430 | 2026-04 | trend 근거 | Tencent 2B/32B embodied foundation, Mixture-of-Transformers |
 | **SemanticVLA** | 2511.10518 | 2025-11 | visual-side pruning | 2.7× latency reduction. Orthogonal |
 | **Action-aware Dynamic Pruning** | 2509.22093 | 2025-09 | token pruning | action stage별 pruning, 1.35× |
 | **Adaptive Action Chunking** | 2604.04161 | 2026-04 | chunk 관련 | action entropy 기반 chunk size. ACE-VLA의 chunk boundary 결정에 채택 검토 |
 | **DA-PTQ / QVLA / HBVLA** | 2602-2604 | 2026 | VLA quantization | weight quantization, ACE-VLA와 orthogonal |
 
-### 리스크
+> **보강 관찰 (2026-04-21)**: 실제 VLA+MoE 연구는 공개된 것이 매우 드뭅니다(AdaMoE-VLA, HEX, HY-Embodied 정도). 대부분 dense architecture이거나 MoE를 "judgment 용도로 곁가지로 붙이는" 수준에 머물러 있습니다. 이는 **ACE-VLA의 blue-ocean 특성을 유지하면서 AdaMoE-VLA를 base training recipe로 활용**하는 positioning을 가능하게 합니다. AdaMoE-VLA는 training-time architecture, ACE-VLA는 inference-time serving — 두 연구가 **strictly complementary** 합니다.
+
+### Implementation Roadmap — AdaMoE-VLA base 활용 재현 전략
+
+AdaMoE-VLA 공식 checkpoint 미공개 상태이므로, 본 lab에서 직접 훈련 후 ACE-VLA inference 최적화를 얹는 2단계 계획을 권장합니다.
+
+#### Step A. AdaMoE-VLA base 재현 (2~4주 추정)
+
+**Starting point 선택지 (권장 순)**:
+1. **공식 GitHub + Pi-0 base** (권장):
+   - `git clone --recurse-submodules https://github.com/swjTheDad/AdaMoE-VLA.git`
+   - `GIT_LFS_SKIP_SMUDGE=1 uv sync`
+   - Pi-0 pretrained weight 로드 (Physical Intelligence 공개 checkpoint)
+   - `finetune.sh`를 LIBERO 데이터로 수정하여 실행
+2. **OpenVLA-7B 기반 retrofit** (alternative):
+   - AdaMoE-VLA의 core 메커니즘(FFN → MoE + Scale Adapter)을 OpenVLA의 Llama2-7B backbone에 porting
+   - Pi-0보다 model/codebase가 널리 알려져 있어 디버깅 용이
+   - 단, paper 결과와 직접 비교 불가 — 방법론 복제 검증 차원
+
+**Base 모델 크기 & 자원**:
+| 옵션 | Base 파라미터 | Active 추정 | Training 가능 서버 |
+|------|-------------|-----------|-----------------|
+| Pi-0 + AdaMoE 4 experts | ~3B dense → ~6-8B total | ~3B | #5 (RTX Pro 6000 96GB) 단일 GPU + LoRA |
+| Pi-0 + AdaMoE 8 experts | ~3B dense → ~12-15B total | ~3-4B | #5 with 4-bit optimizer state |
+| OpenVLA-7B + AdaMoE 4 experts | ~7B dense → ~14-18B total | ~7B | #4 (4090×2) with FSDP, 또는 #5 with LoRA |
+
+**Training time 추정** (LIBERO 기준, full finetune):
+- 논문이 H100 기준 시간 미공개 — 유사 VLA 훈련(OpenVLA LIBERO finetune = 8×H100, 1~2일 기준)을 기준으로 scaling:
+- **#5 단일 RTX Pro 6000 96GB + LoRA**: 5~10일 (보수적)
+- **#4 4090×2 + FSDP + gradient checkpointing**: 10~15일
+- **#5 full finetune (no LoRA)**: 8-12일
+- *위험 요소*: RoboTwin 데이터는 LeRobot format 변환 비용 추가 (~2-3일 engineering)
+
+**재현 시 우선 검증 metric**:
+- LIBERO Goal/Object/Spatial task success rate가 AdaMoE-VLA paper 수치(+1.8% over dense baseline) 수준에 도달하는지
+- Scale Adapter 제거 시 accuracy degradation 재현 (ablation)
+
+#### Step B. ACE-VLA 적용 (2~3주 추정)
+
+AdaMoE-VLA base 위에 ACE-VLA의 7가지 기법 구현:
+1. Hard budget 33ms 설정 + measurement infrastructure (1주)
+2. Expert-level cumulative score + ACE caching integration (1주)
+3. Visual freshness scoring + safety whitelist + schedulability analysis (0.5주)
+4. SimplerEnv/LIBERO inference latency/success rate 측정 (0.5주)
+
+**총 소요 (Step A + B)**: 보수적으로 5~7주 (1인 집중 연구 기준).
+
+#### 구현 리스크 & 완화
+
+| 리스크 | 영향 | 완화 |
+|--------|------|------|
+| AdaMoE-VLA checkpoint 미공개 | High — 재현 비용 | Pi-0 또는 OpenVLA base로 방법론만 복제. Paper 결과와 가까워지는지를 검증 기준으로 삼음 |
+| LIBERO + RoboTwin 데이터 license/접근 | Mid | LIBERO는 공개, RoboTwin만 별도 확인 필요 |
+| Scale Adapter + ACE caching 상호작용 | Mid | Scale Adapter는 expert weighting 신호를 제공 — ACE의 cumulative score 계산에 scale value를 이미 반영할 수 있어 **오히려 ACE-VLA를 단순화**할 가능성 |
+| Training 기간 중 컴퓨팅 unavailability | Mid | Step A와 Step B를 분리하여 Step B는 AdaMoE-VLA 공식 checkpoint가 혹시 공개되면 (OpenReview decision 이후 가능성) fast-track |
+| Pi-0 vs OpenVLA 양쪽 검증 부담 | Mid | Pi-0 하나로 집중, OpenVLA는 ACE-VLA의 generality 실험에서만 ablation |
+
+#### Checkpoint/Dataset 확보 체크리스트
+
+- [ ] Pi-0 공개 pretrained weight 확인 (Physical Intelligence 페이지)
+- [ ] LIBERO 데이터셋 다운로드 (LeRobot hub)
+- [ ] RoboTwin 데이터셋 접근 권한 확인 (필요 시)
+- [ ] SimplerEnv 설치 (real robot eval 미지원 대안)
+- [ ] AdaMoE-VLA OpenReview decision 모니터링 — accept 시 공식 checkpoint 공개 기대
+
+### 리스크 (전체)
 | 리스크 | 완화 방안 |
 |--------|---------|
-| VLA-MoE 공개 모델 부재 | OpenVLA를 expert로 분해(retrofit). Contribution의 일부 |
+| VLA-MoE 공개 모델 부재 | **AdaMoE-VLA 재현** (Pi-0 base)을 첫 step으로 편입. Ablation으로 contribution 명확화 |
 | Hard real-time guarantee | Probabilistic SLO(P99 < budget)로 완화 |
 | Safety-critical skip 실패 | Whitelisted "always-on" expert 명시 |
 | Real robot eval 부재 | Sim-only로 PoC, real robot은 future |
+| AdaMoE-VLA 결과 재현 실패 | OpenVLA base로 스위치 + 저자 연락 (GitHub issue) |
 
 ---
 
