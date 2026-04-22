@@ -14,6 +14,150 @@
 
 ---
 
+## Executive Summary
+
+> 연구자/학생이 Phase 1~1'' 상세 로그를 읽기 전 **Top-M 아이디어의 구조와 근거, 그리고 Exploration 과정에서 나온 모든 아이디어의 연구 GAP·제안 overview·미선정 사유**를 한눈에 파악할 수 있도록 정리한 요약. 상세 내용은 Phase 별 섹션 (Section 3 Phase 1 / Section 4 Phase 2 / Section 5 Phase 1' / Section 6 Phase 2' / Section 7 Phase 1'') 참조.
+
+### Top 1 — F2 Quantization-Robust Layered Defense for VLM-PIM (평균 score **8.43**, Phase 2' 판정: **Accept**, Target Venue: **HPCA 2026 / MICRO 2026**)
+
+**기본 전제 (Premise)**
+- VLM W8A8 양자화 시 layer-wise visual attention 이 5.73% → 72.58% (+66pp) 로 extreme collapse (본 연구 E5 측정).
+- Weight-only INT4/INT8 은 Δ<0.1pp 로 pattern 보존 — **activation quantization** 이 분포 파괴의 핵심 (FP8-Dynamic 도 -4.17pp opposite collapse).
+- FP16 L27 Q·Kᵀ > 65504 token 3.2% overflow — VLM 긴 sequence (L≥1000) 에서 LM head 직전 sharpened representation 의 FP16 5-bit exponent 한계.
+- Aggregate corr 0.996 (stable) vs individual sample min 0.357 (catastrophic masking) — per-sample fragility 가 aggregate 평균에 숨음.
+
+**기존 연구가 touch 하지 못한 GAP**
+- MBQ ([arXiv:2412.19509](https://arxiv.org/abs/2412.19509), CVPR'25) 는 gradient sensitivity (vision 10× 둔감) 만 정량화, layer-wise attention ratio 미측정. "W8A8 nearly lossless" 는 task accuracy 기준이며 attention distribution 붕괴와 양립.
+- P3-LLM ([arXiv:2511.06838](https://arxiv.org/abs/2511.06838)) 은 static per-layer precision + calibration-free smoothing — **runtime collapse detection** 및 BF16 fallback path 부재.
+- AKVQ-VL ([arXiv:2501.15021](https://arxiv.org/abs/2501.15021)), VL-Cache ([arXiv:2410.23317](https://arxiv.org/abs/2410.23317)) 는 layer-level policy — **sample-level granularity** 미탐구.
+- LLM.int8 ([arXiv:2208.07339](https://arxiv.org/abs/2208.07339)) 의 outlier → softmax mass 영향 관찰은 text-LLM 전용 + extreme 값 (+66pp) 보고 없음.
+- Post-literature survey: Qwen-VL + W8A8 + attention ratio 정량화는 **완전 공백**. +66pp collapse 선행 보고 부재 → **measurement contribution**.
+
+**제안 기법 Overview**
+- (HW layer granularity) AttAcc simulator macro 내부에 per-layer KL comparator (W8A8 output vs weight-only-INT8 shadow output) 추가 → KL > threshold 시 해당 layer 를 BF16 dedicated path 로 escalation.
+- (HW numerical safety) L27 self-attn 의 Q·Kᵀ abs_max 가 FP16 max 근접 시 즉시 BF16 rescue.
+- (SW sample granularity) L0-L1 probe 로 per-sample fragility score 계산 (LR classifier, 입력 feature ≤10차원, <3% FLOPs). W8A8 shadow inference 를 처음 4 layer 만 실행 → weight-only-INT8 와의 KL divergence 로 fragility 분류.
+- (Policy dispatcher) stable 85% → 4-B Layer-Adaptive PIM placement / fragile 10-15% → L17-21 peak layer GPU HBM 강제 + 나머지 PIM / highly fragile 2% → full GPU attn.
+- (cross-granularity layered defense) HW detector (layer) + SW gating (sample) 이 서로 다른 granularity 에서 복합 방어.
+
+**예상 효과 (보수)**
+| 지표 | Baseline | F2 목표 | 조건 |
+|------|----------|--------|------|
+| W8A8 MMMU accuracy drop | -12.4% (collapse) | **-1.5~-2.5%** | Qwen3-VL-4B 에서 detector + BF16 fallback 활성 |
+| FP16 L27 overflow rate | 3.2% token | **<0.3%** (10× reduction) | L≥1000 long-sequence, bf16 escalation |
+| Per-sample worst-case corr | 0.357 (individual min) | **0.70-0.80** (2× robustness) | 10-15% fragile 요청 conservative fallback |
+| Macro area overhead | — | **<3%** | RTL-level estimation on AttAcc sim |
+| Latency overhead | — | **<5%** | L0-L1 probe + async KL |
+
+**Scoring 및 이유**
+| Axis | Score | 근거 |
+|------|-------|------|
+| Novelty | **8.5** | (a) +66pp W8A8 collapse 정량화 **최초** (post-literature survey 검증, MBQ/Q-VLM/VLMQ/MQuant/AKVQ-VL/LLM.int8 전체 측정 부재); (b) 3-mechanism triangulation (outlier + sink + rotation-invariance) 첫 통합 설명; (c) per-sample fragility gating 축 empty. |
+| Differentiation | **8.5** | HW (layer granularity) × SW (sample granularity) **cross-granularity layered defense** 는 VLM PIM 문헌에 없음. P3-LLM (static), MBQ (calibration), AKVQ-VL (layer-level) 모두 single-granularity 로 orthogonal. |
+| Impact | **8.3** | Edge VLM 배포 urgent (MXFP4/NVFP4 precision 전쟁 2026), Samsung/SK Hynix 차세대 product roadmap 직결. HW + quantization + systems 3개 community cross-citation 가능. |
+| 전문가 합의 | Algo ✅ / HW ✅ / System ◯ | Algo: per-sample fragility probe 는 알고리즘 기여. HW: KL detector macro + BF16 path 는 전형적 HW 기여. System: HW-SW 인터페이스 프로토콜 명시 조건부 Accept. |
+
+**→ Phase 상세**: [Section 5 F2](#section-5--phase-1-전문가-1차-refinement--fusion) / [Section 6 F2 score delta](#section-6--phase-2-2차-리뷰--6개월-fresh-유사연구-재점검) / [Section 10.5 post-literature survey](#section-105--post-hoc-literature-survey-w8a8-visual-attention-collapse-선행-보고-검증)
+
+---
+
+### Top 2 — F1 DeepStack-Native Prefill-Decode Pipeline with 6-Tier KV Tiering (평균 score **7.60**, Phase 2' 판정: **Conditional Accept**, Target Venue: **ASPLOS 2026 / MLSys 2026**)
+
+**기본 전제 (Premise)**
+- Qwen3-VL DeepStack 아키텍처는 ViT 중간 layer 출력을 LLM [L4, L8, L12] 에 inject — visual 정보가 self-attn 으로 확산되며 L17-21 peak (24.5%) 형성 (본 연구 E4 측정).
+- E1 측정: chunked prefill C≤32 구간에서 Arithmetic Intensity < 60 → 강 memory-bound. E2: C=16 에서 PIM attn 50× / E2E 1.53× gain.
+- Video L=8948 에서 PIM 0.81× regression (break-even ≈ L 2K).
+- 5-model 비교 (Qwen3-VL/Qwen2.5-VL/InternVL3/Qwen3.5/Mllama) — dense family dense band 공통, cross-attn/hybrid linear 는 아키텍처별 대응 필요.
+
+**기존 연구가 touch 하지 못한 GAP**
+- AttAcc ([ASPLOS 2024], 본 연구 baseline) 은 **decode-only PIM** — prefill 은 simulator 상에서 GPU route, chunked prefill PIM 평가 불가.
+- STARC ([arXiv:2505.05772](https://arxiv.org/abs/2505.05772)) 는 AttAcc sim 공유하지만 token clustering bank remapping — **layer-topology dispatch** 와 orthogonal axis.
+- VLCache ([arXiv:2512.12977](https://arxiv.org/abs/2512.12977)) 는 attention sparsity 기반 tier — **DeepStack inject topology 기반 tier** 미탐구.
+- VL-Cache ([arXiv:2410.23317](https://arxiv.org/abs/2410.23317)) 는 layer-adaptive budget SW — HW placement 축 부재.
+- Jenga ([arXiv:2503.18292](https://arxiv.org/abs/2503.18292)) 는 generic heterogeneous arch — **VLM DeepStack-specific vision injection** 미대응.
+- PAM ([arXiv:2602.11521](https://arxiv.org/abs/2602.11521)) 은 text-LLM 3-tier — **visual token 고유 비대칭** 미대응.
+
+**제안 기법 Overview**
+- (Simulator extension) AttAcc 4-file mod (config/system/model/ramulator_wrapper) — 본 연구 P1 작업과 공통 인프라. Chunked prefill m=1 GEMV decomposition 으로 PIM m=1 accumulator 구조 재사용.
+- (6-tier KV placement) DeepStack inject [L4, L8, L12] + L17-21 peak + L27 overflow 기준 6-tier 정의: Tier 0 pre-inject (L0-L3) / Tier 1-3 post-inject intermediate / Tier 4 L17-21 peak = GPU HBM full bf16 / Tier 5 L22-L27 tail = BF16 escalation.
+- (AI inflection dispatch) C∈{8,16,32,64} chunk 별 AI 를 측정 후 AI < 60 구간만 PIM route, video L=8948 regression 구간에서 C=8 adaptive fallback.
+- (Per-tier compression) Tier 0/5 INT4 weight-only / Tier 1-3 aggressive eviction 60-80% / Tier 4 GPU HBM bf16 강제 / L27 numerical safety.
+- (Cross-request ViT reuse) 같은 image 의 L4/L8/L12 inject 는 ViT 출력 cache — 4-C 연장.
+- (A3 adapter 흡수) Mllama cross-attn 은 PIM immutable region / Qwen3.5 hybrid linear 는 KV skip — 5-family generalization.
+
+**예상 효과 (보수)**
+| 지표 | Baseline | F1 목표 | 조건 |
+|------|----------|--------|------|
+| E2E prefill latency (Qwen3-VL-4B, L=4096) | AttAcc 1.00× | **0.62-0.69× (1.45-1.60× speedup)** | 672×672, C=16, BS=8 |
+| TTFT (chunked C=16) | AttAcc 1.00× | **0.55-0.65× (1.53-1.80×)** | prefill-dominated workload |
+| Decode throughput | 1.00× | **1.20-1.30×** | decode-heavy |
+| Video L=8948 | 0.81× (regression) | **0.95-1.05× (regression 회복)** | C=8 adaptive fallback |
+| FHD TTFT | 1,285ms | **650-800ms** | BS=8, 1920×1080 |
+
+**Scoring 및 이유**
+| Axis | Score | 근거 |
+|------|-------|------|
+| Novelty | **7.0** | DeepStack inject topology × AI inflection 교집합 tier 는 unique; 단 Focus/V-Rex (HPCA'26) 등 VLM HW accelerator concurrent work 존재 — incremental risk. |
+| Differentiation | **8.0** | STARC (token clustering), VLCache (attention sparsity), Jenga (generic), PAM (text-LLM) 모두 축 다름. C-adaptive dispatcher + video regression 회복은 unique. |
+| Impact | **7.8** | AttAcc follow-up 으로 자연 positioning, production chunked prefill default + VLM 상용화 타이밍 매치. 5-model generalization 으로 industry relevance 확보. DeepStack 의존성이 일반화 risk (Impact 8.0 → 7.8 하향). |
+| 전문가 합의 | Algo ✅ / HW ◯ / System ✅ | Algo: tier boundary 가 학습 대상. HW: 측정 재현성 조건부. System: ASPLOS end-to-end serving 적합. |
+
+**→ Phase 상세**: [Section 5 F1](#section-5--phase-1-전문가-1차-refinement--fusion) / [Section 6 F1 score delta](#section-6--phase-2-2차-리뷰--6개월-fresh-유사연구-재점검)
+
+---
+
+### Exploration 요약 (Top-M 외 모든 아이디어 — Phase 상세 읽기 전 판단용)
+
+> Phase 1 에서 8개 아이디어 도출 → Phase 1' 에서 3 fused (F1/F2/F3) 로 재구성 + 2개 DROP → Phase 2' 에서 F3 Major Revision. 아래는 Phase 1 각 초안 + Fused F3 의 한눈 요약. 상세 미선정 사유 · 재방문 조건은 [Section 9 미선정 로그 (ideas.md 하단)](#section-9--다음-단계-제안) 및 ideas.md 미선정 섹션 참조.
+
+#### H1 DeepStack-Aware Chunked-Prefill PIM Extension — **F1 로 흡수**
+- **연구 GAP**: AttAcc 원본 simulator 가 decode-only — DeepStack inject layer 경계에서 chunk boundary 재조정 + PIM dispatch 동적 스위칭 미탐구.
+- **제안 overview**: AttAcc simulator prefill path 확장, DeepStack inject [4,8,12] 경계에서 chunk size 재계산, PIM route dynamic dispatch. C1 TTFT 정면 해결 (E1 C≤32 AI<60, E2 C=16 E2E 1.53×).
+- **Top-M 반영**: 독립 통과 borderline (Novelty 5, Sarathi-Serve/IANUS 대비 incremental) → A2 흡수하여 **F1 Top 2** 로 승격.
+
+#### H2 Hierarchical 3-Tier KV (GPU HBM / PIM bank / CXL-SSD) — **DROP (SCOOP)**
+- **연구 GAP**: Video L=8948 에서 PIM 0.81× regression — cold KV 를 CXL 로, hot 을 PIM 으로, peak 을 HBM 으로 length-adaptive 계층화 필요.
+- **제안 overview**: 3-tier hierarchy + length-adaptive promotion policy, video long-context 회복 타겟.
+- **미선정 사유**: **PAM ([arXiv:2602.11521](https://arxiv.org/abs/2602.11521), 2026.02) 이 HBM-PIM + DRAM-PIM + SSD-PIM 3-tier + context locality migration + PAMattention 모두 선점 (~75-80% 메커니즘 일치)**. FlexGen/InfiniGen/LoL-PIM 까지 3-tier 포화 — 단독 통과 불가. F1 의 "C-adaptive dispatcher video mode" 로 기능 일부 흡수.
+
+#### H3 Quantization-Robust Pattern-Fallback PIM Macro — **F2 로 흡수**
+- **연구 GAP**: W8A8 pattern collapse 는 HW level 에서 감지/대응할 수 있는가? FP16 L27 overflow 에 HW numerical safety net 있는가?
+- **제안 overview**: W4A16 기본 + per-layer W8A8 collapse detector (KL divergence monitor) + BF16 fallback path HW macro. Runtime dynamic precision escalation.
+- **Top-M 반영**: Novelty 6, Diff 8 독립 통과 후보 → A1 (SW sample granularity) 와 fusion 시 cross-granularity novelty 확보 → **F2 Top 1** 으로 승격.
+
+#### A1 PatternGuard Per-Sample Fragility Gating — **F2 로 흡수**
+- **연구 GAP**: E3 individual min corr 0.357 — aggregate 0.996 stable 뒤에 숨은 per-sample catastrophic masking. VL-Cache/AKVQ-VL 모두 layer-level, per-sample gating 축 empty.
+- **제안 overview**: L0-L1 probe + W8A8 vs weight-only-INT8 KL disagreement signal 로 fragile 10-15% 요청 감지 → conservative GPU fallback. Stable 85% 만 PIM layer-adaptive placement 적용.
+- **Top-M 반영**: Novelty 8 독립 최고점 but H3 와 역할 중복 우려 → H3 (HW layer granularity) + A1 (SW sample granularity) fusion → **F2 Top 1** (cross-granularity layered defense).
+
+#### A2 InjectScope DeepStack-Native 6-Tier KV — **F1 로 흡수**
+- **연구 GAP**: DeepStack inject [4,8,12] + L17-21 peak + L27 overflow 의 구조적 경계를 KV tier boundary 로 활용한 선행 연구 없음.
+- **제안 overview**: 6-tier KV placement (pre-inject / post-inject-1/2/3 / peak / tail) + per-tier precision · eviction rate 차등 + cross-request ViT feature reuse.
+- **Top-M 반영**: VLCache (2025.12) concurrent (~45-55%) → DeepStack topology binding 으로 narrow + H1 (prefill dispatch) 와 fusion → **F1 Top 2**.
+
+#### A3 ArchAware-Adapter Cross-Architecture Unified KV — **F1 evaluation generalization 섹션으로 흡수**
+- **연구 GAP**: 5-model 이질 아키텍처 (dense self-attn / cross-attn / hybrid linear) 를 관통하는 통합 KV policy adapter 부재.
+- **제안 overview**: Mllama cross-attn visual K/V → PIM immutable region, Qwen3.5 hybrid linear → linear layer KV skip. Architecture fingerprint dispatcher.
+- **Top-M 반영**: Novelty 7 but Jenga ([arXiv:2503.18292](https://arxiv.org/abs/2503.18292)) concurrent (~50-60%) + 5-model scale 부족 → 독립 논문 대신 F1 의 "5-family generalization 모듈" 로 흡수.
+
+#### L1 VLM-SLO Admission Control & Dual-Pool Batching — **DROP (SCOOP)**
+- **연구 GAP**: MMMU p99 TTFT 12.4× tail 에 dual-pool (visual-heavy vs text-heavy) + M/G/1 analytical bound admission control 부재.
+- **제안 overview**: 2개 admission pool + classic M/G/1 queueing 기반 SLO-aware admission + chunked-prefill merger.
+- **미선정 사유**: **ModServe ([arXiv:2502.00937](https://arxiv.org/abs/2502.00937), 2025.02) modality-aware disaggregation + RPS-Serve ([arXiv:2603.26498](https://arxiv.org/abs/2603.26498), 2026.03) Rocks/Pebbles/Sand + Dual-Pool Token-Budget Routing ([arXiv:2604.08075](https://arxiv.org/abs/2604.08075), 2026.04) 3편이 80%+ 선점**. VLM serving scheduling 레드오션. F1 dispatcher 내부 "PIM bank contention-aware admission" sub-component 로 일부 흡수 가능.
+
+#### L2 GPU↔PIM KV Migration + VLM-MOESI — **F3 로 refined → F3 는 Major Revision 미선정**
+- **연구 GAP**: 4-C Cross-Request Image Sharing 의 invalidation protocol 부재. Cross-request image 변경 시 공유 KV coherence state machine 없음.
+- **제안 overview**: Image-hash (pHash 64-bit + SimHash verification) granularity 의 MOESI 5-state (Modified/Owned/Exclusive/Shared/Invalid) coherence protocol — GPU-HBM ↔ PIM-DRAM 간.
+- **F3 refine 후 미선정 사유**: Phase 2' 6-month fresh similarity search 에서 **VLCache ([arXiv:2512.12977](https://arxiv.org/abs/2512.12977), 2025.12) 신규 arxiv 논문이 image-hash 기반 encoder/KV cache 재사용을 SGLang 에 구현 + 1.2-16× TTFT speedup 실증 → ~70-75% scoop on refined claim**. Major Revision 판정 — "KV 재사용" 포기 후 "coherence traffic 감소 / invalidation cost / write-back bandwidth" 축으로 전면 피벗 조건부 2-4주 후 재세션 권고.
+
+---
+
+**Top-M 선정 기준 요약** (Section 7 Phase 1'' 에서 적용):
+- Novelty + Differentiation + Impact 평균 ≥ 7.0 + Phase 2' 판정 Accept/Conditional Accept + 실험 feasibility (2×A6000 + AttAcc sim) 충족.
+- F3 는 score 평균 6.17 + Major Revision 판정 → 이번 세션 미선정, narrative 피벗 후 재진입 예정.
+
+---
+
 ## Section 0 — 현재 연구 상태 (PDF 2종 분석)
 
 ### PDF-A: VLM_exploration_PIM_260407.pdf (motivation paper)
