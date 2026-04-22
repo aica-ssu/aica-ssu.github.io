@@ -360,7 +360,260 @@ Top 5 ideas × 2 tracks (Top-tier + Tier-2) = **10 variants** 도출.
 
 ---
 
-## Section 9 — 세션 자체 평가 (Self-Assessment)
+## Section 9 — Top 3 상세 실험 플랜 (5-요소 spec 부합, 2026-04-22 추가)
+
+본 세션의 Top 3 아이디어에 대해 `references/experiment-plan-spec.md` 의 5-요소 (Hardware / Model / Dataset / Simulator-Tools / Ablation-Protocol) 를 구체화한 실험 플랜. 특히 **HRTS** (ASPLOS/MICRO target, 흥미 포인트) 와 **NACK-Gossip Tier-2** (DGX Spark 2-node edge experiment) 에 집중.
+
+---
+
+### 9.1 HRTS — HBM Row-Tile Streaming for Long-Context Video VLM
+
+#### (1) Hardware Environment
+- **Primary (row-hit profiling)**: **RTX 5090 32GB** (Blackwell, HBM3e 1.8 TB/s, L2 128MB) — 연구실 서버 #3 보유. Row-buffer 추정을 위한 micro-architectural profiling 에 적합.
+- **Secondary (long-context 128K+ scope)**: **RTX Pro 6000 96GB** (Blackwell workstation, HBM3e 1.8 TB/s) — 연구실 서버 #5 보유. 128K context 에서 KV footprint ≈ 30GB 수용.
+- **Tertiary (analytical cross-check)**: RTX 4090 24GB × 2 (GDDR6X, L2 72MB) — 연구실 서버 #1,2 보유. GDDR6X vs HBM3e 간 row-hit 차이 검증.
+- **CPU / System memory**: AMD Ryzen 9 7950X + **512GB DDR5** (Pro 6000 서버 기준) — NVMe tier 통과 시 pinned host memory pool.
+- **Storage**: Samsung 990 Pro 4TB NVMe (7.45 GB/s seq read) — cold tier 의 wall-clock 재현.
+- **접근 경로**: **100% 연구실 자체 보유 HW** (cloud 대여 불필요).
+- **역할**: RTX 5090 (row-hit/L2 primary) + Pro 6000 (capacity primary) + RTX 4090 (generalization check).
+
+#### (2) Model
+- **Primary**: **LLaVA-Video-7B** (HuggingFace `lmms-lab/LLaVA-Video-7B-Qwen2`, FP16, temporal continuity 강한 video VLM).
+- **Secondary**: **Qwen2.5-VL-7B-Instruct** (HuggingFace `Qwen/Qwen2.5-VL-7B-Instruct`, FP16, dynamic resolution) — row-hit pattern 의 model-agnostic 검증.
+- **Robustness**: **InternVL3-8B** (HuggingFace `OpenGVLab/InternVL3-8B`, BF16) — 다른 vision encoder architecture 에서 재현.
+- **Precision**: FP16 기본, BF16 cross-check.
+- **Inference code base**: **vLLM v0.7 fork** (PagedAttention block → row-aligned tile 확장) + **FlashAttention-3 fork** (indirection pointer for tri-tier KV).
+- **Fine-tuning 불필요** (training-free inference-time 기법).
+
+#### (3) Dataset / Workload
+- **Long-context video benchmarks (primary)**:
+  - **VideoMME** (long subset, 30-60min) — multi-domain video QA, public.
+  - **MVBench** (20 task, short-to-medium) — multi-aspect.
+  - **LongVideoBench** (1hr+) — extreme long-context stress.
+- **Row-hit microbenchmark (synthetic)**: YouTube-8M subset, 1-hour clip × 10, 1 fps sampling × 256 visual token/frame = 3600 × 256 = 921K token KV footprint.
+- **Scale**: primary 평가 500 video × 5 query = 2500 request, microbenchmark 10 × 128K token = 10M token KV access.
+- **Metrics**:
+  - **Primary**: Decode throughput (tokens/s), TPOT (ms), HBM row-hit rate (%), memory footprint (GB).
+  - **Secondary**: VideoMME accuracy, MVBench accuracy (goal: ≤0.5pp drop).
+
+#### (4) Simulator / Tools
+- **HBM simulator (optional cross-check)**: **Ramulator2** v2.0 (HBM3/HBM3e config) — row-hit analytical model과 실측 cross-validation. **Modification**: HBM3e row-buffer size 파라미터 (typical 8 KB) 를 config 에 명시 추가.
+- **DRAM cross-check**: **DRAMSim3** (JEDEC HBM3 timing).
+- **HW profiler**:
+  - **NVIDIA Nsight Compute**:
+    - `lts__t_sectors_aperture_device_op_read_lookup_hit` (L2 hit rate)
+    - `dram__throughput.avg.pct_of_peak_sustained_elapsed` (HBM BW utilization)
+    - `dram__sectors_read.sum` (row-tile 당 read sectors)
+  - **Nsight Systems**: async stream overlap profile (3-stream orchestration).
+  - **NVML**: 실시간 GPU power + memory footprint tracking.
+- **Serving stack fork**: vLLM v0.7.0 기준 `blocks/paged_attention.py` → `RowTilePagedAttention` 확장. FlashAttention-3 v3.1 에 indirection pointer 추가 (upstream PR 참고).
+- **External libs**: FlashAttention-3 (CUTLASS 3.5), transformers v4.45+, PyTorch 2.5+.
+
+#### (5) Ablation + Measurement Protocol
+- **Factorial design (2^3 = 8-cell)**:
+  - M1 row-aligned KV tile (on/off)
+  - M2 bi-exponential window pin (on/off, off 는 uniform FIFO)
+  - M3 async tri-tier streaming (on/off, off 는 HBM-only eviction)
+- **Parameter sweeps**:
+  - Tile size: {128, 256, 512} token (4KB/8KB/16KB row-tile)
+  - Window α (bi-exp decay): {0.1, 0.3, 0.5, 0.7}
+  - Prefetch depth: {1, 2, 4} layer-ahead
+  - Context length: {32K, 64K, 128K, 256K} token
+- **Baselines (9편, peer-reviewed 67%)**:
+  - vLLM PagedAttention [SOSP 2023, arXiv:2309.06180] [peer-reviewed]
+  - SGLang RadixAttention [NeurIPS 2024, arXiv:2312.07104] [peer-reviewed]
+  - VL-Cache [ICLR 2025 Poster, arXiv:2410.23317] — **OpenReview verified**
+  - StreamingLLM [ICLR 2024, arXiv:2309.17453] [peer-reviewed]
+  - VideoLLM-online [CVPR 2024, arXiv:2406.11816] [peer-reviewed]
+  - H2O [NeurIPS 2023, arXiv:2306.14048] [peer-reviewed]
+  - InfiniGen [OSDI 2024] [peer-reviewed]
+  - Semantic Scheduling [arXiv:2506.12204, 2025-06]
+  - FlexGen [ICML 2023, arXiv:2303.06865] [peer-reviewed]
+- **Main metric**: Decode throughput + TPOT. **Secondary**: HBM row-hit rate, memory footprint, VideoMME accuracy.
+- **Expected runtime**: FlashAttention-3 fork **4주** + vLLM integration **2주** + Ramulator2 calibration **1주** + 실험 (VideoMME/MVBench/LongVideoBench × 3 model × 8-cell ablation) **4주** + paper writing **3주** = **약 14주**.
+- **Fallback mode**:
+  - HBM row boundary reverse-engineering 실패 시 → Nsight Compute `dram__bytes_read.sum` breakdown 으로 row-hit 간접 추정 + Ramulator2 analytical model 로 cross-check.
+  - FlashAttention-3 indirection fork 가 TMA path 와 충돌 시 → TMA 없는 warp-specialized kernel (CUTLASS 3.x template) 로 fallback (성능 5-10% 저하 감수).
+  - NVMe tier 실험 wall-clock 재현 불가 시 → analytical model + 1-tier (HBM+pinned) 실험 우선.
+
+#### Tier-2 variant (IEEE CAL / DATE) 실험 플랜 축소
+- Hardware: RTX 5090 32GB 단일.
+- Model: LLaVA-Video-7B 단일.
+- Dataset: VideoMME long subset 단일 (300 video).
+- Tool: Nsight Compute L2 hit + row-hit counter + Ramulator2 cross-check.
+- Ablation: M1 only (row-aligned tile, tile size {128,256,512} sweep).
+- Metric: HBM row-hit rate +15-25%p, attention kernel latency -8-12%.
+- Runtime: 개발 **2주** + 실험 **2주** + writing **1주** = **5주**.
+
+---
+
+### 9.2 ContextMIG — Reuse Graph × MIG Dual-Issue × Phase Coalesce
+
+#### (1) Hardware Environment
+- **Primary (MIG 실기)**: **AWS p5.48xlarge** (H100 80GB × 8 with MIG support) — 1-2주 단기 대여 (~$30-$50/hr × 40h = $1200-2000 budget). MIG slice reconfiguration 실기 테스트.
+- **Secondary (Green Context + L2)**: **RTX Pro 6000 96GB** (Blackwell) — 연구실 서버 #5. CUDA 12.5+ Green Context API + L2 128MB cudaAccessPolicyWindow.
+- **Tertiary (multi-tenant sim)**: RTX 4090 24GB × 2 (NVLink-less) — 연구실 서버 #4. Low-end dual-GPU 에서 MIG 대체 (Green Context only).
+- **CPU / Memory**: 연구실 서버 기준 AMD EPYC + 512GB DDR5 (p5 는 2TB DRAM 포함).
+- **Network**: 연구실 내부는 10GbE, p5 는 AWS elastic fabric.
+- **접근 경로**: AWS partnership + 연구실 자체 보유 (Pro 6000/4090).
+
+#### (2) Model
+- **Tenant A (primary)**: **Qwen2.5-VL-7B-Instruct** (HuggingFace), FP16.
+- **Tenant B (primary)**: **LLaVA-OneVision-7B** (HuggingFace `lmms-lab/llava-onevision-qwen2-7b-ov`), FP16.
+- **Secondary workload**: **InternVL3-8B**, BF16.
+- **Robustness**: **MiniCPM-V-2.6** (HuggingFace), FP16.
+- **Precision**: FP16 기본.
+- **Inference code base**: **vLLM v0.7 fork** (`ClusterAwareBlockManager` 확장) + **SGLang v0.4** (RadixAttention → semantic-radix 확장).
+- **Fine-tuning 불필요**.
+
+#### (3) Dataset / Workload
+- **Synthetic mixed trace (primary)**: LMMs-Eval 기반 5-class workload (OCR 20% + grounding 20% + caption 20% + chat 20% + reasoning 20%), Poisson arrival λ=2-8 req/s, 시뮬 2-tenant concurrent.
+- **Multi-turn dialog**: **MMDU** (Multi-turn Multi-image Dialogue) — same-image multi-query 패턴.
+- **Document multi-query**: 공개 document 1000개 × 3-5 query (OCR/summary/table/grounding) concurrent.
+- **Real trace (partnership 시도)**:
+  - **LMSys VisionArena** subset (partnership 이메일 필요).
+  - **WildVision** trace (HuggingFace dataset, limited).
+- **Scale**: 5000 request mixed workload + 1000 document × 5 query + 500 MMDU session.
+- **Metrics**:
+  - **Primary**: p50/p90/p99 TTFT (ms), aggregate throughput (req/s), SM utilization (%).
+  - **Secondary**: L2 hit rate, MIG reconfig latency (μs), MMDU/DocVQA accuracy (unchanged goal).
+
+#### (4) Simulator / Tools
+- **Serving stack**: **vLLM v0.7 fork** with `ClusterAwareBlockManager` 확장 (PagedAttention block metadata 에 `cluster_id` 추가). **SGLang v0.4** with semantic-radix tree.
+- **LSH infra**: **CLIP-B/32** (OpenAI `clip-base-patch32`, HuggingFace) — 150MB, 0.8ms/image on H100. pHash Python lib (`imagehash`).
+- **MIG API**: NVIDIA Management Library (NVML) `nvmlDeviceCreateGpuInstance` + `cuCtxFromGreenCtx` (CUDA 12.5+).
+- **HW profiler**:
+  - Nsight Compute: `sm__warps_active.avg.pct_of_peak_sustained_active`, `l1tex__t_sector_hit_rate.pct`, `lts__t_sectors_aperture_device_op_read_lookup_hit`.
+  - NVML: per-process SM occupancy, HBM BW.
+  - `cudaProfiler` Green Context reconfig latency (μs).
+- **External libs**: CLIP (OpenAI/open_clip), transformers v4.45+, FlashAttention-3.
+
+#### (5) Ablation + Measurement Protocol
+- **Factorial (2^3 = 8-cell)**:
+  - M1 CLIP-L LSH reuse graph (on/off, off 는 random cluster)
+  - M2 MIG dual-issue partition (on/off, off 는 single-instance MIG)
+  - M3 phase-aligned coalescing (on/off, off 는 FCFS)
+- **Parameter sweeps**:
+  - LSH hash bucket: {8, 16, 32} bit SimHash
+  - MIG slice ratio: {3:5, 4:4, 5:3} SM
+  - Reuse sliding window: {128, 256, 512} request
+  - Tenant count: {2, 4, 8}
+- **Baselines (9편, peer-reviewed 56%)**:
+  - vLLM [SOSP 2023] [peer-reviewed]
+  - SGLang [NeurIPS 2024] [peer-reviewed]
+  - Mosaic [arXiv:2604.10060, 2026-04]
+  - HERMES [ISCA 2024] [peer-reviewed]
+  - Bullet [arXiv:2504.19516, 2025-04]
+  - LithOS [EuroSys 2025 / SOSP 2025] [peer-reviewed]
+  - Llumnix [OSDI 2024] [peer-reviewed]
+  - VL-Cache [ICLR 2025 Poster]
+  - DynamoLLM [HPCA 2025] [peer-reviewed]
+- **Main metric**: Aggregate throughput + p99 TTFT. **Secondary**: SM utilization, MIG reconfig latency, MMDU accuracy.
+- **Expected runtime**: vLLM `ClusterAwareBlockManager` 구현 **6주** + LSH infra + SGLang semantic-radix **2주** + AWS p5 대여 예약 + trace 확보 **2주** + 실험 **4주** + writing **3주** = **약 17주**.
+- **Fallback mode**:
+  - AWS p5 예산 초과 시 → H100 단일 lambda.ai 1-week $500-800 대여로 축소.
+  - LMSys VisionArena partnership 거절 시 → 자체 synthetic trace 만으로 평가 (Top-tier reviewer 제약).
+  - MIG dual-issue API 제약 시 → MPS + Green Context 조합으로 fallback (성능 5-8% 저하).
+
+#### Tier-2 variant (IEEE ESL / IEEE CAL) 실험 플랜 축소
+- Hardware: Pro 6000 96GB 단일 (Green Context only, MIG 미사용).
+- Model: Qwen2.5-VL-7B + LLaVA-OneVision-7B 2-tenant.
+- Dataset: Synthetic mixed trace 2000 request 만.
+- Tool: CLIP-B/32 + LSH, Nsight Compute (F1 + hash latency + collision rate).
+- Ablation: M1 only (CLIP-L LSH reuse graph classifier, hash bit sweep).
+- Metric: F1 ≥ 0.82, hash latency ≤ 1.5ms/req, collision rate ≤ 3%.
+- Runtime: 개발 **3주** + 실험 **2주** + writing **1주** = **6주**.
+
+---
+
+### 9.3 NACK-Gossip Tier-2 — DGX Spark 2-node NVLink Peer-Fetch (Edge VLA Experiment) ⭐
+
+**⭐ User-requested edge case**: 최근 공개된 NVIDIA DGX Spark 를 **두 개 엮어** real 로봇 fleet edge 시나리오 재현.
+
+#### (1) Hardware Environment
+- **Primary (edge 2-node 시나리오)**: **NVIDIA DGX Spark × 2 node** — Grace-Blackwell GB10 superchip (Grace Arm Neoverse V2 20-core + Blackwell GPU 512GB/s HBM + **128GB unified LPDDR5X memory**) per node.
+  - **Intra-node**: NVLink-C2C 900 GB/s (Grace↔Blackwell on-chip).
+  - **Inter-node**: ConnectX-7 800 GbE SmartNIC (100 GB/s bi-directional) 또는 지원 시 NVLink Switch.
+  - 각 node 가 독립 robot 역할 (simulated robot fleet).
+- **Power measurement**: `nvidia-smi` GPU power + Grace CPU TDP 측정.
+- **접근 경로**: DGX Spark 개발자 프로그램 신청 또는 파트너십 요청 (NVIDIA Inception 프로그램). 본 세션 작성 시점 2026-04 기준 commercial availability 확인 필요.
+- **Fallback hardware**: DGX Spark 접근 실패 시 → **RTX 4090 × 2 NVLink bridge** (연구실 서버 #4, NVLink 600GB/s) 또는 **AWS p5 dual-H100** (NVLink 900GB/s). Grace CPU 효과는 analytical model 로 proxy.
+
+#### (2) Model
+- **Primary**: **OpenVLA-7B** (HuggingFace `openvla/openvla-7b`, BF16, LIBERO 지원 기본).
+- **Secondary**: **OpenVLA-OFT** (fine-tuned action chunking variant).
+- **Tertiary (robustness)**: **π0** (Physical Intelligence, 공개 checkpoint 또는 reproduction).
+- **Precision**: BF16 기본, INT8 quantized variant 는 Tier-2 scope 에서 선택.
+- **Inference code base**: OpenVLA HuggingFace wrapper + **vLLM v0.7 fork** (peer-access extension).
+- **Fine-tuning 불필요** (training-free peer-fetch primitive).
+
+#### (3) Dataset / Workload
+- **Simulation benchmarks (primary)**:
+  - **LIBERO** (4 suite: Spatial / Object / Goal / Long) — OpenVLA 공식 지원. 각 suite 100 trial × 2 robot concurrent.
+  - **RoboCasa** (household manipulation benchmark) — Isaac Sim 기반, 다양한 object.
+  - **CALVIN** (long-horizon manipulation) — skill composition.
+- **Synthetic skill-repeat trace (core NACK 검증)**: 자체 생성 — 2-robot 이 skill library (pick / place / pour / open / close) 에서 **skill-level 반복** 패턴. Skill similarity threshold {0.7, 0.85, 0.95} sweep.
+- **Scale**:
+  - Microbenchmark: 10K peer-fetch event × KV block 크기 4 variant = 40K measurement.
+  - Benchmark eval: 500 trial × 2 robot × 3 model = 3000 rollout.
+- **Metrics**:
+  - **Primary**: Peer-fetch latency p50/p99 (μs), NVLink BW utilization (%), fleet-wide action throughput (actions/s).
+  - **Secondary**: LIBERO task success rate, decode step latency (ms), **SM dynamic power (W)** (ISLPED 요건), Grace CPU TDP.
+
+#### (4) Simulator / Tools
+- **Robot simulator**: **NVIDIA Isaac Sim** v4.5 (physics simulator) + **Isaac Lab** (VLA integration). 2-robot co-simulation 환경 구축 — 각 robot 이 별도 DGX Spark node 에 매핑.
+- **Peer-fetch microbenchmark**: **`cudaMemcpyPeerAsync`** 기반 custom C++/CUDA benchmark (KV block 4KB/16KB/64KB/256KB 크기 sweep).
+- **Baseline peer communication**: **NCCL** v2.19+ all-reduce latency + throughput (NVLink BW reference).
+- **HW profiler**:
+  - **Nsight Systems** NVLink counter:
+    - `nvlink__rx_bytes_data_user.sum` (received bytes)
+    - `nvlink__tx_bytes_data_user.sum` (transmitted bytes)
+    - `nvlink__utilization.pct` (link utilization %)
+  - **`nvidia-smi`** GPU power (`--query-gpu=power.draw`).
+  - **`perf stat`** + **RAPL** Grace CPU TDP (Linux).
+  - **`nvprof`** P2P transfer profiling.
+- **Orchestration**: Ray cluster 또는 custom MPI (2-node fleet coordination).
+- **External libs**: OpenVLA HF, Isaac Lab, NCCL v2.19+, PyTorch 2.5+.
+
+#### (5) Ablation + Measurement Protocol
+- **Microbenchmark matrix**:
+  - KV block size: {4 KB, 16 KB, 64 KB, 256 KB}
+  - Pull-batch size: {4, 16, 64, 256} blocks
+  - TTL lease: {100 ms, 500 ms, 2 s, 5 s}
+  - Transfer pattern: intra-node peer (Grace↔Blackwell) vs inter-node (ConnectX-7) 비교.
+- **Edge case 실험 (DGX Spark 2-node 특이 상황)**:
+  - **E1 — Control loop deadline under NVLink contention**: 2-robot fleet 이 동시에 100Hz 주기로 decode + peer-fetch 발생 시, deadline miss rate 측정.
+  - **E2 — Skill transition burst**: 두 robot 이 동시에 skill 전환할 때 peer-fetch miss rate 상승 → beacon adaptive freq 효과 측정.
+  - **E3 — NVLink BW saturation**: 동시 256KB peer pull × 4 batch → NVLink BW utilization 95%+ 도달, decode stall 측정.
+  - **E4 — Cross-node latency budget**: 20Hz control loop (50ms deadline) 에서 inter-node ConnectX-7 transfer 의 타이밍 여유 측정.
+  - **E5 — Power-bounded edge scenario**: DGX Spark TDP 제한 하에 fleet throughput 최대화.
+- **Baselines (3편, peer-reviewed 100%)**:
+  - vLLM PagedAttention [SOSP 2023] [peer-reviewed]
+  - Llumnix [OSDI 2024] [peer-reviewed]
+  - NCCL P2P baseline [SC 2019, dl.acm.org/doi/10.1145/3295500.3356186] [peer-reviewed]
+- **Main metric**: Peer-fetch latency p50 / p99 reduction vs NCCL baseline. **Secondary**: NVLink BW utilization, SM dynamic power, LIBERO success rate, fleet throughput.
+- **Expected runtime**:
+  - DGX Spark 2-node setup + networking **1주**
+  - `cudaMemcpyPeerAsync` microbenchmark **1주**
+  - Isaac Sim 2-robot co-simulation 환경 구축 **2주**
+  - Edge case 실험 E1-E5 **2주**
+  - Power measurement + ISLPED 요건 **1주**
+  - Paper writing (ESL 4p) **2주**
+  - **총 9주** (ISLPED 제출 시 +1주 full paper 확장).
+- **Fallback mode**:
+  - **DGX Spark 접근 불가 시 (가장 가능성 높은 리스크)**:
+    - **Option A**: RTX 4090 × 2 NVLink bridge (연구실 서버 #4) 로 intra-node peer-access 실험 수행. Inter-node (Spark 간 ConnectX-7) 효과는 **analytical model** + 10GbE network measurement 로 proxy. Grace CPU 의 unified memory (128GB LPDDR5X) 효과는 CPU pinned memory 로 대체.
+    - **Option B**: AWS p5.2xlarge (dual-H100 NVLink) 로 1주 대여. Grace CPU 효과는 여전히 missing.
+    - **Option C**: 모든 HW 접근 실패 시 → "design-only" 세션으로 분류하고 NACK-Gossip Top-tier 로 upgrade 후 향후 환경 확보 시 재실험.
+  - **Isaac Sim 2-robot 통신 레이턴시 문제**: ROS2 rtps middleware 로 대체 또는 custom IPC.
+
+#### Tier-2 variant publication scope
+- ESL 4-page: microbenchmark (peer-fetch latency, NVLink BW util) + 1-edge case (E1 control loop deadline) + power metric.
+- ISLPED 6-page 확장 시: E1+E2+E3 포함 + Grace CPU TDP breakdown.
+
+---
+
+## Section 10 — 세션 자체 평가 (Self-Assessment) — 원본 Section 9 (실험플랜 보강 후 renumber)
 
 ### 9.1 성과
 - Updated 모든 harness 규칙 (tier, dual-track, improve-first, reference integrity) 적용 완료.
