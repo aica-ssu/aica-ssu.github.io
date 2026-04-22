@@ -17,6 +17,22 @@ type WikiEntry = {
 const entries: Record<string, WikiEntry[]> = {
   "2026-04": [
     {
+      slug: "2026-04/vlm-vla-context-serving-v2",
+      title: "VLM/VLA Context-aware Caching & Serving (v2, Updated Harness Rules 재실행)",
+      description:
+        "업데이트된 harness 규칙(tiering ≤3-4, tier-aware dual-track, improve-first mechanism ≤3, reference integrity + OpenReview identity 4-point check) 전체 적용. 6 ideas → 5 (Axis A merger) → 10 variants (dual-track) → Top 3 Tier-Mix: (1) HRTS Top-tier 7.90 Accept (ASPLOS/MICRO, HBM row-tile streaming for long-context video VLM), (2) ContextMIG Top-tier 7.75 Accept (ASPLOS/MLSys, CLIP-L reuse graph × MIG dual-issue × phase coalesce for multi-tenant VLM, Mosaic scoop 정면 대응 replace-all), (3) NACK-Gossip Tier-2 7.80 Conditional Accept (IEEE ESL/ISLPED, VLA 2-GPU NVLink peer-fetch profiling). OpenReview 3편 verified (VL-Cache ICLR'25, VLA-Cache NeurIPS'25, SparseVLM ICML'25).",
+      date: "2026-04-22",
+      tags: ["Mode 1", "VLM", "VLA", "Tier-Mix", "Dual-Track"],
+    },
+    {
+      slug: "2026-04/vlm-vla-context-serving",
+      title: "VLM/VLA Context-aware Caching & Serving (v1, 초기 ideation)",
+      description:
+        "PIM 비의존 pure GPU stack 기반 VLM/VLA context-aware caching/serving ideation 초기 버전. ai-optimization-expert (A1-A3) + legacy-system-expert (L1-L3) + algorithm-expert (P1-P2 predictor) 협업. 6 ideas → Top 3: L1 ContextSM-Tri 7.00 Accept (content-axis SM/BW/KV tri-partition), A3 SemCOW-Deadline 7.15 Conditional Accept (page-refcount COW + deadline SM yielding), A1 PhaseGraph-VLA 7.08 Conditional Accept (SSE Page-Hinkley + phase CUDA Graph). Phase 2' placeholder 11편 post-verification (GUI-KV/OxyGen 실존, Rethinking Token Pruning withdrawn, 8편 부재), Semantic Scheduling concurrent 발견으로 L1 Novelty 7.2→6.8 조정. v2 재실행 세션의 baseline context.",
+      date: "2026-04-22",
+      tags: ["Mode 1", "VLM", "VLA", "Predictor"],
+    },
+    {
       slug: "2026-04/vlm-pim-extension",
       title: "VLM+PIM 내부 연구 보완·확장: DeepStack-Native 6-Tier KV + Quantization-Robust Layered Defense",
       description:
