@@ -17,6 +17,14 @@ type WikiEntry = {
 const entries: Record<string, WikiEntry[]> = {
   "2026-04": [
     {
+      slug: "2026-04/vlm-pim-extension",
+      title: "VLM+PIM 내부 연구 보완·확장: DeepStack-Native 6-Tier KV + Quantization-Robust Layered Defense",
+      description:
+        "AttAcc(ASPLOS'24) baseline + Qwen3-VL-4B 기반 VLM+PIM 연구의 보완점 탐색. 8 ideas → 3 fused → Top 2 (F2 Quant-Robust Layered Defense HPCA/MICRO 8.43, F1 DeepStack-Native 6-Tier Pipeline ASPLOS/MLSys 7.60). VLCache/PAM/ModServe scoop 분석 + W8A8 +66pp visual attention collapse 선행 보고 부재 검증.",
+      date: "2026-04-22",
+      tags: ["Mode 2", "VLM", "PIM", "AttAcc"],
+    },
+    {
       slug: "2026-04/ace-moe-vlm-vla",
       title: "ACE-MoE 확장: VLM/VLA Software 연구 주제 Top 3",
       description:
