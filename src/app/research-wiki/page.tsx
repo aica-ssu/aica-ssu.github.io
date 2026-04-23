@@ -17,6 +17,14 @@ type WikiEntry = {
 const entries: Record<string, WikiEntry[]> = {
   "2026-04": [
     {
+      slug: "2026-04/energy-efficient-edge-vlm",
+      title: "최신 VLM 특성 기반 에너지 효율적 Edge VLM Inference (Parquet / Triptych / Cartographer / Sift / Verge)",
+      description:
+        "기존 세션 완전 신규 (v1/v2/v3 VLM/VLA context serving, PRISM-VLM-KV, ACE-MoE, VLM+PIM 어느 것도 참조 안 함). 2026-04-23 신규 규칙 R23-R26 (workload-driven / kernel fusion triviality / Platform-Usage Analysis 3-step / metaphor noun title) 전면 적용 첫 세션. 초창기 LLaVA-1.5 (fixed 576 token) vs 최신 Qwen2.5-VL/InternVL3 (dynamic 4-16,384 token + MRoPE 3D + pixel shuffle + video temporal packing) 아키텍처 diff 를 mechanism 에 직접 활용. 3 experts × 4 idea = 12 후보 → 3-way artificial split 통합 → Tier-1 3 + Track B 3 = 6 후보. Phase 2 similarity critique 에서 CodecSight (arXiv:2604.06036, 2026-04-07, 16일 차이) 68-72% Tidal direct scoop 발견 → Tidal DROP. 최종 Tier-1 Top 2 (Parquet 7.54 AnyRes tile-count unifying signal × coupled DVFS × per-tile precision / Triptych 7.38 DLA + UMA zero-copy + DLA preemption) + Tier-2 독립 Top 3 (Cartographer 7.06 MRoPE tri-axial LUT / Sift 6.85 entropy-adaptive pixel shuffle / Verge 6.29 Conditional Thor vs Orin cross-arch).",
+      date: "2026-04-23",
+      tags: ["Mode 1", "VLM", "Edge GPU", "Jetson", "Energy", "Metaphor Naming"],
+    },
+    {
       slug: "2026-04/vlm-vla-context-serving-v3",
       title: "VLM/VLA Context-aware Caching & Serving (v3, Dual Top-3 New-Rules Re-run)",
       description:
