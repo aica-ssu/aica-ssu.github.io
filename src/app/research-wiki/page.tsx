@@ -17,6 +17,14 @@ type WikiEntry = {
 const entries: Record<string, WikiEntry[]> = {
   "2026-04": [
     {
+      slug: "2026-04/vlm-vla-context-serving-v3",
+      title: "VLM/VLA Context-aware Caching & Serving (v3, Dual Top-3 New-Rules Re-run)",
+      description:
+        "v1/v2 (4/22, 구 규칙) 에서 도출된 10 variants 를 새 규칙 (R21 Dual Top-3 = Tier-1 Top 3 + Tier-2 독립 Top 3 총 6 아이디어 / R22 summary 블로그-style 의무 / Executive Summary 맨 앞 / arxiv 링크 포맷 강화 / Track B 독립) 으로 improve. v2 placeholder 7편 전부 재검증 (Harvest arXiv:2602.00328 55-65% concurrent 발견) + 2026-04 20+편 최신 논문 탐색 (Mosaic arXiv:2604.10060 55-65% HRTS concurrent, Predictable LLM Serving arXiv:2508.20274 60% ContextMIG concurrent, FlashVLA arXiv:2505.21200 68-72% DeadlineCOW scoop 접경). Tier-1 Top 3: HRTS+ 7.85 / ContextMIG+ 7.73 / PhaseGraph-VLA+ 7.18 (v1 A1 revival). Tier-2 독립 Top 3 (Track B): B1 GCReconfProfile 7.50 (ISLPED) / B2 TokenEvictEnergy 7.35 (IEEE ESL, negative result) / B3 ActHeadFuse 7.20 (IEEE CAL, 1-kHz control). Mechanism diff 전부 add 0 (improve-first 완전 준수), peer-reviewed ratio Tier-1 60-70% / Tier-2 67-100%.",
+      date: "2026-04-23",
+      tags: ["Mode 1", "VLM", "VLA", "Dual Top-3", "Track B", "v3"],
+    },
+    {
       slug: "2026-04/vlm-vla-context-serving-v2",
       title: "VLM/VLA Context-aware Caching & Serving (v2, Updated Harness Rules 재실행)",
       description:
