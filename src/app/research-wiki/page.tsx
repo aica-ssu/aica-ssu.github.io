@@ -17,6 +17,14 @@ type WikiEntry = {
 const entries: Record<string, WikiEntry[]> = {
   "2026-04": [
     {
+      slug: "2026-04/qwen3vl-deepstack-edge",
+      title: "Qwen3-VL (DeepStack) + Qwen3.5 최신 아키텍처의 Edge 배포 최적화 (Loom / Mangrove / Vault / Gale / Forge)",
+      description:
+        "Qwen3-VL (arXiv:2511.21631, DeepStack arXiv:2406.04334 integration) + Qwen3.5-Omni (arXiv:2604.15804) 3 PDF 입력. R23 Step 0-α 신규 규칙 첫 적용 (IISWC/ISPASS/benchmark report 우선 탐색, 15편). Qwen3-VL 의 3 core upgrade (Interleaved MRoPE frequency interleave / DeepStack multi-layer residual visual_indexes=[8,16,24] / explicit video timestamp) + Qwen3.5 의 Hybrid MoE + Gated Delta Net + Thinker-Talker + ARIA 를 Jetson Orin AGX / Thor 128GB LPDDR5X / RTX 4060-5090 edge 에 배포 시 이전 Qwen2.5-VL / LLaVA-1.5 대비 아키텍처 diff 직접 mechanism 화. 3 experts × 4 idea = 12 → 3-way artificial split 통합 → Tier-1 Top 3 (★ Loom 7.90 lead Interleaved MRoPE unified LUT + FA3 fused / Mangrove 7.60 DeepStack 4-stage + LPDDR bank + DLA offload / Vault' 7.30 post-Major Revision DeepStack×MoE L2 contention) + Tier-2 독립 Top 2 (Gale 6.70 GDN:Attn 3:1 + 256K 3-tier / Forge 6.50 Thinker/Talker Tensor Core + DLA + L2) = 5 selected. T3 Echo DROP (VLCache arXiv:2512.12977 72-78% scoop + 이전 세션 Tidal 재진입). Jetson Thor vLLM MoE gap forum (2026-02) 산업 motivation. 이전 edge-vlm-energy 세션과 완전 독립.",
+      date: "2026-04-24",
+      tags: ["Mode 1", "Qwen3-VL", "DeepStack", "Qwen3.5", "Edge GPU", "Jetson Thor", "MoE", "R23 Step 0-α"],
+    },
+    {
       slug: "2026-04/energy-efficient-edge-vlm",
       title: "최신 VLM 특성 기반 에너지 효율적 Edge VLM Inference (Parquet / Triptych / Cartographer / Sift / Verge)",
       description:
