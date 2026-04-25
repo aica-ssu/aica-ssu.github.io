@@ -1,5 +1,25 @@
 # Session 2026-04-22 — Mode 2 — VLM+PIM 연구 보완·확장 아이디어 도출
 
+## Ideation Flow Chart (R29 retrofit)
+
+> AttAcc baseline (ASPLOS'24) + Qwen3-VL-4B-Instruct, VLM_exploration_PIM_260407 motivation + PIM_260422 미팅자료 기반.
+
+```mermaid
+flowchart TD
+    S0[Step 0: 외부 탐색<br/>+ PDF 2종 분석<br/>30+ 논문 peer-reviewed] --> P1[Phase 1: 8 ideas 도출<br/>hw-pim main + ai-opt + legacy-sys]
+    P1 --> P2[Phase 2: 다중 리뷰 + similarity critique]
+    P2 --> Fuse[Phase 1' Fusion: 3 fused]
+    Fuse --> P2p{Phase 2': 6개월 fresh<br/>유사연구 재점검}
+    P2p -->|VLCache 2025.12 scoop| Drop1[F3 VLM-MOESI 미선정]
+    P2p -->|PAM scoop| Drop2[H2 DROP]
+    P2p -->|ModServe scoop| Drop3[L1 DROP]
+    P2p -->|8.43 Accept HPCA/MICRO| F2[★ Top 1 — F2 Quant-Robust Layered Defense<br/>W8A8 +66pp collapse runtime detection]
+    P2p -->|7.60 Accept| F1[Top 2 — F1 DeepStack-Native 6-Tier Pipeline<br/>visual_indexes per-stream]
+    F2 --> Post[Post-survey: W8A8 +66pp collapse<br/>선행 보고 부재 검증 → 8.23→8.43]
+```
+
+---
+
 ## Meta
 - **User request**: "/home/yhgong/paper/vlm 내에 있는 pdf 로된 미팅자료들을 분석하고 vlm 가속 및 에너지효율성에 대한 연구 ideation 혹은 현재 진행중인 부분에서 보완할점 등을 탐색"
 - **Mode**: 2 (local PDFs)
@@ -300,9 +320,9 @@
 
 | 세션 | 관계 | 활용 |
 |------|------|------|
-| [2026-04-21 Mode 2 ACE-MoE VLM/VLA extension](2026-04-21-mode2-ace-moe-vlm-vla-extension.md) | **orthogonal / internal concurrent work** | 같은 PDF (VLM_exploration_PIM_260407)의 **SW-only** 측면 분석. Top 3 = I5 ACE-VLA / I3 Joint Budget / I1 Modality-Aware ACE. 이번 세션은 명시적으로 PIM/HW 측면 포커스. **중복 회피**: Modality-Aware ACE / Visual ACT / Joint Budget는 internal work로 겹치지 않도록 narrative 구분 |
-| [2026-04-21 Mode 1 MoE Fingerprinting](2026-04-21-mode1-moe-fingerprinting.md) | unrelated (MoE security) | 본 세션에 영향 없음 |
-| [2026-04-22 Mode 1 PRISM BNN/TNN domain extension](2026-04-22-mode1-bnn-tnn-domain-extension.md) | unrelated (CIM quantization) | 본 세션에 영향 없음 |
+| 2026-04-21 Mode 2 ACE-MoE VLM/VLA extension | **orthogonal / internal concurrent work** | 같은 PDF (VLM_exploration_PIM_260407)의 **SW-only** 측면 분석. Top 3 = I5 ACE-VLA / I3 Joint Budget / I1 Modality-Aware ACE. 이번 세션은 명시적으로 PIM/HW 측면 포커스. **중복 회피**: Modality-Aware ACE / Visual ACT / Joint Budget는 internal work로 겹치지 않도록 narrative 구분 |
+| 2026-04-21 Mode 1 MoE Fingerprinting | unrelated (MoE security) | 본 세션에 영향 없음 |
+| 2026-04-22 Mode 1 PRISM BNN/TNN domain extension | unrelated (CIM quantization) | 본 세션에 영향 없음 |
 
 ### 2.2 Bias 방지 적용
 

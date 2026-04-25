@@ -5,9 +5,11 @@
   "scripts": {
     "gen-photos": "node scripts/gen-photos.js",
     "dev": "node scripts/gen-photos.js && next dev",
-    "build": "node scripts/gen-photos.js && next build",
+    "build": "node scripts/gen-photos.js && npm run validate-wiki && next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "validate-wiki": "node scripts/validate-research-wiki-links.mjs",
+    "fix-wiki-links": "node scripts/fix-research-wiki-links.mjs"
   },
   "dependencies": {
     "next": "16.1.6",

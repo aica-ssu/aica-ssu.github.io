@@ -1,9 +1,28 @@
 # Session 2026-04-22 (v2) — Mode 1 — VLM/VLA Context-aware Caching & Serving (Updated Rules Re-run)
 
+## Ideation Flow Chart (R29 retrofit)
+
+> v2 = updated harness rules 재실행 (tier ≤3-4 / dual-track / improve-first ≤3 / OpenReview 4-point check).
+
+```mermaid
+flowchart TD
+    S0[Step 0: 외부 탐색<br/>+ v1 결과 review] --> P1[Phase 1: 6 ideas]
+    P1 --> Merge[Phase 1' Axis A merger<br/>TriadSM + RGSM → ContextMIG<br/>5 ideas after merge]
+    Merge --> Variants[10 variants<br/>Top-tier + Tier-2]
+    Variants --> P2{Phase 2': OpenReview 3편 verify<br/>VL-Cache / VLA-Cache / SparseVLM}
+    P2 -->|7.90 Accept| HRTS[★ HRTS Top-tier]
+    P2 -->|7.75 Accept| CMIG[ContextMIG Top-tier<br/>L1 improve+merge]
+    P2 -->|7.80 Conditional Accept| NACK[NACK-Gossip Tier-2]
+    P2 -->|Major Revision 탈락| MR[DeadlineCOW Top-tier 탈락<br/>PhaseScope Tier-2 탈락]
+    P2 -->|7 logged| Log[Tier-2 not Top-M / 기타]
+```
+
+---
+
 ## Meta
 - **User request (동일)**: "VLM 혹은 VLA 모델에서 Context-awareness 를 고려해서 caching 하거나 serving optimization (시스템레벨에서, kernel optimization, processing unit 할당, offloading, 메모리 할당 정책 등) 하는 것에 관심이 있는데, 관련된 최근 1,2년간 연구탐색을 통해 ideation 을 진행해줘"
 - **Mode**: 1 (sentence-input), **v2 = updated harness rules 재실행**.
-- **관련 이전 세션**: [2026-04-22 v1](2026-04-22-mode1-vlm-vla-context-serving.md) (Top 3 = L1 ContextSM-Tri / A3 SemCOW-Deadline / A1 PhaseGraph-VLA).
+- **관련 이전 세션**: [2026-04-22 v1](/research-wiki/2026-04/vlm-vla-context-serving) (Top 3 = L1 ContextSM-Tri / A3 SemCOW-Deadline / A1 PhaseGraph-VLA).
 - **Experts participated**: ai-optimization-expert, legacy-system-expert, differentiation-reviewer (integrated Phase 2/2').
 - **새로 적용된 harness 규칙**:
   1. **Tiering discipline** (physical ≤3~4, software pool ≤3~4, architecture-natural 예외).

@@ -8,6 +8,25 @@
 
 ---
 
+## Ideation Flow Chart (R29 retrofit)
+
+> Qwen3-VL DeepStack + Qwen3.5-Omni 신규 아키텍처 → Edge 배포. R23 Step 0-α 첫 적용.
+
+```mermaid
+flowchart TD
+    S0[Step 0-α: IISWC/ISPASS<br/>+ benchmark technical report 우선 탐색<br/>15편 수집] --> P1[Phase 1: 3 expert × 4 idea = 12 후보]
+    P1 --> Split[3-way artificial split 통합]
+    Split --> P2{Phase 2: similarity critique<br/>+ Major Revision}
+    P2 -->|72-78% scoop| Drop[T3 Echo DROP<br/>VLCache arXiv:2512.12977]
+    P2 -->|★ lead 7.90| T1A[Tier-1 Loom<br/>DeepStack visual_indexes layer-partition]
+    P2 -->|7.60| T1B[Tier-1 Mangrove<br/>Interleaved MRoPE freq optimization]
+    P2 -->|7.30 post-MR| T1C[Tier-1 Vault'<br/>NVFP4 + DeepStack×MoE L2 contention]
+    P2 -->|6.70 Tier-2| T2A[Tier-2 Gale<br/>Jetson Thor 128GB LPDDR5X]
+    P2 -->|6.50 Tier-2| T2B[Tier-2 Forge<br/>RTX 4060-5090 cross-arch]
+```
+
+---
+
 ## 1. 연구 진행 Meta
 
 ### 1.1 사용자 쿼리 원문
@@ -702,15 +721,15 @@ Qwen3.5-Omni Thinker (MoE+GDN LLM) → Tensor Core, Talker Code2Wav causal ConvN
 
 ## 7. 참고 파일
 
-- **Session 상세**: [sessions/2026-04-24-mode1-qwen3vl-deepstack-edge.md](../sessions/2026-04-24-mode1-qwen3vl-deepstack-edge.md)
+- **Session 상세**: [sessions/2026-04-24-mode1-qwen3vl-deepstack-edge.md](/research-wiki/2026-04/qwen3vl-deepstack-edge)
 - **Staging**:
-  - [ai-opt expert](../sessions/staging/2026-04-24-qwen3vl-deepstack-edge-aiopt-expert.md) (626줄)
-  - [legacy-sys expert](../sessions/staging/2026-04-24-qwen3vl-deepstack-edge-legacy-sys-expert.md) (528줄)
-  - [hw-pim expert](../sessions/staging/2026-04-24-qwen3vl-deepstack-edge-hwpim-expert.md) (543줄)
-  - [Phase 1 integration](../sessions/staging/2026-04-24-qwen3vl-deepstack-edge-phase1-integration.md)
-  - [Phase 2 novelty](../sessions/staging/2026-04-24-qwen3vl-deepstack-edge-phase2-novelty.md)
-  - [Phase 2 differentiation](../sessions/staging/2026-04-24-qwen3vl-deepstack-edge-phase2-diff.md)
-  - [Phase 2 impact](../sessions/staging/2026-04-24-qwen3vl-deepstack-edge-phase2-impact.md)
-  - [Phase 2 similarity](../sessions/staging/2026-04-24-qwen3vl-deepstack-edge-phase2-similarity.md)
-  - [Phase 1'/2'/1''](../sessions/staging/2026-04-24-qwen3vl-deepstack-edge-phase1prime-2prime-1primeprime.md)
-- **규칙 참고**: [R27 Summary Self-Sufficiency for Implementation](../../.claude/skills/aica-research-bot/references/summary-generation.md#r4-top-3-아이디어-상세-포맷-tier-1--tier-2-모두-2026-04-24-r27-적용-self-sufficient-for-implementation)
+  - ai-opt expert (626줄)
+  - legacy-sys expert (528줄)
+  - hw-pim expert (543줄)
+  - Phase 1 integration
+  - Phase 2 novelty
+  - Phase 2 differentiation
+  - Phase 2 impact
+  - Phase 2 similarity
+  - Phase 1'/2'/1''
+- **규칙 참고**: R27 Summary Self-Sufficiency for Implementation

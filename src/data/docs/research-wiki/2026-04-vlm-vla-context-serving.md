@@ -1,5 +1,26 @@
 # Session 2026-04-22 — Mode 1 — VLM/VLA Context-Aware Caching & Serving Optimization
 
+## Ideation Flow Chart (R29 retrofit)
+
+> v1 — pure GPU stack (PIM 비의존). 6 ideas + 2 predictor → Top 3 post-verification.
+
+```mermaid
+flowchart TD
+    S0[Step 0: 외부 탐색<br/>최근 1-2년 context-aware caching/serving] --> P1[Phase 1: 6 ideas<br/>A1-A3 ai-opt + L1-L3 legacy-sys]
+    P1 --> Pred[+ 2 predictor 보강]
+    Pred --> P2{Phase 2': placeholder 11편 검증}
+    P2 -->|2편 실존| Verify[GUI-KV scoop / OxyGen adjacent]
+    P2 -->|1편 withdrawn| W[Rethinking Token Pruning withdrawn]
+    P2 -->|8편 부재| Absent[8편 부재]
+    Verify --> Adjust[Semantic Scheduling 발견<br/>L1 Novelty -0.4 조정]
+    Adjust --> Top1[Top 1 — A3 SemCOW-Deadline 7.15]
+    Adjust --> Top2[Top 2 — A1 PhaseGraph-VLA 7.08]
+    Adjust --> Top3[Top 3 — L1 ContextSM-Tri 7.00]
+    Adjust --> Logged[3 logged: L2 7.08 tiebreak 패 / A2 6.88 / L3 6.50 Major Revision]
+```
+
+---
+
 ## Meta
 - **User request**: "VLM 혹은 VLA 모델에서 Context-awareness 를 고려해서 caching 하거나 serving optimization (시스템레벨에서, kernel optimization, processing unit 할당, offloading, 메모리 할당 정책 등) 하는 것에 관심이 있는데, 관련된 최근 1,2년간 연구탐색을 통해 ideation 을 진행해줘"
 - **Mode**: 1 (sentence-input)

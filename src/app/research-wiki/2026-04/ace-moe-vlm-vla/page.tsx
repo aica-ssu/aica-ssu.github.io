@@ -3,6 +3,7 @@ import path from "path";
 import Link from "next/link";
 import { Metadata } from "next";
 import { markdownToHtml } from "@/lib/markdown";
+import MermaidScript from "@/components/MermaidScript";
 
 export const metadata: Metadata = {
   title: "ACE-MoE VLM/VLA Extension Ideas - AICA Lab",
@@ -30,6 +31,7 @@ export default async function AceMoeVlmVlaPage() {
         className="md-content"
         dangerouslySetInnerHTML={{ __html: html }}
       />
+      <MermaidScript />
     </div>
   );
 }

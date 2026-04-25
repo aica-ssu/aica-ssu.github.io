@@ -8,6 +8,25 @@
 
 ---
 
+## Ideation Flow Chart (R29 retrofit)
+
+> R23-R26 신규 규칙 첫 적용. 12 후보 → 3-way artificial split 통합 + Track B 독립.
+
+```mermaid
+flowchart TD
+    S0[Step 0: 외부 탐색<br/>R23 workload-driven 적용] --> P1[Phase 1: 3 expert × 4 idea = 12 후보<br/>ai-opt + legacy-sys + hw-pim]
+    P1 --> Split[3-way artificial split 통합<br/>+ Track B 독립 추가]
+    Split --> P2{Phase 2 similarity critique<br/>2026-04-07 신규 논문 점검}
+    P2 -->|68-72% scoop| Drop[I1 Tidal DROP<br/>CodecSight arXiv:2604.06036]
+    P2 -->|Accept strong| T1A[★ Tier-1 Parquet 7.54<br/>AnyRes tile 처리]
+    P2 -->|Accept| T1B[Tier-1 Triptych 7.38<br/>modality pipeline]
+    P2 -->|Tier-2 CAL| T2A[Tier-2 Cartographer 7.06<br/>MRoPE LUT]
+    P2 -->|Tier-2 ISLPED| T2B[Tier-2 Sift 6.85<br/>pixel shuffle]
+    P2 -->|Tier-2 ESL| T2C[Tier-2 Verge 6.29<br/>cross-arch]
+```
+
+---
+
 ## 1. 연구 진행 Meta
 
 ### 1.1 사용자 쿼리 원문
@@ -686,14 +705,14 @@
 
 ## 7. 참고 파일
 
-- **Session 상세 (재현성)**: [sessions/2026-04-23-mode1-energy-efficient-edge-vlm.md](../sessions/2026-04-23-mode1-energy-efficient-edge-vlm.md)
+- **Session 상세 (재현성)**: [sessions/2026-04-23-mode1-energy-efficient-edge-vlm.md](/research-wiki/2026-04/energy-efficient-edge-vlm)
 - **Staging**:
-  - [aiopt expert](../sessions/staging/2026-04-23-edge-vlm-energy-aiopt-expert.md) (520 lines)
-  - [legacy-sys expert](../sessions/staging/2026-04-23-edge-vlm-energy-legacy-sys-expert.md) (500 lines)
-  - [hwpim expert](../sessions/staging/2026-04-23-edge-vlm-energy-hwpim-expert.md) (467 lines)
-  - [Phase 1 integration](../sessions/staging/2026-04-23-edge-vlm-energy-phase1-integration.md)
-  - [Phase 2 novelty](../sessions/staging/2026-04-23-edge-vlm-energy-phase2-novelty.md)
-  - [Phase 2 differentiation](../sessions/staging/2026-04-23-edge-vlm-energy-phase2-diff.md)
-  - [Phase 2 impact](../sessions/staging/2026-04-23-edge-vlm-energy-phase2-impact.md)
-  - [Phase 2 similarity critique](../sessions/staging/2026-04-23-edge-vlm-energy-phase2-similarity.md)
-  - [Phase 1'/2'/1''](../sessions/staging/2026-04-23-edge-vlm-energy-phase1prime-2prime-1primeprime.md)
+  - aiopt expert (520 lines)
+  - legacy-sys expert (500 lines)
+  - hwpim expert (467 lines)
+  - Phase 1 integration
+  - Phase 2 novelty
+  - Phase 2 differentiation
+  - Phase 2 impact
+  - Phase 2 similarity critique
+  - Phase 1'/2'/1''

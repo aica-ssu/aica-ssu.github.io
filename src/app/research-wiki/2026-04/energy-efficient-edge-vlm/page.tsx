@@ -3,6 +3,7 @@ import path from "path";
 import Link from "next/link";
 import { Metadata } from "next";
 import { markdownToHtml } from "@/lib/markdown";
+import MermaidScript from "@/components/MermaidScript";
 
 export const metadata: Metadata = {
   title: "최신 VLM 특성 기반 에너지 효율적 Edge VLM Inference (Parquet / Triptych / Cartographer / Sift / Verge) - AICA Lab",
@@ -30,6 +31,7 @@ export default async function EnergyEfficientEdgeVlmPage() {
         className="md-content"
         dangerouslySetInnerHTML={{ __html: html }}
       />
+      <MermaidScript />
     </div>
   );
 }

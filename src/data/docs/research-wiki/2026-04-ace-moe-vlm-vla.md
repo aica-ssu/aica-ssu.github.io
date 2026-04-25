@@ -8,6 +8,22 @@
 
 ---
 
+## Ideation Flow Chart (R29 retrofit)
+
+> ACE-MoE (ICCAD'26 submission) 의 software 측면 확장. Phase 7 관련연구 보강 후 score 재조정.
+
+```mermaid
+flowchart TD
+    S0[Step 0: ACE-MoE submission 분석<br/>+ Qwen3-VL software 측정 데이터 수집] --> P1[Phase 1: VLM/VLA software 확장 후보 도출]
+    P1 --> P2{Phase 2: 3-reviewer 평가<br/>+ arxiv 60+편 보강}
+    P2 -->|score 8.5| Top1[★ Top 1 — ACE-VLA real-time<br/>VLA action chunk 동기화]
+    P2 -->|score 8.0| Top2[Top 2 — Joint Token-Expert Budget<br/>VLM token + MoE expert co-budget]
+    P2 -->|score 7.5| Top3[Top 3 — Modality-Aware ACE for VLM-MoE<br/>vision/text/action 별 expert 정책]
+    P2 -->|미선정| Logged[3 logged<br/>관련연구 보강 후 score 재조정]
+```
+
+---
+
 ## 배경 — 왜 VLM/VLA로 확장하는가
 
 ACE-MoE(ICCAD'26 submission)의 결론부에는 다음이 명시되어 있습니다:

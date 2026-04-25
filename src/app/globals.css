@@ -150,25 +150,35 @@ a:hover {
 }
 
 .md-content table {
-  width: max-content;
+  width: 100%;
   max-width: 100%;
   margin-top: 0;
   margin-bottom: 16px;
   border-spacing: 0;
   border-collapse: collapse;
-  overflow: auto;
-  display: block;
+  display: table;
+  table-layout: auto;
   color: var(--text-primary);
 }
 .md-content th {
   font-weight: 600;
-  padding: 6px 13px;
+  padding: 8px 13px;
   border: 1px solid var(--border);
   color: var(--text-primary);
+  vertical-align: top;
 }
 .md-content td {
-  padding: 6px 13px;
+  padding: 8px 13px;
   border: 1px solid var(--border);
+  vertical-align: top;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+}
+.md-content td br {
+  content: "";
+  display: block;
+  margin-top: 4px;
 }
 .md-content tr {
   background-color: var(--bg-primary);

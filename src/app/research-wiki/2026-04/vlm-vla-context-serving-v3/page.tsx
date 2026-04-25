@@ -3,6 +3,7 @@ import path from "path";
 import Link from "next/link";
 import { Metadata } from "next";
 import { markdownToHtml } from "@/lib/markdown";
+import MermaidScript from "@/components/MermaidScript";
 
 export const metadata: Metadata = {
   title: "VLM/VLA Context-aware Caching & Serving (v3, Dual Top-3 New-Rules Re-run) - AICA Lab",
@@ -30,6 +31,7 @@ export default async function VlmVlaContextServingV3Page() {
         className="md-content"
         dangerouslySetInnerHTML={{ __html: html }}
       />
+      <MermaidScript />
     </div>
   );
 }

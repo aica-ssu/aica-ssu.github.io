@@ -4,7 +4,7 @@
 >
 > **Bundle 형식**: 2026-04-25 R28-R33 + R35 신규 hierarchical 적용 (재생성). 학생 / AI 가 본 README + 자기가 진행하려는 idea 파일 1-2 개만 읽어도 (a) 전체 ideation flow 이해, (b) 시작점 결정, (c) Tier 분기 판단 자율 수행 가능.
 >
-> **이전 단일 파일 summary**: [`../2026-04-24-moe-fingerprint-security-serving.md`](../2026-04-24-moe-fingerprint-security-serving.md) (legacy, 동일 내용 평면화 버전)
+> **이전 단일 파일 summary**: [`../2026-04-24-moe-fingerprint-security-serving.md`](/research-wiki/2026-04/moe-fingerprint-security-serving) (legacy, 동일 내용 평면화 버전)
 
 ---
 
@@ -154,7 +154,7 @@ flowchart TD
   > "학생 이방산이 260424 MoE fingerprinting 폴더에 정리한 실험 데이터 (summary for presentation + raw data) 를 기반으로 연구 ideation 진행. 가능하면 지금 수준에서 +α 로 실험을 너무 많이 하지 않고 얻을 수 있는 novelty. AI 보안 혹은 모델 서빙 최적화 방향. finetuning-free + no-extra-guard-forward + multi-task 장점이 paper-worthy novelty 인지 보안 전문가 입장에서 엄밀 검증 + 가능한 ideation 방향."
 - **Mode**: 1 (sentence + folder input)
 - **실행 일시**: 2026-04-24
-- **관련 이전 세션**: [2026-04-21 mode1 MoE fingerprinting](../../sessions/2026-04-21-mode1-moe-fingerprinting.md) (전제 다름 — 외부 side-channel 85-90% 가정 vs 본 세션 in-worker forward hook 100% 정확 fingerprint).
+- **관련 이전 세션**: 2026-04-21 mode1 MoE fingerprinting (전제 다름 — 외부 side-channel 85-90% 가정 vs 본 세션 in-worker forward hook 100% 정확 fingerprint).
 
 ### 2.2 접근 방식 (주요 키워드 4-8개)
 
@@ -219,8 +219,8 @@ flowchart TD
 
 ## 4. 참고 / 관련 자료
 
-- **상세 Phase 로그**: [`sessions/2026-04-24-mode1-moe-fingerprint-security-serving.md`](../../sessions/2026-04-24-mode1-moe-fingerprint-security-serving.md)
-- **이전 단일 파일 summary (legacy 호환)**: [`../2026-04-24-moe-fingerprint-security-serving.md`](../2026-04-24-moe-fingerprint-security-serving.md)
-- **관련 이전 세션**: [2026-04-21 mode1 MoE fingerprinting](../../sessions/2026-04-21-mode1-moe-fingerprinting.md)
+- **상세 Phase 로그**: [`sessions/2026-04-24-mode1-moe-fingerprint-security-serving.md`](/research-wiki/2026-04/moe-fingerprint-security-serving)
+- **이전 단일 파일 summary (legacy 호환)**: [`../2026-04-24-moe-fingerprint-security-serving.md`](/research-wiki/2026-04/moe-fingerprint-security-serving)
+- **관련 이전 세션**: 2026-04-21 mode1 MoE fingerprinting
 - **OpenReview verified**: V-MoE Adversarial [Fd05J4Bu5Sp](https://openreview.net/pdf?id=Fd05J4Bu5Sp), FJD [RC5x3OkywQ](https://openreview.net/forum?id=RC5x3OkywQ)
 - **wiki entry 들**: `__research_wiki/ideas.md`, `papers.md`, `concepts.md`, `index.md`, `README.md`

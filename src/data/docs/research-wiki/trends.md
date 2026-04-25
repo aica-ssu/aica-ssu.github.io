@@ -6,7 +6,7 @@
 
 ### VLM + PIM / GPU-PIM Heterogeneous Serving — 2026-04 시점 미니 트렌드
 - **Date analyzed**: 2026-04-22
-- **Session**: [링크](sessions/2026-04-22-mode2-vlm-pim-extension.md)
+- **Session**: [링크](/research-wiki/2026-04/vlm-pim-extension)
 - **Experts**: hw-pim-accelerator-expert (primary), ai-optimization-expert, legacy-system-expert
 
 **신호 1 — VLM-specific HW accelerator 가 2025-Q4 ~ 2026-Q1 폭발적 증가**: Focus ([arXiv:2512.14661](https://arxiv.org/abs/2512.14661), HPCA 2026 Best Paper Candidate, Duke), V-Rex ([arXiv:2512.12284](https://arxiv.org/abs/2512.12284), HPCA 2026, KAIST), ORCHES (MICRO 2025, vision reasoning 3.10×), Pimba ([arXiv:2507.10178](https://arxiv.org/abs/2507.10178), MICRO 2025 post-transformer) 등 4편이 6개월 내 연속 등장. 공통 테마: **VLM 특이성 (visual token 비대칭, multi-image long-context, video streaming) 을 HW 에 직접 반영**. AttAcc (ASPLOS 2024) / NeuPIMs / IANUS / TransPIM 의 LLM 가정은 이미 outdated.
@@ -45,7 +45,7 @@
 
 ### BNN/TNN + CIM + Non-Image 도메인 — 2026-04 시점 미니 트렌드
 - **Date analyzed**: 2026-04-22
-- **Session**: [링크](sessions/2026-04-22-mode1-bnn-tnn-domain-extension.md)
+- **Session**: 링크
 - **Experts**: algorithm-expert, hw-pim-accelerator-expert
 - **Papers analyzed**: 25+ (ISLPED/ISSCC/Interspeech/arxiv 2022-2026)
 - **Trigger**: 공영호 교수의 PRISM (ISLPED'26 투고) 확장 쿼리. scratch training + small model + CIM target 제약.
@@ -88,7 +88,7 @@
 
 ### MoE Expert Fingerprinting (Security + Systems Dual Axis) — 2026-04 시점 미니 트렌드
 - **Date analyzed**: 2026-04-21
-- **Session**: [링크](sessions/2026-04-21-mode1-moe-fingerprinting.md)
+- **Session**: 링크
 - **Experts**: system-robustness-expert, ai-optimization-expert
 - **Papers analyzed**: 30+ (Phase 1 expert-memory 기반 + Phase 2 리뷰어 arxiv 재검색)
 - **Trigger**: User 공영호 교수가 "fingerprinting accuracy 85-90%, expert 많은 Qwen3에서 더 잘 됨" premise 공유 후 보안+시스템 연구 주제 도출 요청.
@@ -131,7 +131,7 @@
 
 ### VLM/VLA Software-Side Serving Optimization — 2026-04 시점 미니 트렌드 분석
 - **Date analyzed**: 2026-04-21
-- **Session**: [링크](sessions/2026-04-21-mode2-ace-moe-vlm-vla-extension.md)
+- **Session**: 링크
 - **Experts**: ai-optimization-expert
 - **Papers analyzed**: 2 (in-depth) + 7 (referenced)
 - **Trigger**: ACE-MoE의 future direction (VLM/VLA 확장)을 user가 명시적으로 요청

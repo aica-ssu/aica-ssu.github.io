@@ -8,6 +8,28 @@
 
 ---
 
+## Ideation Flow Chart (R29 retrofit)
+
+> v1 → v2 → v3 진화. R21 Dual Top-3 + R22 summary 블로그-style + Track B 독립.
+
+```mermaid
+flowchart TD
+    Prev[v1/v2 10 variants 누적] --> S0[Step 0: 신규 v3 외부 탐색<br/>2026-04 20+편 신규 논문]
+    S0 --> P1[Phase 1: v1/v2 + Track B 독립 3편]
+    P1 --> P2{Phase 2 similarity:<br/>Mosaic/Harvest/FlashVLA 등 신규}
+    P2 -->|7.85 Accept| HRTS[Tier-1 HRTS+]
+    P2 -->|7.73 Accept| CMIG[Tier-1 ContextMIG+]
+    P2 -->|7.18 Conditional| PG[Tier-1 PhaseGraph-VLA+]
+    P2 -->|7.50 Accept| B1[Tier-2 B1 GCReconfProfile]
+    P2 -->|7.35 Conditional| B2[Tier-2 B2 TokenEvictEnergy]
+    P2 -->|7.20 Accept| B3[Tier-2 B3 ActHeadFuse]
+    P2 -->|Harvest concurrent| Drop1[NACK-Gossip Tier-2 미선정]
+    P2 -->|FlashVLA scoop 접경| Drop2[DeadlineCOW Top/Tier-2 미선정]
+    P2 -->|GUI-KV+MIG collision| Drop3[PhaseScope 미선정]
+```
+
+---
+
 ## 1. 연구 진행 Meta
 
 ### 1.1 사용자 쿼리 원문
@@ -968,8 +990,8 @@ OpenVLA-OFT 의 action-head `SiLU → Linear(4096→448) → torch.bucketize` 3-
 
 ## 7. 참고 파일
 
-- **Session 상세 (재현성)**: [sessions/2026-04-23-mode1-vlm-vla-context-serving-v3.md](../sessions/2026-04-23-mode1-vlm-vla-context-serving-v3.md)
-- **Staging (v3 보강)**: [2026-04-23-v3-placeholder-verify.md](../sessions/staging/2026-04-23-v3-placeholder-verify.md) / [2026-04-23-v3-latest-papers-supplement.md](../sessions/staging/2026-04-23-v3-latest-papers-supplement.md) / [2026-04-23-v3-tier2-independent-track-b.md](../sessions/staging/2026-04-23-v3-tier2-independent-track-b.md)
-- **Prior sessions**: [v1 2026-04-22](../sessions/2026-04-22-mode1-vlm-vla-context-serving.md) / [v2 2026-04-22](../sessions/2026-04-22-mode1-vlm-vla-context-serving-v2.md)
-- **이전 summary (pattern 참조)**: [2026-04-23 PRISM](2026-04-23-prism-vlm-kv-extension.md) / [2026-04-24 Qwen3-VL DeepStack Edge (R27 원본 예시)](2026-04-24-qwen3vl-deepstack-edge.md)
-- **R27 규칙 출처**: [summary-generation.md § R4](../../.claude/skills/aica-research-bot/references/summary-generation.md)
+- **Session 상세 (재현성)**: [sessions/2026-04-23-mode1-vlm-vla-context-serving-v3.md](/research-wiki/2026-04/vlm-vla-context-serving-v3)
+- **Staging (v3 보강)**: 2026-04-23-v3-placeholder-verify.md / 2026-04-23-v3-latest-papers-supplement.md / 2026-04-23-v3-tier2-independent-track-b.md
+- **Prior sessions**: [v1 2026-04-22](/research-wiki/2026-04/vlm-vla-context-serving) / [v2 2026-04-22](/research-wiki/2026-04/vlm-vla-context-serving-v2)
+- **이전 summary (pattern 참조)**: 2026-04-23 PRISM / [2026-04-24 Qwen3-VL DeepStack Edge (R27 원본 예시)](/research-wiki/2026-04/qwen3vl-deepstack-edge)
+- **R27 규칙 출처**: summary-generation.md § R4
