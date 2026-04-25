@@ -239,6 +239,27 @@ for (const file of walk(DATA_ROOT)) {
   }
 }
 
+// Additional check (R44): no blank lines inside <svg> blocks (CommonMark splits HTML blocks at blank lines).
+for (const file of walk(DATA_ROOT)) {
+  const content = fs.readFileSync(file, "utf-8");
+  const lines = content.split("\n");
+  let inSvg = false;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (/^<svg /.test(line)) inSvg = true;
+    else if (/^<\/svg>/.test(line)) inSvg = false;
+    else if (inSvg && /^\s*$/.test(line)) {
+      errors.push({
+        file: path.relative(REPO_ROOT, file),
+        line: i + 1,
+        text: "(blank)",
+        url: "",
+        kind: "blank-line-inside-svg-r44",
+      });
+    }
+  }
+}
+
 console.log(`Scanned: ${totalLinks} total links, ${mdLinks} relative .md links, ${absoluteLinks} absolute /research-wiki links`);
 if (errors.length === 0) {
   console.log("OK: all research-wiki links resolve to existing routes.");

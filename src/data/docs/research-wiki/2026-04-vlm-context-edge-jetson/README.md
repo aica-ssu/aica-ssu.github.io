@@ -49,10 +49,8 @@
       <path d="M0,0 L10,5 L0,10 z" fill="#F96167"/>
     </marker>
   </defs>
-
   <text x="440" y="28" text-anchor="middle" font-size="20" font-weight="700" fill="#1E2761">학생 연구 실행 흐름 — Tier-1/2 분기 결정 트리</text>
   <text x="440" y="52" text-anchor="middle" font-size="12" fill="#666" font-style="italic">각 ◇ 분기는 자기 측정값으로 직접 판단. 화살표 옆 숫자 = 권장 주차 (총 12주 가정).</text>
-
   <!-- Step 1 -->
   <rect x="140" y="80" width="600" height="105" rx="10" fill="#CADCFC" stroke="#1E2761" stroke-width="2"/>
   <text x="440" y="106" text-anchor="middle" font-size="15" font-weight="700" fill="#1E2761">Step 1 — 가용 Jetson HW + Tier-1 idea 매칭 (Wk 0)</text>
@@ -60,14 +58,12 @@
   <text x="440" y="146" text-anchor="middle" font-size="12" fill="#1a1a1a">Jetson Orin NX/AGX → SHOAL (DLA tile-stream, MLSys/ASPLOS)</text>
   <text x="440" y="164" text-anchor="middle" font-size="12" fill="#1a1a1a">Jetson Orin Nano 8GB → VESPER (UMA pruner, OSDI/SOSP) 또는 Tier-2</text>
   <line x1="440" y1="185" x2="440" y2="215" stroke="#1E2761" stroke-width="2" marker-end="url(#arr)"/>
-
   <!-- Step 2 -->
   <rect x="140" y="215" width="600" height="80" rx="10" fill="#CADCFC" stroke="#1E2761" stroke-width="2"/>
   <text x="440" y="240" text-anchor="middle" font-size="15" font-weight="700" fill="#1E2761">Step 2 — Baseline 재현 (Wk 1-2)</text>
   <text x="440" y="262" text-anchor="middle" font-size="12" fill="#1a1a1a">Qwen3-VL-4B / InternVL3-2B prefill+decode latency 측정 (3-run avg)</text>
   <text x="440" y="280" text-anchor="middle" font-size="12" fill="#1a1a1a">Tegrastats + Nsight Compute counter (lts__t_sectors / dram__bytes_read)</text>
   <line x1="440" y1="295" x2="440" y2="325" stroke="#1E2761" stroke-width="2" marker-end="url(#arr)"/>
-
   <!-- Decision 1 -->
   <polygon points="440,325 720,378 440,430 160,378" fill="#FFFFFF" stroke="#F96167" stroke-width="2.5"/>
   <text x="440" y="370" text-anchor="middle" font-size="14" font-weight="700" fill="#1E2761">◇ Baseline ±5% 일치?</text>
@@ -80,14 +76,12 @@
   <text x="825" y="416" text-anchor="middle" font-size="10" font-weight="600" fill="#1E2761">JetPack /</text>
   <text x="825" y="430" text-anchor="middle" font-size="10" font-weight="600" fill="#1E2761">CUDA / PyTorch</text>
   <text x="825" y="445" text-anchor="middle" font-size="10" font-weight="600" fill="#1E2761">버전 정렬</text>
-
   <!-- Step 3 -->
   <rect x="140" y="465" width="600" height="85" rx="10" fill="#CADCFC" stroke="#1E2761" stroke-width="2"/>
   <text x="440" y="490" text-anchor="middle" font-size="15" font-weight="700" fill="#1E2761">Step 3 — Mechanism #1 구현 (Wk 3-6)</text>
   <text x="440" y="512" text-anchor="middle" font-size="12" fill="#1a1a1a">Source-verified path (R32 ✅) 사용 — vLLM/SGLang/cuDNN/NVDLA primitives</text>
   <text x="440" y="530" text-anchor="middle" font-size="12" fill="#1a1a1a">Single-mech delta 측정 → 첫 paper-worthy 신호 확보</text>
   <line x1="440" y1="550" x2="440" y2="580" stroke="#1E2761" stroke-width="2" marker-end="url(#arr)"/>
-
   <!-- Decision 2 -->
   <polygon points="440,580 720,633 440,685 160,633" fill="#FFFFFF" stroke="#F96167" stroke-width="2.5"/>
   <text x="440" y="620" text-anchor="middle" font-size="14" font-weight="700" fill="#1E2761">◇ Mech #1 예상 Δ 도달?</text>
@@ -101,7 +95,6 @@
   <text x="825" y="671" text-anchor="middle" font-size="10" font-weight="600" fill="#1E2761">single-mech</text>
   <text x="825" y="685" text-anchor="middle" font-size="10" font-weight="600" fill="#1E2761">Tier-2 spinoff</text>
   <text x="825" y="700" text-anchor="middle" font-size="10" font-weight="600" fill="#1E2761">으로 마무리</text>
-
   <!-- Step 4 -->
   <rect x="140" y="720" width="600" height="90" rx="10" fill="#CADCFC" stroke="#1E2761" stroke-width="2"/>
   <text x="440" y="745" text-anchor="middle" font-size="15" font-weight="700" fill="#1E2761">Step 4 — Mech #2 + #3 통합 + ablation (Wk 7-12)</text>
@@ -109,18 +102,15 @@
   <text x="440" y="785" text-anchor="middle" font-size="12" fill="#1a1a1a">Combined gain 측정 — Tier-1 cut (≥15% latency / ≥20% energy) 검증</text>
   <text x="440" y="803" text-anchor="middle" font-size="11" fill="#666" font-style="italic">기존 baseline: VL-Cache · VLCache · Nova · throttLL'eM · Four Over Six · FastVLM · SparseDVFS</text>
   <line x1="440" y1="810" x2="440" y2="840" stroke="#1E2761" stroke-width="2" marker-end="url(#arr)"/>
-
   <!-- Decision 3 -->
   <polygon points="440,840 720,893 440,945 160,893" fill="#FFFFFF" stroke="#F96167" stroke-width="2.5"/>
   <text x="440" y="880" text-anchor="middle" font-size="14" font-weight="700" fill="#1E2761">◇ Tier-1 threshold 도달 + 3+ baseline?</text>
   <text x="440" y="898" text-anchor="middle" font-size="11" fill="#666">latency ≥15% / energy ≥20% / OR HW novelty 명확</text>
   <text x="440" y="916" text-anchor="middle" font-size="11" fill="#666">+ peer-reviewed baseline 비율 ≥50% (R-Reference Integrity)</text>
-
   <line x1="320" y1="935" x2="220" y2="975" stroke="#1E2761" stroke-width="2" marker-end="url(#arr)"/>
   <text x="265" y="965" font-size="13" font-weight="700" fill="#1E2761">Yes</text>
   <line x1="560" y1="935" x2="660" y2="975" stroke="#F96167" stroke-width="2" marker-end="url(#arrCoral)"/>
   <text x="600" y="965" font-size="13" font-weight="700" fill="#F96167">No</text>
-
   <!-- Tier-1 outcome -->
   <rect x="80" y="975" width="300" height="120" rx="12" fill="#E5F0E8" stroke="#2C5F2D" stroke-width="2.5"/>
   <text x="230" y="1002" text-anchor="middle" font-size="15" font-weight="700" fill="#2C5F2D">★ Tier-1 Submit</text>
@@ -128,7 +118,6 @@
   <text x="230" y="1042" text-anchor="middle" font-size="12" fill="#1a1a1a">SHOAL → MLSys/ASPLOS 2027 (12-18p)</text>
   <text x="230" y="1060" text-anchor="middle" font-size="12" fill="#1a1a1a">VESPER → OSDI/SOSP 2027 (12-15p)</text>
   <text x="230" y="1080" text-anchor="middle" font-size="11" fill="#666" font-style="italic">3-mech 모두 + adaptive attacker discussion</text>
-
   <!-- Tier-2 outcome -->
   <rect x="500" y="975" width="300" height="120" rx="12" fill="#FFF7DA" stroke="#B8860B" stroke-width="2.5"/>
   <text x="650" y="1002" text-anchor="middle" font-size="15" font-weight="700" fill="#8B5A00">Tier-2 Submit (Spinoff)</text>
@@ -136,7 +125,6 @@
   <text x="650" y="1042" text-anchor="middle" font-size="12" fill="#1a1a1a">또는 독립 Tier-2 (TUFA / ShelfSwap / Glacier)</text>
   <text x="650" y="1060" text-anchor="middle" font-size="12" fill="#1a1a1a">single-mech + single-HW + first-to-report scope</text>
   <text x="650" y="1080" text-anchor="middle" font-size="11" fill="#666" font-style="italic">IEEE CAL 4p / DATE 6p / ISLPED 6p / ICCAD 8p</text>
-
   <!-- Caption -->
   <text x="440" y="1140" text-anchor="middle" font-size="12" font-weight="600" fill="#1E2761">실패 시 회복 경로 (모든 분기)</text>
   <text x="440" y="1160" text-anchor="middle" font-size="11" fill="#1a1a1a">Step 2 ❌ → Wk 1-2 환경 보정 후 재시도 / Step 3 ❌ → Tier-2 spinoff 으로 마무리</text>
