@@ -1,6 +1,12 @@
 # Register-Level System-Level-Cache Way-Partitioning for VLM Visual-Token KV Pinning with CPU Workload Isolation on Jetson Edge (CacheVeil)
 
-> [← Session Overview](/research-wiki/2026-04/vlm-context-edge-jetson) · **Tier-1 Top 1 ★ lead**
+> [← Session Overview](/research-wiki/2026-04/vlm-context-edge-jetson) · **Tier-1 Top 1 ★ lead** (원안, R45 적용 전)
+
+> **🚨 R45 Demotion (2026-04-25 추가)**: 본 idea 의 mechanism #1 (ARM CMN `por_hnf_pwpr` partition register) 은 vendor 공식 user-space API 부재 — undocumented BPMP IOCTL `tegra_bpmp_transfer(MRQ_CMN_SLC_PARTITION)` 의존. R45.1 (undocumented CPU/SoC register manipulation) 정확히 위반.
+>
+> **Tier-1 진입 불가**. Tier-2 simulator-path spinoff [tier2/03-cacheveil-sim](/research-wiki/2026-04/vlm-context-edge-jetson/tier2/03-cacheveil-sim.md) 으로 reposition. 실제 register write 대신 gem5 + ChampSim cache partition simulator (Sniper / Aladdin 도 가능) 로 reframe.
+>
+> 본 페이지 내용은 reference 용 — R45 violation 사례 학습 + 향후 Thor JetPack 7.x 에서 BPMP cache partition IOCTL 공식화 시 Tier-1 재진입 가능. 실제 진행 idea 는 [tier2/03-cacheveil-sim](/research-wiki/2026-04/vlm-context-edge-jetson/tier2/03-cacheveil-sim.md) 참조.
 
 > ## 약어 / 핵심 용어 풀이 (R35)
 >

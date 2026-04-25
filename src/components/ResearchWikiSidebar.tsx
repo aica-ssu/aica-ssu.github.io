@@ -22,7 +22,7 @@ const SIDEBAR: SidebarSection[] = [
     ],
   },
   {
-    title: "⭐ 최근 세션 (2026-04-25, 가장 최신)",
+    title: "⭐ 최근 세션 (2026-04-25, R45 적용 재평가)",
     items: [
       {
         label: "Landing — VLM Context-aware Jetson Edge",
@@ -30,16 +30,16 @@ const SIDEBAR: SidebarSection[] = [
         emphasis: true,
       },
       {
-        label: "🥇 CacheVeil (MICRO/HPCA 2027) lead",
-        href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier1/01-cacheveil",
+        label: "🥇 VESPER (OSDI/SOSP 2027) lead",
+        href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier1/03-vesper",
       },
       {
         label: "🥈 SHOAL (MLSys/ASPLOS 2027)",
         href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier1/02-shoal",
       },
       {
-        label: "🥉 VESPER (OSDI/SOSP 2027)",
-        href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier1/03-vesper",
+        label: "🥉 DualLane (ISCA/MICRO 2027)",
+        href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier1/04-duallane",
       },
       {
         label: "T1 TUFA (IEEE CAL 4p)",
@@ -50,11 +50,15 @@ const SIDEBAR: SidebarSection[] = [
         href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier2/02-shelfswap",
       },
       {
-        label: "T3 Glacier Migrate (ICCAD 8p)",
-        href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier2/03-glacier-migrate",
+        label: "T3 CacheVeil-Sim (DAC/ISLPED 6p)",
+        href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier2/03-cacheveil-sim",
       },
       {
-        label: "미선정 15편 로그",
+        label: "🚨 CacheVeil 원안 (R45 demoted)",
+        href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier1/01-cacheveil",
+      },
+      {
+        label: "미선정 16편 로그 (R45 demotion 포함)",
         href: "/research-wiki/2026-04/vlm-context-edge-jetson/unselected",
       },
     ],

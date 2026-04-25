@@ -345,6 +345,21 @@ Phase 1' improve-only 사항 (ΔM=0):
 
 ---
 
+## R45 적용 — Implementation Path 검증
+
+본 idea 의 4 mechanism 모두 vendor 공식 user-space API 위에서 구현 가능 — R45 risk **3/10 LOW** (Tier-1 lead 의 가장 낮은 risk). R45.1 금지 카테고리 위반 없음:
+
+- **Mechanism #1 (UMA dual-view KV)**: `cudaMallocManaged` + `cudaHostRegisterMapped` + `cuMemAdvise(SetPreferredLocation)` 모두 NVIDIA CUDA Runtime 공식 API. Jetson UMA 환경의 [공식 NVIDIA Tech Blog](https://developer.nvidia.com/blog/maximizing-memory-efficiency-to-run-bigger-models-on-nvidia-jetson/) 에서 권장 path.
+- **Mechanism #2 (NEON SIMD CPU pruner)**: `vdupq_n_f16` / `vmaxq_f16` / `vld1q_f16` 등 ARM NEON intrinsics — [ARM 공식 Intrinsics docs](https://developer.arm.com/architectures/instruction-sets/intrinsics/) user-space.
+- **Mechanism #3 (lockfree ringbuffer + grace period)**: `Boost.Lockfree` user-space C++ — kernel patch 불필요.
+- **Mechanism #4 (vLLM block table extension)**: `vllm/v1/core/kv_cache_manager.py` Python-level extension — closed-source firmware 의존 없음.
+
+R45.3 (feasibility) 도 5 workload (Qwen3-VL-4B / InternVL3-2B long-context / MileBench / MVBench / Video-MME) × 3 config (NEON only / dual-view only / both) × 2 baseline (H2O / VLCache) = 30 runs feasibility 확보 — Orin NX 16GB 1 device 12-16주 fit. 모든 Jetson (Thor / Orin AGX / NX / Nano) 적용 가능.
+
+R45 종합 판정: **risk 3/10 LOW, Tier-1 lead 적합**.
+
+---
+
 ## 8. Source Verification (R32 통합)
 
 | Component | Path / Function | 상태 |

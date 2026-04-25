@@ -14,25 +14,43 @@
 
 **3 expert × 7 idea = 21 candidate** 중 Phase 2' (novelty / diff / impact 3-axis review + scoop-similarity critique) 로 **Tier-1 Top 3 + Tier-2 Top 3 = 6 개** 최종 선정. 미선정 15 편 의 사유는 [unselected.md](/research-wiki/2026-04/vlm-context-edge-jetson/unselected).
 
-### 0.1 Tier-1 Top 3 (Top-tier venue)
+### 0.1 Tier-1 Top 3 (Top-tier venue) — **R45 적용 후 갱신 (2026-04-25)**
 
-| Rank | Title | Score (N/D/I 평균) | 핵심 mechanism (1줄) | 링크 |
-|------|-------|-------------------|---------------------|------|
-| 🥇 ★lead | **CacheVeil** — Register-Level SLC Way-Partition for VLM Visual-Token KV Pinning + CPU Workload Isolation. Target: **MICRO 2027 / HPCA 2027** (legacy-sys) | N 8.5 / D 7.0 / I 8.5 = **8.00** | ARM CMN `por_hnf_pwpr` SLC way-partition 으로 visual KV 를 4-way 에 pin + camera ISP/CPU workload 를 나머지 4-way 격리 → L2 conflict miss 28-45% ↓ | [tier1/01-cacheveil.md](/research-wiki/2026-04/vlm-context-edge-jetson/tier1/01-cacheveil.md) |
-| 🥈 | **SHOAL** — DLA tile-stream KV residence orchestrator. Target: **MLSys 2027 / ASPLOS 2027** (ai-opt) | N 7.5 / D 8.5 / I 8.2 = **8.07** | vLLM PagedAttention block table 에 `residence ∈ {GPU_HBM, GPU_UMA, CPU_pinned}` enum 추가, DLA → KV 전송 destination 을 layer-단위 dynamic 결정 + thermal closed-loop | [tier1/02-shoal.md](/research-wiki/2026-04/vlm-context-edge-jetson/tier1/02-shoal.md) |
-| 🥉 | **VESPER** — UMA zero-copy KV ledger with CPU-side patch pruner. Target: **OSDI 2027 / SOSP 2027** (ai-opt) | N 8.0 / D 7.5 / I 8.8 = **8.10** | cudaMallocManaged dual-view KV buffer + CPU NEON SIMD 가 attention score 미만 KV block in-place prune (idle CPU 41-67% 활용) | [tier1/03-vesper.md](/research-wiki/2026-04/vlm-context-edge-jetson/tier1/03-vesper.md) |
+| Rank | Title | Score (N/D/I 평균) | R45 risk | 핵심 mechanism (1줄) | 링크 |
+|------|-------|-------------------|----------|---------------------|------|
+| 🥇 ★lead | **VESPER** — UMA zero-copy KV ledger with CPU-side patch pruner. Target: **OSDI 2027 / SOSP 2027** (ai-opt) | N 8.0 / D 7.5 / I 8.8 = **8.10** | **3/10 LOW** | cudaMallocManaged dual-view KV buffer + CPU NEON SIMD 가 attention score 미만 KV block in-place prune (idle CPU 41-67% 활용). 모든 API 공식 vendor user-space → R45 OK | [tier1/03-vesper.md](/research-wiki/2026-04/vlm-context-edge-jetson/tier1/03-vesper.md) |
+| 🥈 | **SHOAL** — DLA tile-stream KV residence orchestrator. Target: **MLSys 2027 / ASPLOS 2027** (ai-opt) | N 7.5 / D 8.5 / I 8.2 = **8.07** | **4/10 LOW** | vLLM PagedAttention block table 에 `residence ∈ {GPU_HBM, GPU_UMA, CPU_pinned}` enum 추가, DLA → KV 전송 destination 을 layer-단위 dynamic 결정. NvMediaTensor 공식 API + 선택적 NVDLA-sim simulator path | [tier1/02-shoal.md](/research-wiki/2026-04/vlm-context-edge-jetson/tier1/02-shoal.md) |
+| 🥉 | **DualLane** — Dual-NVDLA + GPU 3-Way Dataflow Co-Scheduling for VLM Vision Encoder. Target: **ISCA 2027 / MICRO 2027** (legacy-sys) | N 7.0 / D 8.0 / I 8.6 → R45 보정 후 **8.00** | **4/10 LOW** | Vision encoder layer-split 을 DLA0/DLA1 spatial-split + DLA→GPU NVMM zero-copy + cross-frame stage pipelining. NvMedia DLA + DRM dma-buf + libsmctrl 모두 공식 API → R45 OK | [tier1/04-duallane.md](/research-wiki/2026-04/vlm-context-edge-jetson/tier1/04-duallane.md) |
 
-### 0.2 Tier-2 독립 Top 3 (4-6p venue)
+### 0.2 Tier-2 독립 Top 3 (4-6p venue) — **R45 적용 후 갱신**
 
-| Rank | Title | Score | 핵심 (1줄) | 링크 |
-|------|-------|-------|------------|------|
-| T1 | **TUFA** — Orin Nano-only INT4 vision token early-exit. Target: **IEEE CAL 4p** (ai-opt) | N 6.5 / D 6.5 / I 6.4 = **6.47** | CLIP-ViT-L/14 24-layer 중 spatial entropy 로 12-24 layer 동적 선택 + 7W mode thermal first-to-report | [tier2/01-tufa.md](/research-wiki/2026-04/vlm-context-edge-jetson/tier2/01-tufa.md) |
-| T2 | **ShelfSwap** — Thermal-Envelope driven KV zone migration in UMA. Target: **ISLPED 6p / DATE 6p** (legacy-sys) | N 5.5 / D 6.0 / I 6.7 = **6.07** | Skin temp > 78°C 시 visual KV cold layer 를 CPU-affine UMA zone 으로 `cuMemAdvise` migration → GPU 발열 5-9°C ↓ | [tier2/02-shelfswap.md](/research-wiki/2026-04/vlm-context-edge-jetson/tier2/02-shelfswap.md) |
-| T3 | **Glacier Migrate** — Tegra-PIM emulation via DLA SRAM. Target: **ICCAD 8p / IEEE TCAS-I** (hwpim) | N 6.0 / D 7.0 / I 7.0 = **6.67** | Thor DLA SRAM (~2-4MB) 을 LPDDR5X round-trip bypass buffer 로 활용 (실 PIM 칩 없이 PIM-emulation 효과) | [tier2/03-glacier-migrate.md](/research-wiki/2026-04/vlm-context-edge-jetson/tier2/03-glacier-migrate.md) |
+| Rank | Title | Score | R45 risk | 핵심 (1줄) | 링크 |
+|------|-------|-------|----------|------------|------|
+| T1 | **TUFA** — Orin Nano-only INT4 vision token early-exit. Target: **IEEE CAL 4p** (ai-opt) | N 6.5 / D 6.5 / I 6.4 = **6.47** | **3/10 LOW** | CLIP-ViT-L/14 24-layer 중 spatial entropy 로 12-24 layer 동적 선택 + 7W mode thermal first-to-report. 모두 user-space → R45 OK | [tier2/01-tufa.md](/research-wiki/2026-04/vlm-context-edge-jetson/tier2/01-tufa.md) |
+| T2 | **ShelfSwap** — Thermal-Envelope driven KV zone migration in UMA. Target: **ISLPED 6p / DATE 6p** (legacy-sys) | N 5.5 / D 6.0 / I 6.7 = **6.07** | **4/10 LOW** | Skin temp > 78°C 시 visual KV cold layer 를 CPU-affine UMA zone 으로 `cuMemAdvise` migration → GPU 발열 5-9°C ↓. 공식 API → R45 OK | [tier2/02-shelfswap.md](/research-wiki/2026-04/vlm-context-edge-jetson/tier2/02-shelfswap.md) |
+| T3 | **CacheVeil-Sim** — gem5 + ChampSim cache partition simulator (Tier-1 demotion 의 simulator-path spinoff). Target: **ISLPED 6p / DAC 6p** (legacy-sys) | demoted from 8.00 → **6.5** | **7/10 MED-HIGH** | 실 ARM CMN `por_hnf_pwpr` register write 대신 gem5 + ChampSim cache partition simulator 으로 SLC way-partition 효과 정량화. 5 workload × 3 config × 2 baseline = 30 runs (한 학기 fit) | [tier2/03-cacheveil-sim.md](/research-wiki/2026-04/vlm-context-edge-jetson/tier2/03-cacheveil-sim.md) |
 
 ### 0.3 핵심 차별화 (vs 이전 v1/v2/v3 / qwen3vl-deepstack 세션)
 
-이전 세션 (HRTS / ContextMIG / PhaseGraph-VLA / RESIDUA / PRISMATIC / DELTANET TIDE / EXPERT MURMUR / TEMPO BEACON / Triptych / Cartographer / Mosaic / Echo Chamber / Estuary / Interleaved Harmonic / NVFP4 Vault / Dual-Engine Echo) 모두 **datacenter HBM 가정** + GPU-only assumption. 본 세션은 (i) UMA LPDDR5X (zero-copy, page-fault), (ii) DLA + iGPU heterogeneous, (iii) edge SLC 4-16MB cache partition, (iv) thermal envelope 7-130W 위 **edge-only 첫 mechanism** 도출. Metaphor 명사 (CacheVeil / SHOAL / VESPER / TUFA / ShelfSwap / Glacier Migrate) 모두 신규 — 이전 idea 와 충돌 없음.
+이전 세션 (HRTS / ContextMIG / PhaseGraph-VLA / RESIDUA / PRISMATIC / DELTANET TIDE / EXPERT MURMUR / TEMPO BEACON / Triptych / Cartographer / Mosaic / Echo Chamber / Estuary / Interleaved Harmonic / NVFP4 Vault / Dual-Engine Echo) 모두 **datacenter HBM 가정** + GPU-only assumption. 본 세션은 (i) UMA LPDDR5X (zero-copy, page-fault), (ii) DLA + iGPU heterogeneous, (iii) edge SLC 4-16MB cache partition, (iv) thermal envelope 7-130W 위 **edge-only 첫 mechanism** 도출. Metaphor 명사 (VESPER / SHOAL / DualLane / TUFA / ShelfSwap / CacheVeil-Sim) 모두 신규 — 이전 idea 와 충돌 없음.
+
+---
+
+## R45 적용 결과 — 1차 publish 대비 ranking 변동
+
+본 bundle 1차 publish 시점 (2026-04-25 오전) 의 ranking 은 R45 (Implementation Difficulty + Risk Discipline) 추가 도입 전이었다. R45 의 4 항목 (R45.1 금지 카테고리 / R45.2 simulator-path exception / R45.3 한 학기 30-run feasibility / R45.4 reviewer scoring) 을 6 selected idea 에 일괄 적용한 결과 다음 변동이 발생.
+
+**Tier-1 변동 사항**:
+- **CacheVeil 원안 (8.00, ★ lead)** → **Tier-1 demotion**. Mechanism #1 (ARM CMN `por_hnf_pwpr` SLC way-partition register) 가 vendor 공식 user-space API 부재 — undocumented BPMP IOCTL `tegra_bpmp_transfer(MRQ_CMN_SLC_PARTITION)` 의존. R45.1 금지 카테고리 (undocumented CPU/SoC register manipulation) 정확히 위반. simulator-path Tier-2 spinoff `tier2/03-cacheveil-sim` (gem5 + ChampSim cache partition simulator) 으로 reposition.
+- **VESPER (8.10)** → ★ lead 승격. cudaMallocManaged + cuMemAdvise + NEON intrinsics 모두 vendor 공식 user-space API → R45 risk 3/10 LOW. 모든 Jetson 적용 가능.
+- **DualLane (legacy-sys T3, 원래 unselected)** → **Tier-1 신규 진입**. NvMedia DLA + Linux DRM dma-buf + libsmctrl 모두 공식 API → R45 risk 4/10 LOW. Nova `arXiv:2509.21301` 50-70% CONCURRENT 우려는 4-mechanism 분리 ablation (Dual-DLA spatial-split + NVMM zero-copy + SLC partition + stage pipelining) 으로 차별화. CacheVeil 자리 비면서 score 보정 후 평균 **8.00** 으로 Tier-1 진입.
+
+**Tier-2 변동 사항**:
+- **Glacier Migrate (6.67)** → **unselected 이동**. DLA SRAM physical addr exposure 의무가 R45.1 위반 (undocumented IOMMU API + DLA SRAM physical addr 노출 의무). Simulator path 의 gem5 PIM-extension 12-20주 소요로 단일 학기 fit 불가 (R45.3 위반). Tier-2 단일 학기 진행 불가 → unselected 로 이동, 재방문 조건은 JetPack 의 DLA SRAM 공식 API 노출 또는 NVDLA-sim 의 PIM extension 공개 시.
+- **CacheVeil-Sim 신설**: CacheVeil R45 violator 의 Tier-2 simulator-path spinoff. 실 register write 대신 gem5 syscall mode + ChampSim cache replacement policy modification 으로 SLC way-partition 효과 시뮬레이션. 5 workload × 3 config × 2 baseline = 30 runs feasibility 확보.
+- **TUFA / ShelfSwap** 유지 — 모두 user-space API → R45 OK.
+
+이 변동의 결과로 **Tier-1 lead 가 CacheVeil → VESPER 로 교체**되었고, 학생이 Step 1 idea 매칭 시 Thor 가용 → DualLane (DLA 활용), Orin NX → SHOAL, Orin Nano → VESPER 의 매핑이 새로 성립. CacheVeil 는 [tier1/01-cacheveil.md](/research-wiki/2026-04/vlm-context-edge-jetson/tier1/01-cacheveil.md) 페이지에 R45 demotion notice 가 박스로 추가되어 학생이 R45 violation 사례 학습용으로 활용 가능 (Tier-1 진입 불가 명시).
 
 ---
 
@@ -53,10 +71,10 @@
   <text x="440" y="52" text-anchor="middle" font-size="12" fill="#666" font-style="italic">각 ◇ 분기는 자기 측정값으로 직접 판단. 화살표 옆 숫자 = 권장 주차 (총 12주 가정).</text>
   <!-- Step 1 -->
   <rect x="140" y="80" width="600" height="105" rx="10" fill="#CADCFC" stroke="#1E2761" stroke-width="2"/>
-  <text x="440" y="106" text-anchor="middle" font-size="15" font-weight="700" fill="#1E2761">Step 1 — 가용 Jetson HW + Tier-1 idea 매칭 (Wk 0)</text>
-  <text x="440" y="128" text-anchor="middle" font-size="12" fill="#1a1a1a">Jetson Thor 128GB → ★ CacheVeil (SLC way-partition, MICRO/HPCA)</text>
-  <text x="440" y="146" text-anchor="middle" font-size="12" fill="#1a1a1a">Jetson Orin NX/AGX → SHOAL (DLA tile-stream, MLSys/ASPLOS)</text>
-  <text x="440" y="164" text-anchor="middle" font-size="12" fill="#1a1a1a">Jetson Orin Nano 8GB → VESPER (UMA pruner, OSDI/SOSP) 또는 Tier-2</text>
+  <text x="440" y="106" text-anchor="middle" font-size="15" font-weight="700" fill="#1E2761">Step 1 — 가용 Jetson HW + Tier-1 idea 매칭 (Wk 0) — R45 적용 후</text>
+  <text x="440" y="128" text-anchor="middle" font-size="12" fill="#1a1a1a">Jetson Orin Nano/NX → ★ VESPER (UMA pruner, OSDI/SOSP) — R45 risk 3/10</text>
+  <text x="440" y="146" text-anchor="middle" font-size="12" fill="#1a1a1a">Jetson Orin NX/AGX → SHOAL (DLA tile-stream, MLSys/ASPLOS) — R45 risk 4/10</text>
+  <text x="440" y="164" text-anchor="middle" font-size="12" fill="#1a1a1a">Jetson Thor / Orin AGX (Dual-DLA) → DualLane (DLA spatial-split, ISCA/MICRO) — R45 risk 4/10</text>
   <line x1="440" y1="185" x2="440" y2="215" stroke="#1E2761" stroke-width="2" marker-end="url(#arr)"/>
   <!-- Step 2 -->
   <rect x="140" y="215" width="600" height="80" rx="10" fill="#CADCFC" stroke="#1E2761" stroke-width="2"/>
@@ -113,18 +131,18 @@
   <text x="600" y="965" font-size="13" font-weight="700" fill="#F96167">No</text>
   <!-- Tier-1 outcome -->
   <rect x="80" y="975" width="300" height="120" rx="12" fill="#E5F0E8" stroke="#2C5F2D" stroke-width="2.5"/>
-  <text x="230" y="1002" text-anchor="middle" font-size="15" font-weight="700" fill="#2C5F2D">★ Tier-1 Submit</text>
-  <text x="230" y="1024" text-anchor="middle" font-size="12" fill="#1a1a1a">CacheVeil → MICRO/HPCA 2027 (12-15p)</text>
+  <text x="230" y="1002" text-anchor="middle" font-size="15" font-weight="700" fill="#2C5F2D">★ Tier-1 Submit (R45 후)</text>
+  <text x="230" y="1024" text-anchor="middle" font-size="12" fill="#1a1a1a">VESPER → OSDI/SOSP 2027 (12-15p)</text>
   <text x="230" y="1042" text-anchor="middle" font-size="12" fill="#1a1a1a">SHOAL → MLSys/ASPLOS 2027 (12-18p)</text>
-  <text x="230" y="1060" text-anchor="middle" font-size="12" fill="#1a1a1a">VESPER → OSDI/SOSP 2027 (12-15p)</text>
-  <text x="230" y="1080" text-anchor="middle" font-size="11" fill="#666" font-style="italic">3-mech 모두 + adaptive attacker discussion</text>
+  <text x="230" y="1060" text-anchor="middle" font-size="12" fill="#1a1a1a">DualLane → ISCA/MICRO 2027 (12-15p)</text>
+  <text x="230" y="1080" text-anchor="middle" font-size="11" fill="#666" font-style="italic">3-mech 모두 + R45 risk ≤ 4/10 LOW</text>
   <!-- Tier-2 outcome -->
   <rect x="500" y="975" width="300" height="120" rx="12" fill="#FFF7DA" stroke="#B8860B" stroke-width="2.5"/>
   <text x="650" y="1002" text-anchor="middle" font-size="15" font-weight="700" fill="#8B5A00">Tier-2 Submit (Spinoff)</text>
-  <text x="650" y="1024" text-anchor="middle" font-size="12" fill="#1a1a1a">CacheVeil-Lite → DAC 6p (single way-partition)</text>
-  <text x="650" y="1042" text-anchor="middle" font-size="12" fill="#1a1a1a">또는 독립 Tier-2 (TUFA / ShelfSwap / Glacier)</text>
-  <text x="650" y="1060" text-anchor="middle" font-size="12" fill="#1a1a1a">single-mech + single-HW + first-to-report scope</text>
-  <text x="650" y="1080" text-anchor="middle" font-size="11" fill="#666" font-style="italic">IEEE CAL 4p / DATE 6p / ISLPED 6p / ICCAD 8p</text>
+  <text x="650" y="1024" text-anchor="middle" font-size="12" fill="#1a1a1a">CacheVeil-Sim → ISLPED/DAC 6p (gem5+ChampSim)</text>
+  <text x="650" y="1042" text-anchor="middle" font-size="12" fill="#1a1a1a">또는 독립 Tier-2 (TUFA / ShelfSwap)</text>
+  <text x="650" y="1060" text-anchor="middle" font-size="12" fill="#1a1a1a">single-mech + simulator-path 권장 (R45)</text>
+  <text x="650" y="1080" text-anchor="middle" font-size="11" fill="#666" font-style="italic">IEEE CAL 4p / DATE 6p / ISLPED 6p / DAC 6p</text>
   <!-- Caption -->
   <text x="440" y="1140" text-anchor="middle" font-size="12" font-weight="600" fill="#1E2761">실패 시 회복 경로 (모든 분기)</text>
   <text x="440" y="1160" text-anchor="middle" font-size="11" fill="#1a1a1a">Step 2 ❌ → Wk 1-2 환경 보정 후 재시도 / Step 3 ❌ → Tier-2 spinoff 으로 마무리</text>
@@ -134,44 +152,44 @@
 </svg>
 
 **결정 가이드 요약**:
-- **Step 1 매칭** — 본인이 사용할 수 있는 Jetson HW 기준으로 idea 1 개 선택. Thor 가용 → CacheVeil; Orin NX → SHOAL; Orin Nano 만 → VESPER 또는 Tier-2.
+- **Step 1 매칭** — 본인이 사용할 수 있는 Jetson HW 기준으로 idea 1 개 선택. Orin Nano/NX → ★ VESPER (R45 risk 3/10 LOW); Orin NX/AGX → SHOAL (R45 4/10); Thor / Orin AGX (Dual-DLA) → DualLane (R45 4/10).
 - **Step 2 baseline** — paper/vendor 가 보고한 latency 와 ±5% 일치 안 하면 mechanism 측정 무의미. JetPack/CUDA/PyTorch 버전 + thermal mode (NVPModel) 정렬 우선.
 - **Step 3 mech #1** — single mechanism 만으로도 본인 idea 의 "예상 효과" 표 첫 행 (예: SHOAL 의 "p50 latency -10%") 에 도달해야 Tier-1 진행 정당화.
 - **Step 4 통합** — 3 개 mechanism 결합 후 Tier-1 cut (latency ≥15% / energy ≥20%) 도달 시 top-tier 제출. 미달 시 single-mech Tier-2 spinoff 으로 빠른 publication.
-- **Score 7.5 cut + Concurrent scoop check** — Phase 2' similarity critique 통해 Nova `arXiv:2509.21301` (50-70% concurrent) 등 강한 scoop 압박 시 mechanism repositioning 또는 미선정.
+- **Score 7.5 cut + Concurrent scoop check + R45 check** — Phase 2' similarity critique 통해 강한 scoop 압박 시 mechanism repositioning. R45.1 위반 (undocumented register / kernel module / closed-source firmware) 시 simulator-path Tier-2 변환 의무.
 
-### Tier-1 Path 가이드 (가장 유망 ideation 부터)
+### Tier-1 Path 가이드 (R45 적용 후 ★ lead 부터)
 
-**Path Lead — CacheVeil ★ (legacy-sys 출처, score 8.00, MICRO/HPCA 후보)**:
-- **시작점**: Orin AGX 64GB (4MB SLC, 8-way 가정) baseline TPOT/Decode 측정 → ARM CMN `por_hnf_pwpr` partition policy IOCTL 노출 확인.
-- **Tier-1 진입 조건**: 4-4 partition 시 visual KV pinning 후 (a) L2 conflict miss -28% 이상, (b) decode TPOT p99 -15% 이상.
-- **추가 의무 (Phase 1' 정제 사항)**:
-  - Baseline 보강: VL-Cache OpenReview verified ([HMrcv7Q4Ub](https://openreview.net/forum?id=HMrcv7Q4Ub)), Mind the Memory Gap [arXiv:2503.08311](https://arxiv.org/abs/2503.08311), libsmctrl ECRTS 2025
-  - JetPack 7.1 fixed-target + sysfs fallback 명시 (BPMP IOCTL 비공식 우려 해소)
-  - Mirror Lake 와의 axis 분리 (cache layer vs IOMMU layer) — 본 idea 는 cache layer 만
-
-**Path B — SHOAL (ai-opt, score 8.07, MLSys/ASPLOS)**:
-- **시작점**: Jetson Thor stock vLLM v1 빌드 + Qwen3-VL-4B baseline TTFT/decode → DRM enum 추가 micro-benchmark.
-- **Tier-1 진입 조건**: image patch ≥ 256, batch ≥ 2 일 때 prefill TTFT 18-24% ↓ + accuracy drop ≤ 0.5pp.
-- **Phase 1' 정제**: baseline FastVLM (CVPR 2025) + V2Drop 추가, DLA 부재 환경 fallback (`GPU_HBM ↔ GPU_UMA` 만) 강화.
-
-**Path C — VESPER (ai-opt, score 8.10, OSDI/SOSP)**:
+**Path Lead — VESPER ★ (ai-opt, score 8.10, OSDI/SOSP, R45 risk 3/10 LOW)**:
 - **시작점**: Orin NX 16GB cudaMallocManaged + memAdvise path 검증 → NEON kernel skeleton.
 - **Tier-1 진입 조건**: long-context (≥ 8K) decode tok/s 22-28% ↑ + algorithmic eviction (H2O baseline) 와 system gain 분리 ablation.
 - **Phase 1' 정제**: VLCache [arXiv:2512.12977](https://arxiv.org/abs/2512.12977) + Dissecting CPU-GPU UPM [arXiv:2508.12743](https://arxiv.org/abs/2508.12743) baseline 추가.
+- **R45 적용 결과**: cudaMallocManaged + cuMemAdvise + NEON intrinsics 모두 vendor 공식 user-space → R45 OK. 모든 Jetson 적용 가능.
+
+**Path B — SHOAL (ai-opt, score 8.07, MLSys/ASPLOS, R45 risk 4/10 LOW)**:
+- **시작점**: Jetson Thor stock vLLM v1 빌드 + Qwen3-VL-4B baseline TTFT/decode → DRM enum 추가 micro-benchmark.
+- **Tier-1 진입 조건**: image patch ≥ 256, batch ≥ 2 일 때 prefill TTFT 18-24% ↓ + accuracy drop ≤ 0.5pp.
+- **Phase 1' 정제**: baseline FastVLM (CVPR 2025) + V2Drop 추가, DLA 부재 환경 fallback (`GPU_HBM ↔ GPU_UMA` 만) 강화.
+- **R45 적용 결과**: NvMediaTensor 공식 API 사용. 추가로 NVDLA-sim simulator path 보강 가능 (Thor NVDLA-gen-next API 비공개 시 fallback).
+
+**Path C — DualLane (legacy-sys, score 8.00, ISCA/MICRO, R45 risk 4/10 LOW)**:
+- **시작점**: Orin AGX 64GB (Dual-DLA v2) baseline → TensorRT 10.9 `--useDLACore=0/1` Vision encoder split.
+- **Tier-1 진입 조건**: vision encoder ≥ 35% prefill 워크로드에서 prefill 1.4-1.8× speedup + DLA→GPU NVMM zero-copy round-trip ≤ 100μs.
+- **R45 적용 결과**: NvMedia DLA + Linux DRM dma-buf + libsmctrl 모두 공식 user-space API → R45 OK. Nova `arXiv:2509.21301` 50-70% CONCURRENT 우려는 4-mechanism 분리 ablation 으로 차별화.
 
 ### Tier-2 Path 가이드
 
-- **TUFA (T2)**: Orin Nano 7W single mechanism. **TUFA 의 trivialty 회피 명시** — vision early-exit 자체는 CVPR 2024-25 다수 (DynamicViT/A-ViT/V2Drop) 이지만 Orin Nano 7W thermal envelope 측정은 first-to-report.
-- **ShelfSwap (T2)**: novelty 5.5 — SparseDVFS / Four Over Six 등 adjacent 명시. 단일 mechanism + ISLPED 6p scope 만.
-- **Glacier Migrate (T2)**: pixel-level workload-specific axis 명시 — DLA SRAM 의 어떤 op subset 만 PIM-emulation 가능한지 정량화. ICCAD 8p 분량으로 격상.
+- **TUFA (T2, R45 risk 3/10)**: Orin Nano 7W single mechanism. **TUFA 의 trivialty 회피 명시** — vision early-exit 자체는 CVPR 2024-25 다수 (DynamicViT/A-ViT/V2Drop) 이지만 Orin Nano 7W thermal envelope 측정은 first-to-report.
+- **ShelfSwap (T2, R45 risk 4/10)**: novelty 5.5 — SparseDVFS / Four Over Six 등 adjacent 명시. 단일 mechanism + ISLPED 6p scope 만.
+- **CacheVeil-Sim (T2, R45 risk 7/10 MED-HIGH)**: CacheVeil 의 simulator-path spinoff. gem5 + ChampSim cache partition simulator 으로 SLC way-partition 효과 reproducible eval. 5 workload × 3 config × 2 baseline = 30 runs (4-server parallel 시 4-11일).
 
 ### Drop / Pivot 가이드
 
-- **Phase 1' improve-first**: 모든 6 idea 의 mechanism diff = 0 (변경 없음, 보강만). Phase 1'' 최종 선정 confirmed.
-- **DualLane 미선정 사유**: Nova [arXiv:2509.21301](https://arxiv.org/abs/2509.21301) 50-70% CONCURRENT, repositioning 부담 큼. VESPER 가 더 distinctive UMA axis.
-- **PageWeave 미선정 사유**: VESPER 와 axis 부분 중복, novelty 비슷하나 reviewer-impact 격차.
-- **Watershed/KILN/STELE/ThermalLoom/Mirror Lake/TGQ/Tessellated Bank Affinity**: CONCURRENT scoop 강 또는 score < 7.5.
+- **Phase 1' improve-first**: Phase 1' / 1'' 단계에서 mechanism diff = 0 (보강만), 그러나 **Phase 1'' R45 적용 단계에서 CacheVeil + Glacier Migrate 2 idea 의 implementation path 변동** 발생 (CacheVeil → Tier-2 simulator spinoff, Glacier Migrate → unselected).
+- **DualLane Tier-1 진입 사유 (R45 후)**: 모든 API 공식 + CacheVeil 자리 비면서 Tier-1 5 자리 중 진입.
+- **CacheVeil 원안 demotion**: ARM CMN `por_hnf_pwpr` undocumented BPMP IOCTL 의존 → R45.1 위반. simulator-path Tier-2 spinoff 으로 변환.
+- **Glacier Migrate unselected**: DLA SRAM physical addr exposure R45.1 위반 + simulator path 12-20주 비현실 → 단일 학기 fit 불가.
+- **PageWeave / Watershed/KILN/STELE/ThermalLoom/Mirror Lake/TGQ/Tessellated Bank Affinity**: CONCURRENT scoop 강 또는 score < 7.5.
 
 ---
 
@@ -236,21 +254,23 @@
 
 ---
 
-## 3. Tier-1 Top 3 표 (간략 link 표)
+## 3. Tier-1 Top 3 표 (R45 적용 후 link 표)
 
-| # | Idea | Venue | Score (N / D / I) | 핵심 mechanism (1줄) | 출처 expert |
-|---|------|-------|-------------------|---------------------|-------------|
-| 1 ★ | [CacheVeil](/research-wiki/2026-04/vlm-context-edge-jetson/tier1/01-cacheveil.md) | MICRO 2027 / HPCA 2027 | 8.5 / 7.0 / 8.5 = 8.00 | ARM CMN SLC 4-way pin (visual KV) + 4-way isolation (CPU/ISP) | legacy-sys |
-| 2 | [SHOAL](/research-wiki/2026-04/vlm-context-edge-jetson/tier1/02-shoal.md) | MLSys 2027 / ASPLOS 2027 | 7.5 / 8.5 / 8.2 = 8.07 | DLA → KV residence enum (GPU_HBM/UMA/CPU_pinned) layer-단위 dynamic | ai-opt |
-| 3 | [VESPER](/research-wiki/2026-04/vlm-context-edge-jetson/tier1/03-vesper.md) | OSDI 2027 / SOSP 2027 | 8.0 / 7.5 / 8.8 = 8.10 | UMA cudaMallocManaged dual-view + NEON SIMD CPU pruner | ai-opt |
+| # | Idea | Venue | Score (N / D / I) | R45 risk | 핵심 mechanism (1줄) | 출처 expert |
+|---|------|-------|-------------------|----------|---------------------|-------------|
+| 1 ★ | [VESPER](/research-wiki/2026-04/vlm-context-edge-jetson/tier1/03-vesper.md) | OSDI 2027 / SOSP 2027 | 8.0 / 7.5 / 8.8 = 8.10 | 3/10 LOW | UMA cudaMallocManaged dual-view + NEON SIMD CPU pruner | ai-opt |
+| 2 | [SHOAL](/research-wiki/2026-04/vlm-context-edge-jetson/tier1/02-shoal.md) | MLSys 2027 / ASPLOS 2027 | 7.5 / 8.5 / 8.2 = 8.07 | 4/10 LOW | DLA → KV residence enum (GPU_HBM/UMA/CPU_pinned) layer-단위 dynamic | ai-opt |
+| 3 | [DualLane](/research-wiki/2026-04/vlm-context-edge-jetson/tier1/04-duallane.md) | ISCA 2027 / MICRO 2027 | 7.0 / 8.0 / 8.6 → 8.00 | 4/10 LOW | Vision encoder layer-split DLA0/DLA1 spatial-split + NVMM zero-copy + cross-frame stage pipelining | legacy-sys |
 
-## 4. Tier-2 독립 Top 3 표
+> **참고**: CacheVeil (원래 ★ lead, 8.00) 는 R45.1 위반 으로 Tier-1 demotion → [tier2/03-cacheveil-sim](/research-wiki/2026-04/vlm-context-edge-jetson/tier2/03-cacheveil-sim.md) 으로 reposition. 원안 페이지는 [tier1/01-cacheveil](/research-wiki/2026-04/vlm-context-edge-jetson/tier1/01-cacheveil.md) reference 로 유지.
 
-| # | Idea | Venue | Score (N / D / I) | 핵심 mechanism (1줄) | 출처 expert |
-|---|------|-------|-------------------|---------------------|-------------|
-| T1 | [TUFA](/research-wiki/2026-04/vlm-context-edge-jetson/tier2/01-tufa.md) | IEEE CAL 4p | 6.5 / 6.5 / 6.4 = 6.47 | CLIP-ViT 24-layer 중 spatial entropy 로 12-24 layer 동적 exit (Orin Nano 7W only) | ai-opt |
-| T2 | [ShelfSwap](/research-wiki/2026-04/vlm-context-edge-jetson/tier2/02-shelfswap.md) | ISLPED 6p / DATE 6p | 5.5 / 6.0 / 6.7 = 6.07 | Skin temp > 78°C → visual KV cold layer CPU-affine zone migration | legacy-sys |
-| T3 | [Glacier Migrate](/research-wiki/2026-04/vlm-context-edge-jetson/tier2/03-glacier-migrate.md) | ICCAD 8p / IEEE TCAS-I | 6.0 / 7.0 / 7.0 = 6.67 | Thor DLA SRAM 2-4MB 을 LPDDR5X round-trip bypass (PIM emulation) | hwpim |
+## 4. Tier-2 독립 Top 3 표 (R45 적용 후)
+
+| # | Idea | Venue | Score (N / D / I) | R45 risk | 핵심 mechanism (1줄) | 출처 expert |
+|---|------|-------|-------------------|----------|---------------------|-------------|
+| T1 | [TUFA](/research-wiki/2026-04/vlm-context-edge-jetson/tier2/01-tufa.md) | IEEE CAL 4p | 6.5 / 6.5 / 6.4 = 6.47 | 3/10 LOW | CLIP-ViT 24-layer 중 spatial entropy 로 12-24 layer 동적 exit (Orin Nano 7W only) | ai-opt |
+| T2 | [ShelfSwap](/research-wiki/2026-04/vlm-context-edge-jetson/tier2/02-shelfswap.md) | ISLPED 6p / DATE 6p | 5.5 / 6.0 / 6.7 = 6.07 | 4/10 LOW | Skin temp > 78°C → visual KV cold layer CPU-affine zone migration | legacy-sys |
+| T3 | [CacheVeil-Sim](/research-wiki/2026-04/vlm-context-edge-jetson/tier2/03-cacheveil-sim.md) | ISLPED 6p / DAC 6p | demoted → 6.5 | 7/10 MED-HIGH | gem5 + ChampSim cache partition simulator 으로 SLC way-partition 효과 (CacheVeil 의 simulator-path spinoff) | legacy-sys |
 
 ## 5. 미선정 15편 요약 표
 
@@ -264,7 +284,9 @@
 | RIVET | Orin DLA-only INT8 image embedding LRU cache | SGLang RadixAttention overlap, score 4.0 |
 | ThermalLoom | Thermal-throttle BW degradation + NVPModel hide | ShelfSwap + STELE 와 thermal axis 중복 |
 | PageWeave | Visual-token lifetime classifier + cgroup | VESPER 와 UMA axis 중복 |
-| DualLane | Dual-NVDLA + GPU 3-way + SLC partition | Nova [arXiv:2509.21301](https://arxiv.org/abs/2509.21301) 50-70% CONCURRENT |
+| ~~DualLane~~ | ~~Dual-NVDLA + GPU 3-way + SLC partition~~ | **R45 적용 후 Tier-1 진입 (4/10 LOW)** — CacheVeil 자리 비면서 ranking 변동 |
+| **Glacier Migrate** (R45 demotion) | DLA SRAM 2-4MB 을 LPDDR5X round-trip bypass (PIM emulation) | **R45.1 위반** (DLA SRAM physical addr exposure) + simulator path 12-20주 비현실 |
+| **CacheVeil 원안** (R45 demotion) | ARM CMN SLC 4-way pin (visual KV) + 4-way isolation | **R45.1 위반** (undocumented BPMP IOCTL) → simulator-path Tier-2 spinoff (CacheVeil-Sim) 으로 reposition |
 | FrostHint | ISP zero-copy + L2 pre-warming hint | CacheVeil baseline 으로 흡수 권고, score 3.5 |
 | TileGate | L2-capacity-aware tile size | CacheVeil baseline 으로 흡수 권고, score 3.5 |
 | Watershed | Phase-level coarse DLA+GPU dispatcher | DuetServe + Nova CONCURRENT 58% |
@@ -330,7 +352,7 @@
 
 1. **README** (현재 파일) — 전체 ideation flow + Tier 분기 + 약어 glossary 자율 학습.
 2. **Flow Chart 의 분기 노드** — 자기 환경 (Thor 가용? DLA 사용?) 에 맞는 path 선택.
-3. **Tier-1 lead idea 파일** ([CacheVeil](/research-wiki/2026-04/vlm-context-edge-jetson/tier1/01-cacheveil.md)) → Mechanism 4 elements + Implementation Steps 정독.
+3. **Tier-1 lead idea 파일** ([VESPER](/research-wiki/2026-04/vlm-context-edge-jetson/tier1/03-vesper.md)) → Mechanism 4 elements + Implementation Steps 정독. (CacheVeil 원안은 R45 demotion, [tier1/01-cacheveil](/research-wiki/2026-04/vlm-context-edge-jetson/tier1/01-cacheveil.md) 는 R45 violation 사례 학습용)
 4. **Preliminary Analysis Metrics** 항목 → 자기 자원 (workstation/lab) 으로 Step 1 baseline 재현 → Tier-1 진입 조건 만족 여부 판단 → Tier-2 fallback 또는 Tier-1 paper 작성.
 
 추가 탐색 자료:

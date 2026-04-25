@@ -19,6 +19,7 @@ export async function generateStaticParams() {
     { idea: "01-cacheveil" },
     { idea: "02-shoal" },
     { idea: "03-vesper" },
+    { idea: "04-duallane" },
   ];
 }
 

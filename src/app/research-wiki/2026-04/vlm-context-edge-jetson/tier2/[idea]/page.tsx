@@ -18,7 +18,7 @@ export async function generateStaticParams() {
   return [
     { idea: "01-tufa" },
     { idea: "02-shelfswap" },
-    { idea: "03-glacier-migrate" },
+    { idea: "03-cacheveil-sim" },
   ];
 }
 
