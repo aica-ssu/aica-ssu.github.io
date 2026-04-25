@@ -1,6 +1,6 @@
 # Adversarial Robustness of Discrete Routing in Mixture-of-Experts Jailbreak Detection (DISCRETE-VEIL)
 
-> [← Session Overview](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/README.md)
+> [← Session Overview](/research-wiki/2026-04/moe-fingerprint-security-serving/README.md)
 
 > ## 📖 약어 / 핵심 용어 풀이 (R35)
 >
@@ -234,7 +234,7 @@ Peer-reviewed ratio: 4/8 = **50%** (R2 ≥25% 충족).
 - **Baseline 2-3 편**: FJD + OmniGuard + hidden-state probe.
 - **참고 소요**: 약 4-6 weeks.
 - **Tier-1 과의 관계**: precedence claim ("first-to-report MoE embedding-PGD on text routing classifier"). Tier-1 S&P submission 전 IEEE CAL 4p 로 publication priority 확보 가능.
-- 상세는 **Tier-2 [01-discrete-veil-lite.md](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/tier2/01-discrete-veil-lite.md)** 참조.
+- 상세는 **Tier-2 [01-discrete-veil-lite.md](/research-wiki/2026-04/moe-fingerprint-security-serving/tier2/01-discrete-veil-lite.md)** 참조.
 
 ---
 

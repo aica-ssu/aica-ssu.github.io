@@ -1,6 +1,6 @@
 # Training-Free Multi-Task Guard via Mixture-of-Experts Routing Fingerprint (BEACON-GUARD)
 
-> [← Session Overview](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/README.md)
+> [← Session Overview](/research-wiki/2026-04/moe-fingerprint-security-serving/README.md)
 
 > ## 📖 약어 / 핵심 용어 풀이 (R35)
 >

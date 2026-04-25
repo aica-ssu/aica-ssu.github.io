@@ -1,10 +1,10 @@
 # Multi-Signal Fingerprint Fusion Geometric Analysis for Two-Task Mixture-of-Experts Guard (BEACON-GUARD-Lite DATE)
 
-> [← Session Overview](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/README.md) · **Tier-2 독립 #3** (Tier-1 ATC fallback)
+> [← Session Overview](/research-wiki/2026-04/moe-fingerprint-security-serving/README.md) · **Tier-2 독립 #3** (Tier-1 ATC fallback)
 
 > ## 📖 약어 풀이 (R35)
 >
-> - **MoE / Routing fingerprint / k-NN / FJD / OmniGuard / Task-Cond Routing / MMD / JS divergence** — Tier-1 [BEACON-GUARD idea 파일](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/tier1/03-beacon-guard.md) 약어집 참조.
+> - **MoE / Routing fingerprint / k-NN / FJD / OmniGuard / Task-Cond Routing / MMD / JS divergence** — Tier-1 [BEACON-GUARD idea 파일](/research-wiki/2026-04/moe-fingerprint-security-serving/tier1/03-beacon-guard.md) 약어집 참조.
 > - **DATE** (Design, Automation and Test in Europe) — Tier-2 short paper venue 6 page. Hardware/system 분야 본 spinoff 의 primary target.
 > - **Multi-signal fusion** — 단일 signal classifier 대신 여러 signal (discrete topk_index + continuous softmax_scores + integer activation_count) 의 geometric property 통합 분석.
 > - **Cosine similarity** — 두 vector 의 각도, `cos(θ) = (a·b) / (|a||b|)`. ([Wikipedia](https://en.wikipedia.org/wiki/Cosine_similarity))
@@ -18,7 +18,7 @@
 
 ## 1. 개요
 
-BEACON-GUARD Tier-1 ATC ([../tier1/03-beacon-guard.md](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/tier1/03-beacon-guard.md)) 의 **Mech 2 (Multi-Signal Fingerprint Fusion Geometric Analysis) 단독 축소**. ATC 12p 에서 LOOM' 와 paper-pair 진행이 어려운 경우 DATE 6p deployment cost 차트 중심 fallback.
+BEACON-GUARD Tier-1 ATC ([../tier1/03-beacon-guard.md](/research-wiki/2026-04/moe-fingerprint-security-serving/tier1/03-beacon-guard.md)) 의 **Mech 2 (Multi-Signal Fingerprint Fusion Geometric Analysis) 단독 축소**. ATC 12p 에서 LOOM' 와 paper-pair 진행이 어려운 경우 DATE 6p deployment cost 차트 중심 fallback.
 
 **Metaphor 부속 (R30)**: "Beacon-Lite" — Tier-1 의 multi-task 축 제외, fusion analysis 단독.
 
@@ -113,7 +113,7 @@ BEACON-GUARD Tier-1 ATC ([../tier1/03-beacon-guard.md](/summary/2026-04-24-mode1
 - vLLM serving integration + production latency
 - WildGuard / LlamaGuard baseline 추가
 
-→ Tier-1 [03-beacon-guard.md](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/tier1/03-beacon-guard.md) 참조.
+→ Tier-1 [03-beacon-guard.md](/research-wiki/2026-04/moe-fingerprint-security-serving/tier1/03-beacon-guard.md) 참조.
 
 ---
 

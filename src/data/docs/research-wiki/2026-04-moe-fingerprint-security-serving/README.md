@@ -57,21 +57,21 @@
 
 | Rank | Title | Score | 링크 |
 |------|-------|-------|------|
-| 🥇 | **Adversarial Robustness of Discrete Routing in Mixture-of-Experts Jailbreak Detection (DISCRETE-VEIL)** — Tier-1 S&P 2027 (13p) | **8.00** | [tier1/01-discrete-veil.md](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/tier1/01-discrete-veil.md) |
-| 🥈 | **Token × Layer 2D Early-Exit Pareto for Multi-Consumer MoE Fingerprint Serving (LOOM)** — Tier-1 MLSys 2027 / ASPLOS 2027 (18p), LOOM+EMBER+THRESHOLD+TALLY merge | **7.38** | [tier1/02-loom.md](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/tier1/02-loom.md) |
-| 🥉 | **Training-Free Multi-Task Guard via Mixture-of-Experts Routing Fingerprint (BEACON-GUARD)** — Tier-1 USENIX ATC 2027 (12p) / DATE 2027 (6p paper pair with LOOM) | **7.25** | [tier1/03-beacon-guard.md](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/tier1/03-beacon-guard.md) |
+| 🥇 | **Adversarial Robustness of Discrete Routing in Mixture-of-Experts Jailbreak Detection (DISCRETE-VEIL)** — Tier-1 S&P 2027 (13p) | **8.00** | [tier1/01-discrete-veil.md](/research-wiki/2026-04/moe-fingerprint-security-serving/tier1/01-discrete-veil.md) |
+| 🥈 | **Token × Layer 2D Early-Exit Pareto for Multi-Consumer MoE Fingerprint Serving (LOOM)** — Tier-1 MLSys 2027 / ASPLOS 2027 (18p), LOOM+EMBER+THRESHOLD+TALLY merge | **7.38** | [tier1/02-loom.md](/research-wiki/2026-04/moe-fingerprint-security-serving/tier1/02-loom.md) |
+| 🥉 | **Training-Free Multi-Task Guard via Mixture-of-Experts Routing Fingerprint (BEACON-GUARD)** — Tier-1 USENIX ATC 2027 (12p) / DATE 2027 (6p paper pair with LOOM) | **7.25** | [tier1/03-beacon-guard.md](/research-wiki/2026-04/moe-fingerprint-security-serving/tier1/03-beacon-guard.md) |
 
 ### 0.3 Tier-2 독립 Top 3 (Tier-1 과 동일 detail 수준 유지, R28-α)
 
 | Rank | Title | Score | 링크 |
 |------|-------|-------|------|
-| T1 | **Embedding-Space PGD on MoE Routing Classifier — Single-Model Precedence Study (DISCRETE-VEIL-Lite)** — IEEE CAL 4p / DSN practical 6p | 7.10 | [tier2/01-discrete-veil-lite.md](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/tier2/01-discrete-veil-lite.md) |
-| T2 | **MoE-Specific Layer-Expert Variance Pruning with SAFEx-Style Interpretability (TALLY-Spinoff)** — DATE 2027 4p WIP | 6.80 | [tier2/02-tally-spinoff.md](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/tier2/02-tally-spinoff.md) |
-| T3 | **Multi-Signal Fingerprint Fusion Geometric Analysis for Two-Task Guard (BEACON-GUARD-Lite DATE fallback)** — DATE 2027 6p | 6.90 | [tier2/03-beacon-guard-date.md](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/tier2/03-beacon-guard-date.md) |
+| T1 | **Embedding-Space PGD on MoE Routing Classifier — Single-Model Precedence Study (DISCRETE-VEIL-Lite)** — IEEE CAL 4p / DSN practical 6p | 7.10 | [tier2/01-discrete-veil-lite.md](/research-wiki/2026-04/moe-fingerprint-security-serving/tier2/01-discrete-veil-lite.md) |
+| T2 | **MoE-Specific Layer-Expert Variance Pruning with SAFEx-Style Interpretability (TALLY-Spinoff)** — DATE 2027 4p WIP | 6.80 | [tier2/02-tally-spinoff.md](/research-wiki/2026-04/moe-fingerprint-security-serving/tier2/02-tally-spinoff.md) |
+| T3 | **Multi-Signal Fingerprint Fusion Geometric Analysis for Two-Task Guard (BEACON-GUARD-Lite DATE fallback)** — DATE 2027 6p | 6.90 | [tier2/03-beacon-guard-date.md](/research-wiki/2026-04/moe-fingerprint-security-serving/tier2/03-beacon-guard-date.md) |
 
 ### 0.4 미선정 아이디어 요약
 
-원안 6 → 최종 3 파이프라인 (+ Tier-2 spinoff 3). EMBER + THRESHOLD + TALLY 단독 → LOOM' 4-mech 으로 merge (artificial split 방지, -7 mechanism). BEACON-GUARD 원안 (Tier-1 USENIX Security) → Tier-2 ATC/DATE 강등 (concurrent 압박). 상세는 [unselected.md](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/unselected.md).
+원안 6 → 최종 3 파이프라인 (+ Tier-2 spinoff 3). EMBER + THRESHOLD + TALLY 단독 → LOOM' 4-mech 으로 merge (artificial split 방지, -7 mechanism). BEACON-GUARD 원안 (Tier-1 USENIX Security) → Tier-2 ATC/DATE 강등 (concurrent 압박). 상세는 [unselected.md](/research-wiki/2026-04/moe-fingerprint-security-serving/unselected.md).
 
 ---
 
@@ -207,7 +207,7 @@ flowchart TD
 
 ## 3. 미선정 아이디어 짧은 요약
 
-상세는 [unselected.md](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/unselected.md):
+상세는 [unselected.md](/research-wiki/2026-04/moe-fingerprint-security-serving/unselected.md):
 
 - **EMBER (원안)** → MERGED to LOOM' M2 (early-exit axis 중복)
 - **THRESHOLD (원안)** → DROP, LOOM' M2 token-axis 흡수

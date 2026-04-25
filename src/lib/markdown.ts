@@ -43,18 +43,33 @@ export async function markdownToHtml(md: string, linkBaseUrl?: string) {
 
 function rewriteMdLinks({ baseUrl }: { baseUrl?: string } = {}) {
   return (tree: MdastRoot) => {
-    if (!baseUrl) return;
-    const base = baseUrl.replace(/\/$/, "");
     visit(tree, "link", (node) => {
       const url = node.url;
       if (!url) return;
-      if (/^[a-z]+:\/\//i.test(url) || url.startsWith("/") || url.startsWith("#") || url.startsWith("mailto:")) {
+      if (/^[a-z]+:\/\//i.test(url) || url.startsWith("#") || url.startsWith("mailto:")) {
         return;
       }
       const [pathPart, hashPart] = url.split("#");
       if (!/\.md(?:$|[?#])/.test(pathPart)) {
         return;
       }
+
+      // (a) Absolute path ending in .md — strip extension + map README → dir.
+      if (pathPart.startsWith("/")) {
+        const segs = pathPart.split("/").filter(Boolean);
+        let last = segs.pop() ?? "";
+        last = last.replace(/\.md$/, "");
+        if (last.toLowerCase() === "readme") last = "";
+        let newUrl = "/" + segs.concat(last ? [last] : []).join("/");
+        if (newUrl === "//") newUrl = "/";
+        if (hashPart) newUrl += "#" + hashPart;
+        node.url = newUrl;
+        return;
+      }
+
+      // (b) Relative .md link — needs baseUrl to resolve.
+      if (!baseUrl) return;
+      const base = baseUrl.replace(/\/$/, "");
       const segments = pathPart.split("/");
       const baseSegments = base.split("/").filter(Boolean);
       const resolved: string[] = [...baseSegments];

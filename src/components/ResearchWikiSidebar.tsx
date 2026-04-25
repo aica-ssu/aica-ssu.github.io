@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 type SidebarSection = {
   title: string;
@@ -68,20 +72,26 @@ const SIDEBAR: SidebarSection[] = [
 ];
 
 export default function ResearchWikiSidebar() {
-  return (
-    <aside
-      className="research-wiki-sidebar shrink-0 border-r"
-      style={{
-        width: "320px",
-        maxHeight: "calc(100vh - 64px)",
-        overflowY: "auto",
-        position: "sticky",
-        top: "64px",
-        borderColor: "var(--border)",
-        backgroundColor: "var(--bg-secondary, #f4f6fb)",
-        padding: "24px 16px",
-      }}
-    >
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  // 라우트 변경 시 자동 닫기 (모바일)
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  // 사이드바 open 시 body 스크롤 잠금 (모바일)
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = "";
+      };
+    }
+  }, [open]);
+
+  const sidebarContent = (
+    <>
       <h2
         className="text-base font-bold mb-4"
         style={{ color: "var(--text-primary, #1E2761)" }}
@@ -122,6 +132,68 @@ export default function ResearchWikiSidebar() {
       >
         Hidden link — 외부 노출되지 않음 · 사이드바는 모든 research-wiki 페이지에 동일 노출.
       </p>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Mobile-only hamburger toggle button */}
+      <button
+        type="button"
+        className="md:hidden fixed top-20 left-3 z-40 rounded-md px-3 py-2 text-sm font-medium shadow-md"
+        style={{
+          backgroundColor: "var(--bg-secondary, #f4f6fb)",
+          color: "var(--text-primary, #1E2761)",
+          border: "1px solid var(--border)",
+        }}
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-controls="research-wiki-sidebar"
+      >
+        {open ? "✕ Close" : "☰ Wiki Menu"}
+      </button>
+
+      {/* Mobile-only backdrop */}
+      {open && (
+        <div
+          className="md:hidden fixed inset-0 z-40 bg-black/40"
+          onClick={() => setOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Desktop sidebar (always visible at md+) */}
+      <aside
+        className="research-wiki-sidebar shrink-0 border-r hidden md:block"
+        style={{
+          width: "320px",
+          maxHeight: "calc(100vh - 64px)",
+          overflowY: "auto",
+          position: "sticky",
+          top: "64px",
+          borderColor: "var(--border)",
+          backgroundColor: "var(--bg-secondary, #f4f6fb)",
+          padding: "24px 16px",
+        }}
+      >
+        {sidebarContent}
+      </aside>
+
+      {/* Mobile drawer (off-canvas, fixed overlay) */}
+      <aside
+        id="research-wiki-sidebar"
+        className={`md:hidden fixed inset-y-0 left-0 z-50 overflow-y-auto transition-transform ${
+          open ? "translate-x-0" : "-translate-x-full"
+        }`}
+        style={{
+          width: "min(85vw, 320px)",
+          backgroundColor: "var(--bg-secondary, #f4f6fb)",
+          borderRight: "1px solid var(--border)",
+          padding: "72px 16px 24px 16px",
+        }}
+      >
+        {sidebarContent}
+      </aside>
+    </>
   );
 }

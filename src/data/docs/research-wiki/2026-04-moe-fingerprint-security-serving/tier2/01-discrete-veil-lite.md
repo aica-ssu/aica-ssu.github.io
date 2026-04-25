@@ -1,10 +1,10 @@
 # Embedding-Space PGD on Mixture-of-Experts Routing Classifier — Single-Model Precedence Study (DISCRETE-VEIL-Lite)
 
-> [← Session Overview](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/README.md) · **Tier-2 독립 #1**
+> [← Session Overview](/research-wiki/2026-04/moe-fingerprint-security-serving/README.md) · **Tier-2 독립 #1**
 
 > ## 📖 약어 풀이 (R35, 핵심만)
 >
-> - **MoE / Routing fingerprint / Jailbreak / DRO-Attack / PGD / Gumbel-softmax / WildJailbreak / vLLM** — 모두 Tier-1 [DISCRETE-VEIL idea 파일](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/tier1/01-discrete-veil.md) 의 약어집 참조.
+> - **MoE / Routing fingerprint / Jailbreak / DRO-Attack / PGD / Gumbel-softmax / WildJailbreak / vLLM** — 모두 Tier-1 [DISCRETE-VEIL idea 파일](/research-wiki/2026-04/moe-fingerprint-security-serving/tier1/01-discrete-veil.md) 의 약어집 참조.
 > - **Precedence claim** — 동일 attack 공간에서 "first-to-report" 우선 publication 으로 inventor 주장. Tier-1 large paper 보다 먼저 short paper 로 publish 하여 priority 확보 전략.
 > - **IEEE CAL** (IEEE Computer Architecture Letters) — short paper venue, 4 page, computer architecture letters journal. Tier-2 의 대표적 publication 통로.
 
@@ -24,7 +24,7 @@ DISCRETE-VEIL Tier-1 의 single-mechanism 축소 study. **Qwen3 + PAIR 단일 �
 
 ## 2. 기존 연구의 한계 / GAP
 
-DISCRETE-VEIL Tier-1 [01-discrete-veil.md](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/tier1/01-discrete-veil.md) 의 §2 와 동일하지만, scope 축소로 V-MoE PGD baseline + GateBreaker 비교는 1-2 줄 brief reference 만:
+DISCRETE-VEIL Tier-1 [01-discrete-veil.md](/research-wiki/2026-04/moe-fingerprint-security-serving/tier1/01-discrete-veil.md) 의 §2 와 동일하지만, scope 축소로 V-MoE PGD baseline + GateBreaker 비교는 1-2 줄 brief reference 만:
 
 | 기존 | 본 Lite 와 차별 |
 |------|-----------------|
@@ -113,7 +113,7 @@ DISCRETE-VEIL Tier-1 [01-discrete-veil.md](/summary/2026-04-24-mode1-moe-fingerp
 - V-MoE PGD text adaptation baseline
 - 4-attack-Venn diagram
 
-→ Tier-1 [01-discrete-veil.md](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/tier1/01-discrete-veil.md) 참조.
+→ Tier-1 [01-discrete-veil.md](/research-wiki/2026-04/moe-fingerprint-security-serving/tier1/01-discrete-veil.md) 참조.
 
 ---
 

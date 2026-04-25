@@ -1,6 +1,6 @@
 # Token × Layer 2D Early-Exit Pareto for Multi-Consumer MoE Fingerprint Serving (LOOM)
 
-> [← Session Overview](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/README.md)
+> [← Session Overview](/research-wiki/2026-04/moe-fingerprint-security-serving/README.md)
 
 > ## 📖 약어 / 핵심 용어 풀이 (R35)
 >
@@ -231,7 +231,7 @@ Peer-reviewed: MoE-Infinity (ATC 2024) + Gimbal (MLSys 2026) + vLLM (SOSP 2023) 
 
 LOOM 의 4 mechanism 중 단일 mechanism 만 분리 publication 시:
 - **M2 단독 (token×layer 2D early-exit)** → **DAC 6p / IEEE CAL 4p**: detection 단독 축소, FLOPs / latency 측정 중심.
-- **M4 단독 (LEAP+QIVF interpretability)** → **TALLY-Spinoff DATE 2027 4p WIP**, 별도 [tier2/02-tally-spinoff.md](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/tier2/02-tally-spinoff.md) 참조.
+- **M4 단독 (LEAP+QIVF interpretability)** → **TALLY-Spinoff DATE 2027 4p WIP**, 별도 [tier2/02-tally-spinoff.md](/research-wiki/2026-04/moe-fingerprint-security-serving/tier2/02-tally-spinoff.md) 참조.
 
 ---
 

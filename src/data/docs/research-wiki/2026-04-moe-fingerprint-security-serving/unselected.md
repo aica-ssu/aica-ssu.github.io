@@ -1,6 +1,6 @@
 # 미선정 아이디어 모음 — 2026-04-24 MoE Fingerprint Security+Serving
 
-> [← Session Overview](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/README.md)
+> [← Session Overview](/research-wiki/2026-04/moe-fingerprint-security-serving/README.md)
 
 원안 6 아이디어 → Tier-1 Top 3 + Tier-2 독립 Top 3 = 6 selected. 단, 원안 6 중 5 가 변경/흡수/강등 (-7 mechanism). 본 파일은 각 변경/흡수/drop 의 사유 + 재방문 조건.
 
@@ -97,7 +97,7 @@
   - Self-critique 가 이미 "LOOM/EMBER sub-component" 인정
 - **분할 처리**:
   - LOOM' M4 로 흡수 (Tier-1 LOOM' paper 의 sub mechanism)
-  - DATE 4p WIP spinoff 으로 LEAP + SAFEx interpretability axis 단독 publication ([tier2/02-tally-spinoff.md](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/tier2/02-tally-spinoff.md))
+  - DATE 4p WIP spinoff 으로 LEAP + SAFEx interpretability axis 단독 publication ([tier2/02-tally-spinoff.md](/research-wiki/2026-04/moe-fingerprint-security-serving/tier2/02-tally-spinoff.md))
 - **재방문 조건 (단독 Tier-1)**: 별도 없음 (현 spinoff 유지).
 
 ---

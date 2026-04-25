@@ -196,7 +196,15 @@ for (const file of walk(DATA_ROOT)) {
       // Absolute /research-wiki/... → must have route
       if (url.startsWith("/research-wiki")) {
         absoluteLinks++;
-        if (!routeExists(url)) {
+        // Strip .md from absolute path (markdown.ts auto-rewrites at render time).
+        let routeUrl = url.split("#")[0];
+        if (routeUrl.endsWith(".md")) {
+          routeUrl = routeUrl.replace(/\.md$/, "");
+          if (routeUrl.toLowerCase().endsWith("/readme")) {
+            routeUrl = routeUrl.slice(0, -"/readme".length);
+          }
+        }
+        if (!routeExists(routeUrl)) {
           errors.push({
             file: path.relative(REPO_ROOT, file),
             line: i + 1,

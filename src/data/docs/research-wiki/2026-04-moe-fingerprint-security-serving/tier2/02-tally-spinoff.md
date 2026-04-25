@@ -1,10 +1,10 @@
 # MoE-Specific Layer-Expert Variance Pruning with SAFEx-Style Interpretability (TALLY-Spinoff)
 
-> [← Session Overview](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/README.md) · **Tier-2 독립 #2**
+> [← Session Overview](/research-wiki/2026-04/moe-fingerprint-security-serving/README.md) · **Tier-2 독립 #2**
 
 > ## 📖 약어 풀이 (R35)
 >
-> - **MoE / Routing fingerprint / FAISS IVF-PQ / k-NN** — Tier-1 [LOOM idea 파일](/summary/2026-04-24-mode1-moe-fingerprint-security-serving/tier1/02-loom.md) 의 약어집 참조.
+> - **MoE / Routing fingerprint / FAISS IVF-PQ / k-NN** — Tier-1 [LOOM idea 파일](/research-wiki/2026-04/moe-fingerprint-security-serving/tier1/02-loom.md) 의 약어집 참조.
 > - **LEAP** (Layer-Expert Axis Pruning) — MoE fingerprint 의 layer-expert axis 별 variance + label MI 기준 top-D dim 만 유지하는 본 spinoff 의 핵심 mechanism. PCA 와 다르게 MoE-specific block structure 보존.
 > - **PCA** (Principal Component Analysis) — 표준 dim reduction. linear projection 으로 분산 최대 axis 추출. ([Wikipedia](https://en.wikipedia.org/wiki/Principal_component_analysis))
 > - **IPCA** (Incremental PCA) — 메모리 제약 환경의 streaming PCA 변형. ([scikit-learn docs](https://scikit-learn.org/stable/modules/decomposition.html#incremental-pca))
