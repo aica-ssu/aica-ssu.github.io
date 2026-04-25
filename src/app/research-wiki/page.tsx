@@ -19,33 +19,41 @@ type SessionCard = {
 
 const recentSessions: SessionCard[] = [
   {
-    date: "2026-04-24",
-    title: "🥇 MoE Expert-Activation Fingerprint 기반 보안 + 서빙 최적화",
-    href: "/research-wiki/2026-04/moe-fingerprint-security-serving",
-    keywords: ["MoE", "Security", "Adversarial", "Serving", "Fingerprint", "S&P 2027", "MLSys 2027", "R28-R37 첫 적용"],
+    date: "2026-04-25",
+    title: "🥇 VLM Context-aware Serving on Jetson Edge",
+    href: "/research-wiki/2026-04/vlm-context-edge-jetson",
+    keywords: ["VLM", "Edge", "Jetson Thor", "Jetson Orin NX", "Jetson Orin Nano", "Context-aware", "Energy", "v1/v2/v3 archived", "R38-R41 첫 적용"],
     summary:
-      "이방산 학생의 4 MoE 모델 × ~5,900 runs 실험 (MMLU 4-cat 96.2% / WildJailbreak 2-way 94.0%) 기반. 사용자 insight (\"no-finetune + multi-task = paper-worthy\") 의 Tier-1 novelty 엄밀 검증 결과 3 진짜 paper-worthy 축 확정 — (1) MoE discrete routing 의 adaptive-adversarial robustness, (2) token×layer 2D early-exit Pareto, (3) information-theoretic shared-substrate. R28-R37 (hierarchical bundle / flow chart / source verified / R35 약어 glossary / R36 link validation / R37 cover-page-less) 첫 적용 세션.",
+      "이전 v1/v2/v3 (HRTS/ContextMIG/PhaseGraph-VLA — datacenter A100/H100 가정) 를 _archive 로 backup 하고 Jetson Thor 128GB / Orin NX 16GB / Orin Nano 8GB 의 4 edge constraint (UMA / DLA / 273-68 GB/s LPDDR5X / thermal 7-130W) 에 맞춰 신규 ideation. 3 expert × 7 idea = 21 candidate → Phase 2 reviewer 3명 (novelty / diff / impact+scoop) 의 평가 + 6개월 fresh similarity critique → Tier-1 Top 3 + Tier-2 독립 Top 3 = 6 selected + 15 미선정. R38 (timeline Topic <br/> 구조) / R39 (link validation) / R40 (Mermaid 의무) / R41 (MermaidScript import) 모두 자동 검증 통과.",
     detailed: true,
     tierTable: [
-      { tier: "🥇 Tier-1", idea: "DISCRETE-VEIL", venue: "IEEE S&P 2027 (13p)", score: "8.00",
-        href: "/research-wiki/2026-04/moe-fingerprint-security-serving/tier1/01-discrete-veil" },
-      { tier: "🥈 Tier-1", idea: "LOOM (merged)", venue: "MLSys/ASPLOS 2027 (18p)", score: "7.38",
-        href: "/research-wiki/2026-04/moe-fingerprint-security-serving/tier1/02-loom" },
-      { tier: "🥉 Tier-1", idea: "BEACON-GUARD", venue: "USENIX ATC 2027 (12p)", score: "7.25",
-        href: "/research-wiki/2026-04/moe-fingerprint-security-serving/tier1/03-beacon-guard" },
-      { tier: "T1", idea: "DISCRETE-VEIL-Lite", venue: "IEEE CAL 4p", score: "7.10",
-        href: "/research-wiki/2026-04/moe-fingerprint-security-serving/tier2/01-discrete-veil-lite" },
-      { tier: "T2", idea: "TALLY-Spinoff", venue: "DATE 4p WIP", score: "6.80",
-        href: "/research-wiki/2026-04/moe-fingerprint-security-serving/tier2/02-tally-spinoff" },
-      { tier: "T3", idea: "BEACON-GUARD-DATE", venue: "DATE 6p", score: "6.90",
-        href: "/research-wiki/2026-04/moe-fingerprint-security-serving/tier2/03-beacon-guard-date" },
+      { tier: "🥇 Tier-1", idea: "CacheVeil (lead)", venue: "MICRO/HPCA 2027 (12-15p)", score: "8.00",
+        href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier1/01-cacheveil" },
+      { tier: "🥈 Tier-1", idea: "SHOAL", venue: "MLSys/ASPLOS 2027 (12-18p)", score: "8.07",
+        href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier1/02-shoal" },
+      { tier: "🥉 Tier-1", idea: "VESPER", venue: "OSDI/SOSP 2027 (12-15p)", score: "8.10",
+        href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier1/03-vesper" },
+      { tier: "T1", idea: "TUFA", venue: "IEEE CAL 4p", score: "6.47",
+        href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier2/01-tufa" },
+      { tier: "T2", idea: "ShelfSwap", venue: "ISLPED/DATE 6p", score: "6.07",
+        href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier2/02-shelfswap" },
+      { tier: "T3", idea: "Glacier Migrate", venue: "ICCAD 8p / IEEE TCAS-I", score: "6.67",
+        href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier2/03-glacier-migrate" },
     ],
     extraLinks: [
-      { label: "📊 Landing (Flow Chart + 약어집)",
-        href: "/research-wiki/2026-04/moe-fingerprint-security-serving" },
-      { label: "📜 미선정 로그",
-        href: "/research-wiki/2026-04/moe-fingerprint-security-serving/unselected" },
+      { label: "📊 Landing (Mermaid Flow Chart + Tier 분기)",
+        href: "/research-wiki/2026-04/vlm-context-edge-jetson" },
+      { label: "📜 미선정 15편 로그",
+        href: "/research-wiki/2026-04/vlm-context-edge-jetson/unselected" },
     ],
+  },
+  {
+    date: "2026-04-24",
+    title: "MoE Expert-Activation Fingerprint 기반 보안 + 서빙 최적화",
+    href: "/research-wiki/2026-04/moe-fingerprint-security-serving",
+    keywords: ["MoE", "Security", "Adversarial", "Serving", "Fingerprint", "S&P 2027", "MLSys 2027"],
+    summary:
+      "이방산 학생의 4 MoE 모델 × ~5,900 runs 실험 (WildJailbreak 2-way 94.0%) 기반. 3 paper-worthy 축 확정: (1) MoE discrete routing adaptive-adversarial, (2) token×layer 2D early-exit Pareto, (3) information-theoretic shared-substrate. Tier-1 Top 3 (DISCRETE-VEIL S&P 8.00 / LOOM MLSys 7.38 / BEACON-GUARD ATC 7.25) + Tier-2 Top 3.",
   },
   {
     date: "2026-04-24",
@@ -62,22 +70,6 @@ const recentSessions: SessionCard[] = [
     keywords: ["VLM", "Edge GPU", "Energy", "Qwen2.5-VL", "InternVL3", "AnyRes Tile", "MRoPE 3D", "R23-R26 첫 적용"],
     summary:
       "LLaVA-1.5 (fixed 576 token) vs 최신 Qwen2.5-VL/InternVL3 아키텍처 diff 활용. 5 Top idea: Parquet (AnyRes tile-count signal × DVFS × per-tile precision) / Triptych (DLA + UMA zero-copy + DLA preemption) + Tier-2 Cartographer / Sift / Verge. Tidal DROP (CodecSight 2604.06036 68-72% scoop).",
-  },
-  {
-    date: "2026-04-23",
-    title: "VLM/VLA Context-aware Caching & Serving (v3)",
-    href: "/research-wiki/2026-04/vlm-vla-context-serving-v3",
-    keywords: ["VLM", "VLA", "Caching", "Serving", "Dual Top-3", "Track B", "R21-R22 첫 적용", "OpenReview"],
-    summary:
-      "R21 Dual Top-3 + R22 summary 블로그-style 첫 적용. 6 Top: HRTS+ (HBM row-tile streaming) / ContextMIG+ (CLIP-L LSH × MIG) / PhaseGraph-VLA+ + Tier-2 독립 GCReconfProfile / TokenEvictEnergy / ActHeadFuse. v2 placeholder 7편 재검증 + 2026-04 20+편 신규 탐색.",
-  },
-  {
-    date: "2026-04-22",
-    title: "VLM/VLA Context-aware Caching & Serving (v2)",
-    href: "/research-wiki/2026-04/vlm-vla-context-serving-v2",
-    keywords: ["VLM", "VLA", "Tier-Mix", "Dual-Track", "OpenReview verified"],
-    summary:
-      "업데이트된 harness 규칙 (tiering ≤3-4, dual-track Top-tier+Tier-2, improve-first, OpenReview identity check) 전체 적용. 6 ideas → Top 3 Tier-Mix (HRTS Top-tier 7.90 / ContextMIG 7.75 / NACK-Gossip Tier-2 7.80 Conditional). OpenReview 3편 verified.",
   },
   {
     date: "2026-04-22",

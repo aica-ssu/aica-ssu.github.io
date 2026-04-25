@@ -6,31 +6,30 @@ import { markdownToHtml } from "@/lib/markdown";
 import MermaidScript from "@/components/MermaidScript";
 
 export const metadata: Metadata = {
-  title: "VLM/VLA Context-aware Caching & Serving (v3, Dual Top-3 New-Rules Re-run) - AICA Lab",
+  title: "Unselected — VLM Context-aware Serving on Jetson Edge - AICA Lab",
   robots: { index: false, follow: false },
 };
 
-export default async function VlmVlaContextServingV3Page() {
+const ROUTE_BASE_DIR = "/research-wiki/2026-04/vlm-context-edge-jetson";
+
+export default async function UnselectedPage() {
   const filePath = path.join(
     process.cwd(),
-    "src/data/docs/research-wiki/2026-04-vlm-vla-context-serving-v3.md"
+    "src/data/docs/research-wiki/2026-04-vlm-context-edge-jetson/unselected.md"
   );
   const content = fs.readFileSync(filePath, "utf-8");
-  const html = await markdownToHtml(content);
+  const html = await markdownToHtml(content, ROUTE_BASE_DIR);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-16">
+    <div className="max-w-4xl mx-auto px-6 py-12">
       <Link
-        href="/research-wiki"
+        href="/research-wiki/2026-04/vlm-context-edge-jetson"
         className="text-xs mb-6 inline-block hover:underline"
         style={{ color: "var(--text-muted)" }}
       >
-        ← Research Wiki
+        ← VLM Context-aware Jetson Edge (Landing)
       </Link>
-      <article
-        className="md-content"
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      <article className="md-content" dangerouslySetInnerHTML={{ __html: html }} />
       <MermaidScript />
     </div>
   );

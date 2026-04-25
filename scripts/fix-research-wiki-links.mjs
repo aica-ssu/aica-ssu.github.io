@@ -36,6 +36,7 @@ const DRY = process.argv.includes("--dry");
 
 function* walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (entry.name.startsWith("_")) continue; // skip _archive/, etc.
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) yield* walk(full);
     else if (entry.isFile() && entry.name.endsWith(".md")) yield full;

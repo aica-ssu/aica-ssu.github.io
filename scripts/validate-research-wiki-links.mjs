@@ -28,6 +28,7 @@ const APP_ROOT = path.join(REPO_ROOT, "src/app/research-wiki");
 
 function* walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (entry.name.startsWith("_")) continue; // skip _archive/, _draft/, etc.
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) yield* walk(full);
     else if (entry.isFile() && entry.name.endsWith(".md")) yield full;

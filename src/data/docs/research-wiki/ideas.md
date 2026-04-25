@@ -223,7 +223,7 @@
 - **Tier-1 scale-up 불가 이유**: characterization-only letter.
 
 ### HRTS+ ★ — HBM Row-Tile Streaming for Long-Context Video VLM (v3 Tier-1 Top 1)
-- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: [링크](/research-wiki/2026-04/vlm-vla-context-serving-v3) / [Summary](/research-wiki/2026-04/vlm-vla-context-serving-v3)
+- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: 링크 / Summary
 - **Tier**: Top-tier | **Target venue**: ASPLOS 2026 / MICRO 2026
 - **Experts**: ai-optimization-expert + legacy-system-expert (2:0 unanimous)
 - **Review Scores** (v3 Phase 2'): Nov **8.0** / Diff **7.8** (Mosaic concurrent 반영 -0.3) / Imp **8.0** / Feas **7.3**. 평균 **7.85** (Accept).
@@ -238,7 +238,7 @@
 - **Tier-2 paper-pair (HRTS Tier-2)**: Row-aligned tile letter (M1 only), LLaVA-Video-7B + VideoMME long subset 단일, HBM row-hit +15-25%p. IEEE CAL 4p / DATE 6p. Precedence 확보.
 
 ### ContextMIG+ — Reuse Graph × MIG Dual-Issue × Phase Coalesce for Multi-tenant VLM (v3 Tier-1 Top 2)
-- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: [링크](/research-wiki/2026-04/vlm-vla-context-serving-v3)
+- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: 링크
 - **Tier**: Top-tier | **Target venue**: ASPLOS 2026 / MLSys 2026
 - **Experts**: ai-optimization-expert + legacy-system-expert + algorithm-expert (3:0 unanimous)
 - **Review Scores** (v3 Phase 2'): Nov **8.3** / Diff **8.0** (Predictable LLM Serving baseline 추가) / Imp **7.8** / Feas **6.8**. 평균 **7.73** (Accept).
@@ -251,7 +251,7 @@
 - **Tier-2 paper-pair (ContextMIG Tier-2)**: CLIP-L LSH classifier standalone (M1 only), Pro 6000 2-tenant, F1 ≥ 0.82 + hash latency ≤ 1.5ms. IEEE ESL 4p / CAL 4p.
 
 ### PhaseGraph-VLA+ — Trajectory-Phase Conditioned CUDA Graph Dispatcher with SSE (v3 Tier-1 Top 3, v1 A1 revival)
-- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: [링크](/research-wiki/2026-04/vlm-vla-context-serving-v3)
+- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: 링크
 - **Tier**: Top-tier | **Target venue**: MLSys 2026 / CoRL 2026
 - **Experts**: ai-optimization-expert + legacy-system-expert + algorithm-expert (Conditional PH FP rate)
 - **Review Scores** (v3 Phase 2'): Nov **6.9** (+0.1 FlashVLA 차별화) / Diff **7.5** / Imp **6.8** / Feas **7.5**. 평균 **7.18** (Conditional Accept).
@@ -262,7 +262,7 @@
 - **Tier-2 paper-pair (PhaseGraph-VLA Tier-2)**: SSE predictor standalone (M1 only), OpenVLA-7B + LIBERO-Spatial 단일, PH FP rate ≤ 5% + decision <100μs. IEEE CAL 4p / DATE 6p.
 
 ### B1 GCReconfProfile — Green Context μs-level Reconfig Characterization (v3 Tier-2 독립 Top 1)
-- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: [링크](/research-wiki/2026-04/vlm-vla-context-serving-v3)
+- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: 링크
 - **Tier**: Tier-2 독립 (Track B) | **Target venue**: ISLPED 2026 6p / DATE 2026 6p
 - **Experts**: legacy-system-expert (primary, HW profiling 축)
 - **Review Scores** (v3 Phase 2'): Nov **7.2** / Diff **7.6** / Imp **7.5** / Feas **7.7**. 평균 **7.50** (Accept).
@@ -272,7 +272,7 @@
 - **Tier-1 scale-up 불가 이유**: 단일 vendor API characterization letter, mechanism 1 개, cross-vendor generality 부재.
 
 ### B2 TokenEvictEnergy — Visual-Token Eviction 의 HBM Refresh/DRAM Energy Negative Result (v3 Tier-2 독립 Top 2)
-- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: [링크](/research-wiki/2026-04/vlm-vla-context-serving-v3)
+- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: 링크
 - **Tier**: Tier-2 독립 (Track B) | **Target venue**: IEEE ESL 2026 4p / ISLPED 2026 6p
 - **Experts**: legacy-system-expert (primary, energy 축)
 - **Review Scores** (v3 Phase 2'): Nov **7.3** / Diff **7.4** / Imp **7.3** / Feas **7.5**. 평균 **7.35** (Conditional Accept, error bar).
@@ -283,7 +283,7 @@
 - **Tier-1 scale-up 불가 이유**: Power-constrained narrow engineering, negative result 중심, confounder 통제 불가.
 
 ### B3 ActHeadFuse — OpenVLA-OFT Action-Head Fused Kernel for Sub-ms Decode Step (v3 Tier-2 독립 Top 3)
-- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: [링크](/research-wiki/2026-04/vlm-vla-context-serving-v3)
+- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: 링크
 - **Tier**: Tier-2 독립 (Track B) | **Target venue**: IEEE CAL 2026 4p / DAC 2026 6p
 - **Experts**: legacy-system-expert (primary, kernel 축)
 - **Review Scores** (v3 Phase 2'): Nov **7.0** / Diff **7.3** / Imp **7.2** / Feas **7.5**. 평균 **7.20** (Accept).
@@ -361,7 +361,7 @@
 ---
 
 ### (v2) HRTS: HBM Row-Tile Streaming for Long-Context Video VLM
-- **Date**: 2026-04-22 (v2) | **Mode**: 1 | **Session**: [링크](/research-wiki/2026-04/vlm-vla-context-serving-v2)
+- **Date**: 2026-04-22 (v2) | **Mode**: 1 | **Session**: 링크
 - **Tier**: Top-tier | **Target venue**: ASPLOS 2026 / MICRO 2026
 - **Experts**: legacy-system-expert (primary)
 - **Review Scores** (Phase 2' 최종): Nov **8.2**/10, Diff **8.1**/10, Imp **8.0**/10, Feas **7.3**/10, 평균 **7.90** (본 세션 1위, Accept)
@@ -376,7 +376,7 @@
 - **Tier-2 variant** (IEEE CAL / DATE): Row-aligned KV tile only (M1), 1-GPU 64K context, HBM row-hit +15~25%p, attention kernel -8~12%. Precedence 확보용 self-contained sub-contribution. Conditional Accept.
 
 ### (v2) ContextMIG: CLIP-L Reuse Graph × MIG Dual-Issue × Phase Coalesce (Multi-tenant VLM merged from TriadSM+RGSM)
-- **Date**: 2026-04-22 (v2) | **Mode**: 1 | **Session**: [링크](/research-wiki/2026-04/vlm-vla-context-serving-v2)
+- **Date**: 2026-04-22 (v2) | **Mode**: 1 | **Session**: 링크
 - **Tier**: Top-tier | **Target venue**: ASPLOS 2026 / MLSys 2026
 - **Experts**: ai-optimization-expert + legacy-system-expert (merged, Axis A Phase 2 merger)
 - **Review Scores** (Phase 2' 최종): Nov **8.3**/10, Diff **8.2**/10, Imp **7.7**/10, Feas **6.8**/10, 평균 **7.75** (본 세션 2위, Accept)
@@ -393,7 +393,7 @@
 - **Tier-2 variant** (IEEE ESL / IEEE CAL): CLIP-L LSH reuse graph classifier only (M1), 2-tenant trace replay, F1 ≥ 0.82, hash collision ≤ 3%, hash latency ≤ 1.5ms/req. Accept but paper pair 사용 안 함 (Top 3 slot NACK-Gossip Tier-2 에 양보).
 
 ### (v2) NACK-Gossip Tier-2: Pull-based NVLink Peer-Fetch Latency Profiling for VLA Inference
-- **Date**: 2026-04-22 (v2) | **Mode**: 1 | **Session**: [링크](/research-wiki/2026-04/vlm-vla-context-serving-v2)
+- **Date**: 2026-04-22 (v2) | **Mode**: 1 | **Session**: 링크
 - **Tier**: **Tier-2** | **Target venue**: IEEE ESL (4p) / ISLPED 2026 (6p)
 - **Experts**: legacy-system-expert (primary, tier-2 rubric 허용)
 - **Review Scores** (Phase 2' 최종): Nov **7.4**/10, Diff **7.7**/10, Imp **7.2**/10, Feas **8.8**/10, 평균 **7.80** (본 세션 Tier-2 1위, Conditional Accept)
@@ -409,7 +409,7 @@
 ---
 
 ### L1 v2 ContextSM-Tri: Content-Axis SM/BW/KV Tri-Partition with Reconfig-Latency-Bounded Green Context
-- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: [링크](/research-wiki/2026-04/vlm-vla-context-serving)
+- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: 링크
 - **Experts**: legacy-system-expert (primary) + algorithm-expert (P1 E²IC distilled classifier 흡수)
 - **Review Scores** (Phase 2' 최종, post-verification): Nov **6.8**/10 (↓ from 7.2 after [arXiv:2506.12204](https://arxiv.org/abs/2506.12204) concurrent discovery), Diff **7.3**/10, Imp **6.8**/10, Feas **7.5**/10, 평균 **7.00** (본 세션 1위 유지)
 - **Phase 2 → Phase 2' Score Delta**: +0.87 → +0.67 (verification 반영)
@@ -429,12 +429,12 @@
 - **차별점**: (1) **content-axis taxonomy → tri-knob mapping** 은 Nova/DuetServe/Bullet/LithOS 모두 미적용 (stage or size based). (2) **MIG + Green Context nested** 구조 (slow outer × fast inner) 는 published 보고 부재. (3) **10 baseline (최다)** 으로 positioning comprehensive. (4) A1 phase predictor cascade 로 VLA fleet serving 확장. Target venue: **MICRO 2026 / HPCA 2027**.
 - **Phase 3 entry actions**: (a) Azure LLM trace 에서 6-class exhaustiveness 검증, (b) Green Context ms-level reconfig NVIDIA benchmark 확인 또는 실측, (c) Pro 6000 MIG 지원 확인.
 - **남은 risk**: DuetServe v2 가 content-aware 추가 시 novelty 침식. Green Context reconfig 가 수십 ms 이면 claim 수정. MIG 는 H100/H200 only.
-- **상세**: [세션 Executive Summary Top 1 + Section 4.1 L1 refinement](/research-wiki/2026-04/vlm-vla-context-serving)
+- **상세**: 세션 Executive Summary Top 1 + Section 4.1 L1 refinement
 
 ---
 
 ### A3 v2 SemCOW-Deadline: Copy-on-Write Reference-Counted Vision KV with Deadline-Aware Green Context SM Yielding for Multi-Tenant VLM Serving
-- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: [링크](/research-wiki/2026-04/vlm-vla-context-serving)
+- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: 링크
 - **Experts**: ai-optimization-expert (primary) + legacy-system-expert (SM yielding stream priority)
 - **Review Scores** (Phase 2' 최종, post-verification): Nov **6.5**/10, Diff **8.0**/10, Imp **8.0**/10, Feas **6.0**/10, 평균 **7.15** (본 세션 2위, verification 에서 +0.02)
 - **Phase 2 → Phase 2' Score Delta**: **+0.46 (최대)** → +0.48 — cluster detection 포기 repositioning 성공 + placeholder 부재 확인으로 sliver 재확인
@@ -454,12 +454,12 @@
 - **차별점**: (1) **page-granular refcount COW + top-k partial recompute** 는 Mosaic/KVShare/MPIC 모두 write-time 분기 없음. (2) **deadline miss risk 기반 SM yielding** 은 Adrenaline 의 idle yielding 과 orthogonal (throughput vs SLO). (3) Cluster detection 포기 로 scoop 축 정면 회피 + sliver 정면 집중. Target venue: **OSDI 2027 / SOSP 2026 / NSDI 2027**.
 - **Phase 3 entry actions**: (a) LMSys VisionArena / WildVision trace 확보, (b) Mosaic+KVShare detector 차용 path 확정, (c) CUDA 12.5 Green Context SM yielding 실측, (d) top-k sensitivity study 선행.
 - **남은 risk**: Mosaic/KVShare v2 가 COW 추가 시 sliver 축소. Single-workstation multi-tenant "simulation" 의 realism 을 reviewer 가 의심 가능 → real cloud trace replay 로 보강.
-- **상세**: [세션 Executive Summary Top 2 + Section 4.1 A3 repositioning](/research-wiki/2026-04/vlm-vla-context-serving)
+- **상세**: 세션 Executive Summary Top 2 + Section 4.1 A3 repositioning
 
 ---
 
 ### A1 v2 PhaseGraph-VLA: Trajectory-Phase Conditioned CUDA Graph Dispatcher with SSE-Driven Boundary Detection
-- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: [링크](/research-wiki/2026-04/vlm-vla-context-serving)
+- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: 링크
 - **Experts**: ai-optimization-expert (primary) + algorithm-expert (P2 SSE Page-Hinkley 흡수)
 - **Review Scores** (Phase 2' 최종, post-verification): Nov **6.8**/10, Diff **7.5**/10, Imp **6.5**/10, Feas **7.5**/10, 평균 **7.08** (본 세션 3위, L2 와 tiebreak 승: impact×feasibility 48.75>43.40). Verification 후 변동 없음.
 - **Phase 2 → Phase 2' Score Delta**: +0.70 (SSE 흡수 + 5개 baseline + 4-way ablation + SimplerEnv/RoboCasa/Jetson 확장)
@@ -480,7 +480,7 @@
 - **차별점**: (1) **phase × batch 2D CUDA Graph dispatcher** 는 vLLM 1D batch-only variant 와 분리. (2) **SSE Page-Hinkley** 는 training-free quantile calibration. (3) **Phase-specific kernel fusion boundaries** (ViT-MQA / SiLU-Linear / KV static reuse) 는 VLA 문헌 unique. (4) **Orthogonal with Nova + VLA-Cache + AC²-VLA** — 4-way ablation 으로 stacked gain 증명. Target venue: **MLSys 2026 / CoRL 2026 / NeurIPS 2026 D&B**.
 - **Phase 3 entry actions**: (a) Page-Hinkley FP rate LIBERO 5 task empirical, (b) SimplerEnv + RoboCasa env 구축, (c) Jetson Orin 접근 (optional), (d) CUDA Graph capture overhead amortization.
 - **남은 risk**: Nova stacking gain < 3% 이면 merge 요구. Open-ended trajectory 에서 3-class phase structure 부정. Helix-VLA placeholder 실존 시 재평가.
-- **상세**: [세션 Executive Summary Top 3 + Section 4.1 A1 refinement](/research-wiki/2026-04/vlm-vla-context-serving)
+- **상세**: 세션 Executive Summary Top 3 + Section 4.1 A1 refinement
 
 ---
 
@@ -667,7 +667,7 @@
 - **상세**: Summary § 4.2
 
 ### L2 v2 TemporalTier-3: Action-Imminence-Driven Hierarchical KV (VLA + Streaming VLM) — 미선정 (Tiebreak 패배)
-- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: [링크](/research-wiki/2026-04/vlm-vla-context-serving)
+- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: 링크
 - **Score avg** (post-verification): Phase 2 6.5 → Phase 2' **7.08** (+0.58). Nov 7.5 / Diff 7.6 / Imp 6.2 / Feas 7.0. 전문가 합의 2.5:0.5. Verification 후 변동 없음.
 - **Phase 2' 판정**: Conditional Accept. **미선정 사유**: A1 v2 PhaseGraph-VLA 와 평균 **동점 7.08**, **impact × feasibility product tiebreak 에서 패배 (L2: 43.40 < A1: 48.75)**.
 - **연구 GAP**: VLA action stream / VLM video streaming 에서 "다음 수백 ms 내 어떤 KV 페이지가 hot 인지" 를 task-specific signal 로 예측. 기존 VLA-Cache / KV-Efficient VLA / HERMES ([arXiv:2601.14724](https://arxiv.org/abs/2601.14724)) 은 single-tier 또는 generic hierarchical.
@@ -676,7 +676,7 @@
 - **개선 가능성 / 재방문 조건**: (a) Hawkes vs Poisson ablation 이 bursty workload (tool-use dialogue) 에서 유의미하면 reposition. (b) Gripper predictor empirical AUC +0.08 이상 증명. (c) 70B+ VLA 등장 (scope 확장) 시. (d) Grace Hopper NVLink-C2C 실기 접근 시. 다음 세션에서 single-PoC (gripper signal AUC study 1주) 후 재평가 가능.
 
 ### A2 v2 TierKernel-Dispatch: Three-Tier Patch Routing with Warp-Specialized Kernel — 미선정 (Top 3 컷오프)
-- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: [링크](/research-wiki/2026-04/vlm-vla-context-serving)
+- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: 링크
 - **Score avg** (post-verification): Phase 2 5.67 → Phase 2' **6.88** (+1.18). Nov 7.0 / Diff 7.5 / Imp 6.5 / Feas 6.5. 전문가 합의 **2:1** (algorithm-expert **No** — intent classifier cross-task generalization 증명 약함). Verification 후 변동 없음.
 - **Phase 2' 판정**: Conditional Accept. **미선정 사유**: (1) 평균 6.88 은 Top 3 컷오프 하회 (L1 7.00 > A3 7.15 > A1 7.08, post-verification). (2) algorithm-expert 반대표. (3) OmniSparse [arXiv:2511.12201](https://arxiv.org/abs/2511.12201) 의 binary hot-cold 대비 3-tier incremental contribution 이 challenge. (4) Blackwell L2 spec 변경 risk.
 - **연구 GAP**: Task intent × kernel variant × memory tier 3축 통합 공백.
@@ -685,7 +685,7 @@
 - **개선 가능성 / 재방문 조건**: (a) Intent classifier cross-task generalization eval (최소 3 VLM benchmark) 결과 확보 시. (b) BlindSight / Tawa 와의 명확한 차별화 formal. (c) B200 이후 L2 spec 확정 후 재검증.
 
 ### L3 v2 MTV-Pool: Multi-Turn-Aware Visual KV Pool — 미선정 (Major Revision)
-- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: [링크](/research-wiki/2026-04/vlm-vla-context-serving)
+- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: 링크
 - **Score avg** (post-verification): Phase 2 6.00 → Phase 2' **6.68** → **6.50 (verified, 강화)**. Nov 5.9 (↓ from 6.3 after GUI-KV scoop 실존 확인) / Diff 7.2 / Imp 6.0 / Feas 7.2. 전문가 합의 **1.5:1.5 분열** (legacy-sys **No** — pool 단일 도입 MICRO scope 엔 얕음, ai-opt Conditional — γ_v weight overfitting 우려).
 - **Phase 2' 판정**: **Major Revision (근거 강화)**. **미선정 사유 (검증 반영)**: placeholder "GUIAgent-KV 65%" 의 실제 논문 = [arXiv:2510.00536](https://arxiv.org/abs/2510.00536) **GUI-KV: Efficient GUI Agents via KV Cache with Spatio-Temporal Awareness** (2025-10-01, Kung-Hsiang Huang, Haoyi Qiu, Yutong Dai) 실존 확인. GUI-KV 메커니즘 = (a) residual stream L2 norm spatial saliency + (b) previous frames' keys → current frame key subspace projection 으로 redundant history 제거. AgentNetBench 5-screenshot: FLOPs -38.9%, accuracy +4.1%. 메커니즘 1:1 일치는 아니나 target scenario (multi-turn GUI agent screenshot history KV 압축) + positioning 완전 중첩 → contribution novelty claim 잠식. 전문가 합의 분열 유지.
 - **연구 GAP**: Screenshot-history 기반 GUI agent (Claude Computer Use, VisualWebArena, OSWorld) 의 turn 별 inter-turn visual coldness — MMInference static permutation / OmniSparse intra-turn 미커버.
