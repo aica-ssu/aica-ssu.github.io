@@ -78,7 +78,7 @@ vLLM PagedAttention block table 에 `residence ∈ {GPU_HBM, GPU_UMA, CPU_pinned
 
 **② 해결하는 문제 + Workload evidence**:
 
-[MobileAIBench arXiv:2406.10290](https://arxiv.org/abs/2406.10290) (NeurIPS D&B 2024): Jetson Orin Nano 8GB LLaVA-1.5-7B prefill TTFT 4.2-6.8s, vision tower 26-39% 차지. [PerfVec ISPASS 2024 arXiv:2310.02491](https://arxiv.org/abs/2310.02491): Orin DLA-only mapping 시 thermal throttle 18.4% → 6.1% 감소. **Orin NX 16GB LLaVA-1.5-7B INT4 prefill 시, vision tower CLIP-ViT-L/14 출력 576 patch token = 256KB FP16 가 DLA-out → CPU staging → iGPU KV 3-hop 으로 LPDDR5X bus 31.4% 점유** (W1 latency breakdown). batch ≥ 2 image 일 때 prefill TTFT 의 18-23% 가 단순 메모리 복사.
+[MobileAIBench arXiv:2406.10290](https://arxiv.org/abs/2406.10290) (NeurIPS D&B 2024): Jetson Orin Nano 8GB LLaVA-1.5-7B prefill TTFT 4.2-6.8s, vision tower 26-39% 차지. [R46-removed: 1차 publish 의 PerfVec 인용은 fabricated — 실제 arxiv:2310.02491 은 무관한 DON-LSTM paper. 진짜 PerfVec 은 [arXiv:2310.16792](https://arxiv.org/abs/2310.16792) 이며 Jetson DLA 측정 paper 아님. 본 인용 제거, DLA workload evidence 는 학생 preliminary measurement 의무]. **Orin NX 16GB LLaVA-1.5-7B INT4 prefill 시, vision tower CLIP-ViT-L/14 출력 576 patch token = 256KB FP16 가 DLA-out → CPU staging → iGPU KV 3-hop 으로 LPDDR5X bus 31.4% 점유** (W1 latency breakdown). batch ≥ 2 image 일 때 prefill TTFT 의 18-23% 가 단순 메모리 복사.
 
 **③ Step-by-step (3-5 steps)**:
 
@@ -132,8 +132,7 @@ DLA tile scheduler 의 lane congestion 측정 — DLA0 / DLA1 의 active queue d
 
 **② 해결 + evidence**:
 
-[PerfVec ISPASS 2024](https://arxiv.org/abs/2310.02491): DLA0+DLA1+iGPU 동시 사용 시 lane congestion 측정 가능. 70% 가 throttle entry 직전 임계.
-
+[R46-removed: PerfVec 인용 fabricated, 실제 arxiv:2310.02491=DON-LSTM 무관 paper. DLA congestion claim 은 preliminary measurement 로 대체 의무]. 
 **③ Step-by-step**:
 
 1. DLA tile scheduler 의 queue depth 100ms polling.
@@ -349,7 +348,7 @@ Phase 1' improve-only 사항 (ΔM=0):
 
 - **vLLM Hybrid KV Cache Manager**: [공식 docs](https://docs.vllm.ai/en/latest/design/hybrid_kv_cache_manager/)
 - **MobileAIBench**: [arXiv:2406.10290](https://arxiv.org/abs/2406.10290) [NeurIPS D&B 2024]
-- **PerfVec**: [arXiv:2310.02491](https://arxiv.org/abs/2310.02491) [ISPASS 2024]
+- **PerfVec (R46-removed)**: 1차 publish 인용은 fabricated arxiv:2310.02491 (실제 DON-LSTM 무관 paper). 진짜 PerfVec arxiv:2310.16792 도 Jetson DLA 측정 paper 가 아니므로 본 idea 의 workload evidence 로 부적합 — 제거
 - **LLMCarbon**: [arXiv:2309.14393](https://arxiv.org/abs/2309.14393) [ICLR 2024]
 - **VLMBench**: [arXiv:2406.09246](https://arxiv.org/abs/2406.09246) [CVPR-W 2024]
 - **PowerInfer-2**: [arXiv:2406.06282](https://arxiv.org/abs/2406.06282)

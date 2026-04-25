@@ -54,6 +54,30 @@
 
 ---
 
+## R46 적용 결과 — Reference Integrity (1차 publish post-mortem)
+
+**문제 사례 (2026-04-25 1차 publish)**: SHOAL idea 의 workload evidence 섹션에서 `[PerfVec ISPASS 2024 arXiv:2310.02491]` 인용 — **arxiv ID 가 완전히 잘못됨**.
+- arxiv:2310.02491 의 실제 paper: "DON-LSTM: Multi-Resolution Learning with DeepONets and Long Short-Term Memory Neural Networks" (Michałowska et al.) — Jetson DLA 와 무관.
+- 진짜 PerfVec 의 arxiv ID 는 [arXiv:2310.16792](https://arxiv.org/abs/2310.16792) ("Learning Generalizable Program and Architecture Representations for Performance Modeling", Li/Flynn/Hoisie). [GitHub PerfVec/PerfVec](https://github.com/PerfVec/PerfVec) 도 실존 (active).
+- 그러나 **진짜 PerfVec 도 Jetson DLA thermal/throughput 측정 paper 가 아님** — ML-기반 generalizable performance modeling framework. 1차 publish 의 "Orin DLA-only mapping 시 thermal throttle 18.4% → 6.1% 감소" 류 specific claim 은 **순수 hallucination**.
+
+**근본 원인**:
+1. Phase 1 expert agent 가 plausible-looking Jetson reference 가 필요해서 PerfVec 을 회상.
+2. arxiv ID 를 모른 채 `2310.02491` hallucinate (실제 `2310.16792` 와 6자리 다름).
+3. 논문에 fabricated specific claim (18.4%/6.1%/31.4% 등) 부여.
+4. R32 (Source Code Verification) 는 code repo 만 검증, **paper link 자체는 미검증**.
+5. Reviewer agents 도 WebFetch 검증 없이 통과.
+
+**해결책 — R46 신규 규칙**:
+- (R46.1) 모든 arxiv 인용은 ideation 시 WebFetch 검증 의무 + `R46 verified: title=[X], authors=[Y], venue=[Z]` 1줄 annotation.
+- (R46.2) Benchmark/Workload/Simulator paper → GitHub repo 실존 + active maintenance + 후속 paper 활용 사례 검증.
+- (R46.3) Model paper → HuggingFace + vLLM/SGLang/llama.cpp framework support 검증.
+- (R46.4) Hallucination 자동 flag 패턴: mismatched arxiv title, "정확한 수치" claim 의 paper 본문 부재, off-by-N arxiv ID.
+
+**현재 적용 결과**: SHOAL idea 의 PerfVec 인용 3 곳 모두 [R46-removed] 마커로 교체됨. DLA workload evidence 는 학생이 직접 preliminary measurement 수행 의무로 변경 (Step 2 baseline reproduce 단계에서). MobileAIBench 등 다른 인용은 R46.1-3 검증 통과.
+
+---
+
 ## 1. 학생 연구 실행 흐름 (Post-Ideation Decision Tree)
 
 > Summary 를 읽은 학생이 **어떤 순서로 실험·구현을 진행하고**, 측정 결과에 따라 **Tier-1 vs Tier-2 venue 를 결정**하는 가이드. ideation 과정이 아니라 **실험 plan 결정 트리** 다.
@@ -219,7 +243,7 @@
 2. **Multi-platform source verification (R32)** — vLLM v1 / SGLang / llama.cpp / TensorRT-LLM 4 platform path 명시 + ✅/⚠️/🔧 표.
 3. **Triple-expert orthogonality** — ai-opt (serving 축) / legacy-sys (cache+UMA+thermal) / hwpim (compute-unit + memory-near).
 4. **Dual Track (Tier-1 + Tier-2)** — Top-tier 13-18p + Tier-2 4-8p paper-pair 가능성 동시 평가.
-5. **Workload-driven (R23)** — Step 0-α W1-W7 (MobileAIBench / EdgeMoE / PerfVec / LLMCarbon / Jetson NVIDIA blog / VLMBench / PowerInfer-2) 모두 인용.
+5. **Workload-driven (R23)** — Step 0-α W1-W7 (MobileAIBench / EdgeMoE / ~~PerfVec (R46-removed, fabricated arxiv:2310.02491)~~ / LLMCarbon / Jetson NVIDIA blog / VLMBench / PowerInfer-2) 모두 인용.
 
 ### 2.4 의도적으로 제외한 축 + 이유
 
