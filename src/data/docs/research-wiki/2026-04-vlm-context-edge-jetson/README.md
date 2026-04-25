@@ -19,7 +19,7 @@
 | Rank | Title | Score (N/D/I 평균) | R45 risk | 핵심 mechanism (1줄) | 링크 |
 |------|-------|-------------------|----------|---------------------|------|
 | 🥇 ★lead | **VESPER** — UMA zero-copy KV ledger with CPU-side patch pruner. Target: **OSDI 2027 / SOSP 2027** (ai-opt) | N 8.0 / D 7.5 / I 8.8 = **8.10** | **3/10 LOW** | cudaMallocManaged dual-view KV buffer + CPU NEON SIMD 가 attention score 미만 KV block in-place prune (idle CPU 41-67% 활용). 모든 API 공식 vendor user-space → R45 OK | [tier1/03-vesper.md](/research-wiki/2026-04/vlm-context-edge-jetson/tier1/03-vesper.md) |
-| 🥈 | **SHOAL** — DLA tile-stream KV residence orchestrator. Target: **MLSys 2027 / ASPLOS 2027** (ai-opt) | N 7.5 / D 8.5 / I 8.2 = **8.07** | **4/10 LOW** | vLLM PagedAttention block table 에 `residence ∈ {GPU_HBM, GPU_UMA, CPU_pinned}` enum 추가, DLA → KV 전송 destination 을 layer-단위 dynamic 결정. NvMediaTensor 공식 API + 선택적 NVDLA-sim simulator path | [tier1/02-shoal.md](/research-wiki/2026-04/vlm-context-edge-jetson/tier1/02-shoal.md) |
+| 🥈 | **SHOAL** — DLA tile-stream KV residence orchestrator. Target: **MLSys 2027 / ASPLOS 2027** (ai-opt) | N 7.5 / D 8.5 / I 8.2 = **8.07** | **4/10 LOW** | vLLM PagedAttention block table 에 `residence ∈ {GPU_HBM, GPU_UMA, CPU_pinned}` enum 추가, DLA → KV 전송 destination 을 layer-단위 dynamic 결정. NvMediaTensor 공식 API + 선택적 AttAcc/LLMServingSim simulator path (R45.9 active) | [tier1/02-shoal.md](/research-wiki/2026-04/vlm-context-edge-jetson/tier1/02-shoal.md) |
 | 🥉 | **DualLane** — Dual-NVDLA + GPU 3-Way Dataflow Co-Scheduling for VLM Vision Encoder. Target: **ISCA 2027 / MICRO 2027** (legacy-sys) | N 7.0 / D 8.0 / I 8.6 → R45 보정 후 **8.00** | **4/10 LOW** | Vision encoder layer-split 을 DLA0/DLA1 spatial-split + DLA→GPU NVMM zero-copy + cross-frame stage pipelining. NvMedia DLA + DRM dma-buf + libsmctrl 모두 공식 API → R45 OK | [tier1/04-duallane.md](/research-wiki/2026-04/vlm-context-edge-jetson/tier1/04-duallane.md) |
 
 ### 0.2 Tier-2 독립 Top 3 (4-6p venue) — **R45 적용 후 갱신**
@@ -46,7 +46,7 @@
 - **DualLane (legacy-sys T3, 원래 unselected)** → **Tier-1 신규 진입**. NvMedia DLA + Linux DRM dma-buf + libsmctrl 모두 공식 API → R45 risk 4/10 LOW. Nova `arXiv:2509.21301` 50-70% CONCURRENT 우려는 4-mechanism 분리 ablation (Dual-DLA spatial-split + NVMM zero-copy + SLC partition + stage pipelining) 으로 차별화. CacheVeil 자리 비면서 score 보정 후 평균 **8.00** 으로 Tier-1 진입.
 
 **Tier-2 변동 사항**:
-- **Glacier Migrate (6.67)** → **unselected 이동**. DLA SRAM physical addr exposure 의무가 R45.1 위반 (undocumented IOMMU API + DLA SRAM physical addr 노출 의무). Simulator path 의 gem5 PIM-extension 12-20주 소요로 단일 학기 fit 불가 (R45.3 위반). Tier-2 단일 학기 진행 불가 → unselected 로 이동, 재방문 조건은 JetPack 의 DLA SRAM 공식 API 노출 또는 NVDLA-sim 의 PIM extension 공개 시.
+- **Glacier Migrate (6.67)** → **unselected 이동**. DLA SRAM physical addr exposure 의무가 R45.1 위반 (undocumented IOMMU API + DLA SRAM physical addr 노출 의무). Simulator path 의 gem5 PIM-extension 12-20주 소요로 단일 학기 fit 불가 (R45.3 위반). Tier-2 단일 학기 진행 불가 → unselected 로 이동, 재방문 조건은 JetPack 의 DLA SRAM 공식 API 노출 또는 AttAcc/LLMServingSim (ASPLOS'24+, R45.9 active) 의 PIM extension 공개 시 (NVDLA-sim 은 R45.9 deprecated 로 금지).
 - **CacheVeil-Sim 신설**: CacheVeil R45 violator 의 Tier-2 simulator-path spinoff. 실 register write 대신 gem5 syscall mode + ChampSim cache replacement policy modification 으로 SLC way-partition 효과 시뮬레이션. 5 workload × 3 config × 2 baseline = 30 runs feasibility 확보.
 - **TUFA / ShelfSwap** 유지 — 모두 user-space API → R45 OK.
 
@@ -170,7 +170,7 @@
 - **시작점**: Jetson Thor stock vLLM v1 빌드 + Qwen3-VL-4B baseline TTFT/decode → DRM enum 추가 micro-benchmark.
 - **Tier-1 진입 조건**: image patch ≥ 256, batch ≥ 2 일 때 prefill TTFT 18-24% ↓ + accuracy drop ≤ 0.5pp.
 - **Phase 1' 정제**: baseline FastVLM (CVPR 2025) + V2Drop 추가, DLA 부재 환경 fallback (`GPU_HBM ↔ GPU_UMA` 만) 강화.
-- **R45 적용 결과**: NvMediaTensor 공식 API 사용. 추가로 NVDLA-sim simulator path 보강 가능 (Thor NVDLA-gen-next API 비공개 시 fallback).
+- **R45 적용 결과**: NvMediaTensor 공식 API 사용. 추가로 AttAcc/LLMServingSim simulator path 보강 가능 (R45.9 active; NVDLA-sim 은 deprecated 금지) (Thor NVDLA-gen-next API 비공개 시 fallback).
 
 **Path C — DualLane (legacy-sys, score 8.00, ISCA/MICRO, R45 risk 4/10 LOW)**:
 - **시작점**: Orin AGX 64GB (Dual-DLA v2) baseline → TensorRT 10.9 `--useDLACore=0/1` Vision encoder split.

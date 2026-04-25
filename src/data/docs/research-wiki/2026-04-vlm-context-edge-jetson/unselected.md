@@ -32,7 +32,7 @@
 | 14 | **Mirror Lake** (UMA modality isolation IOMMU) | hwpim | ISCA / HPCA | 8.0 / 6.5 / 7.5 | **CacheVeil 과 cache axis overlap** — CacheVeil = SLC way-partition (cache layer), Mirror Lake = IOMMU page attribute (kernel layer). Phase 2' 권고는 nested 결합 (CacheVeil 의 backing 으로 Mirror Lake) 또는 sister paper 분리. 본 bundle 은 CacheVeil 단독 진입 + Mirror Lake 미선정. | CacheVeil 과 stacked benefit 측정 — superposition 시 +10%+ 추가 효과 검증 시 sister paper 가능 |
 | 15 | **Pinwheel** (Orin Nano DLA-only short VQA) | hwpim | DAC | 4.0 / 5.5 / 7.0 | **TUFA 와 Orin Nano scope 충돌** — TUFA 는 vision tower early-exit (layer 축), Pinwheel 은 DLA-tile-pinwheel scheduler (compute 축). TUFA 가 더 distinctive. | DLA-only short VQA 의 first-to-report 정량화 시 Tier-2 가능 (TUFA 와 별도 mechanism) |
 | 16 | **Diode Ladder** (NVFP4 Bias Compensation circuit) | hwpim | IEEE TCAS-I / ESSDERC | 3.0 / 4.0 / 6.2 | 회로 시뮬 필요 + Thor only. mechanism 회로-수준 single layer — VLM serving 본질에서 거리. | 회로 시뮬 결과 + Thor NVFP4 drift 0.6pp+ 방어 검증 시 Tier-2 가능 |
-| 17 | **Glacier Migrate** (R45 demotion) | hwpim | (1차 publish: Tier-2 #3 → R45 적용 후 unselected) | 6.0 / 7.0 / 7.0 = **6.67** | **R45.1 위반** — DLA SRAM physical addr exposure 의무 (PTX `ld.global.nc` + IOMMU mapping) 가 undocumented kernel-level path. **R45.3 위반** — simulator path 의 gem5 PIM-extension 12-20주 소요로 단일 학기 fit 불가. | JetPack 의 DLA SRAM 공식 API 노출 시 또는 NVDLA-sim 의 PIM extension 공개 시 Tier-2 재진입 가능 |
+| 17 | **Glacier Migrate** (R45 demotion) | hwpim | (1차 publish: Tier-2 #3 → R45 적용 후 unselected) | 6.0 / 7.0 / 7.0 = **6.67** | **R45.1 위반** — DLA SRAM physical addr exposure 의무 (PTX `ld.global.nc` + IOMMU mapping) 가 undocumented kernel-level path. **R45.3 위반** — simulator path 의 gem5 PIM-extension 12-20주 소요로 단일 학기 fit 불가. | JetPack 의 DLA SRAM 공식 API 노출 시 또는 AttAcc/LLMServingSim (ASPLOS'24+, R45.9 active) 의 PIM extension 공개 시 (NVDLA-sim 은 R45.9 deprecated 로 금지) Tier-2 재진입 가능 |
 
 > **참고**: 위 표의 "#" 컬럼은 본 unselected.md 의 행 번호가 아닌 21 idea 전체 enumeration 에서의 원안 번호. **R45 적용 (2026-04-25 추가) 후 변동**: (a) #7 DualLane 은 Tier-1 진입 (R45 risk 4/10), (b) #8 CacheVeil 원안 은 R45.1 위반으로 Tier-2 simulator-path spinoff (CacheVeil-Sim) 으로 demotion, (c) #17 Glacier Migrate 는 R45.1 위반 + R45.3 비현실로 unselected 이동.
 
@@ -58,7 +58,7 @@
 | 채택 | Phase 2 평균 | R45 risk | 선정 사유 |
 |------|-------------|----------|----------|
 | ★ VESPER (Tier-1 lead) | 8.10 | 3/10 LOW | 최고 impact 8.8, UMA dual-view + NEON SIMD CPU pruner. cudaMallocManaged + NEON 모두 공식 user-space API → R45 OK. CacheVeil R45 demotion 후 ★ lead 승격 |
-| SHOAL (Tier-1) | 8.07 | 4/10 LOW | 최고 diff 8.5, DLA → KV residence enum layer-단위 dynamic. NvMediaTensor 공식 API + 선택적 NVDLA-sim simulator path 보강 |
+| SHOAL (Tier-1) | 8.07 | 4/10 LOW | 최고 diff 8.5, DLA → KV residence enum layer-단위 dynamic. NvMediaTensor 공식 API + 선택적 AttAcc/LLMServingSim simulator path (R45.9 active; NVDLA-sim deprecated 금지) |
 | DualLane (Tier-1) | 8.00 (R45 보정) | 4/10 LOW | NvMedia DLA + DRM dma-buf + libsmctrl 모두 공식 API. 4-mechanism 분리 ablation 으로 Nova CONCURRENT 차별화. CacheVeil 자리 비면서 신규 진입 |
 | TUFA (Tier-2) | 6.47 | 3/10 LOW | Orin Nano-specific 7W constraint first-to-report. trivialty 회피 명시. 모두 user-space API |
 | ShelfSwap (Tier-2) | 6.07 | 4/10 LOW | thermal-driven UMA zone migration first-to-report. cuMemAdvise 공식 API |

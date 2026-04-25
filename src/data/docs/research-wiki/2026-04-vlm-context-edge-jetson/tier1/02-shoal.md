@@ -325,7 +325,7 @@ Phase 1' improve-only 사항 (ΔM=0):
 
 본 idea 의 4 mechanism 모두 vendor 공식 user-space API 위에서 구현 가능 — R45 risk **4/10 LOW**. R45.1 금지 카테고리 (kernel patch / kernel module 추가 / undocumented register / closed-source firmware) 위반 없음. NvMediaTensor 는 NDA scope 일부 unpublished spec 가 있으나 `--useDLACore=0/1` + `--allowGPUFallback` 의 user-space TensorRT API 만 사용. cudaHostRegisterMapped + cuMemAdvise + vLLM block table extension 모두 공식 path. R45.3 (한 학기 30 runs feasibility) 도 5 workload (Qwen3-VL-4B / InternVL3-2B / MiniCPM-V-2.6 / LLaVA-NeXT-7B / video MileBench-Long) × 3 residence config × 2 baseline (vLLM v1 stock / FastVLM) = 30 runs 가능 — Orin AGX 1 device 12-16주 fit.
 
-선택적 simulator-path 보강: NVDLA gen-next API 가 Thor 에서 NDA 로 막힐 경우 [NVDLA-sim](https://github.com/nvdla/sw) 또는 `pytorch-nvdla` 를 통한 functional simulation 으로 fallback 가능 (R45.2 simulator path exception). 그러나 본 idea 는 Orin AGX/NX 의 NVDLA v2.0 만으로 모든 mechanism 검증 가능하므로 simulator-path 는 Thor scope 추가 시 옵션.
+선택적 simulator-path 보강 (R45.9 active simulator only): NVDLA gen-next API 가 Thor 에서 NDA 로 막힐 경우 **AttAcc** ([ASPLOS 2024](https://arxiv.org/abs/2403.15388), VLM/LLM serving simulator with KV cache hierarchy) 또는 **LLMServingSim** (ICCD 2024, LLM serving stack 모델링) + **gem5-Aladdin** (gem5 + accelerator pipeline 결합) 으로 reframe 가능. ⚠️ **R45.9 deprecated 금지**: NVDLA-sim / `pytorch-nvdla` 는 NVIDIA 공식 maintenance 종료 (2020 이후 commit 없음) — reviewer "environment outdated" 지적 사유 → 사용 금지. 본 idea 는 Orin AGX/NX 의 NVDLA v2.0 physical 측정으로 모든 mechanism 검증 가능하므로 simulator-path 는 Thor scope 확장 시 AttAcc/LLMServingSim 으로만 진행.
 
 ---
 

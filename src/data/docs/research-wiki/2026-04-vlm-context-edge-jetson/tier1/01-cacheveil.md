@@ -2,9 +2,16 @@
 
 > [← Session Overview](/research-wiki/2026-04/vlm-context-edge-jetson) · **Tier-1 Top 1 ★ lead** (원안, R45 적용 전)
 
-> **🚨 R45 Demotion (2026-04-25 추가)**: 본 idea 의 mechanism #1 (ARM CMN `por_hnf_pwpr` partition register) 은 vendor 공식 user-space API 부재 — undocumented BPMP IOCTL `tegra_bpmp_transfer(MRQ_CMN_SLC_PARTITION)` 의존. R45.1 (undocumented CPU/SoC register manipulation) 정확히 위반.
+> **🚨 R45 Demotion (2026-04-25 추가, R45.7-9 보강)**: 본 idea 의 mechanism #1 (ARM CMN `por_hnf_pwpr` partition register) 은 vendor 공식 user-space API 부재 — undocumented BPMP IOCTL `tegra_bpmp_transfer(MRQ_CMN_SLC_PARTITION)` 의존. R45.1 (undocumented CPU/SoC register manipulation) 정확히 위반. **R45.7 application-level reframe 도 부적합** — vLLM/SGLang scheduler hook 만으로는 SLC way-partition 의 핵심 효과 (cache line conflict miss 차단) 를 근사할 수 없음.
 >
-> **Tier-1 진입 불가**. Tier-2 simulator-path spinoff [tier2/03-cacheveil-sim](/research-wiki/2026-04/vlm-context-edge-jetson/tier2/03-cacheveil-sim.md) 으로 reposition. 실제 register write 대신 gem5 + ChampSim cache partition simulator (Sniper / Aladdin 도 가능) 로 reframe.
+> **R45.8 Published Paper Verification 결과** (2026-04-25 web search):
+> - 검색 키워드: `"por_hnf_pwpr" ARM CMN cache partition published paper` / `"tegra_bpmp" MRQ_CMN_SLC academia` / `Jetson Orin BPMP cache partition university research`
+> - 결과: ARM Research / NVIDIA Research 의 일부 white paper 외 **peer-reviewed 학술 paper 0편** — academic community 가 활용한 사례 부재.
+> - 결론: 본 mechanism 의 register-level path 는 "vendor 가 일부 활용한 적 있으나 학교 연구실 access 부재" 로 R45.8 위반 확정 → **자동 reject**.
+>
+> **Tier-1 진입 불가**. Tier-2 simulator-path spinoff [tier2/03-cacheveil-sim](/research-wiki/2026-04/vlm-context-edge-jetson/tier2/03-cacheveil-sim.md) 으로 reposition. 실제 register write 대신 **gem5 + ChampSim cache partition simulator** (R45.9 active maintenance — 둘 다 2024-2026 paper 다수 활용) 로 reframe.
+>
+> ⚠️ **R45.9 deprecated simulator 금지 사례**: 일부 학생이 NVDLA-sim 류 deprecated tool 사용 가능성 우려 → 본 demotion 의 simulator-path 는 gem5 / ChampSim / DRAMSim3 / Ramulator2 / AttAcc / LLMServingSim 류 active maintenance simulator 만 허용.
 >
 > 본 페이지 내용은 reference 용 — R45 violation 사례 학습 + 향후 Thor JetPack 7.x 에서 BPMP cache partition IOCTL 공식화 시 Tier-1 재진입 가능. 실제 진행 idea 는 [tier2/03-cacheveil-sim](/research-wiki/2026-04/vlm-context-edge-jetson/tier2/03-cacheveil-sim.md) 참조.
 
