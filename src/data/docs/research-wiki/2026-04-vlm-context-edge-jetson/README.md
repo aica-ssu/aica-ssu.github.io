@@ -36,47 +36,120 @@
 
 ---
 
-## 1. Ideation Flow Chart (R29)
+## 1. 학생 연구 실행 흐름 (Post-Ideation Decision Tree)
 
-> 학생 / AI 가 어떤 실험부터 시작하고 결과에 따라 어느 tier 로 paper 를 만들지 결정할 수 있도록.
+> Summary 를 읽은 학생이 **어떤 순서로 실험·구현을 진행하고**, 측정 결과에 따라 **Tier-1 vs Tier-2 venue 를 결정**하는 가이드. ideation 과정이 아니라 **실험 plan 결정 트리** 다.
 
-```mermaid
-flowchart TD
-    Start[Step 0: 사용자 쿼리 + edge HW 3종 fix<br/>Thor 128GB / Orin NX 16GB / Orin Nano 8GB] --> S0a[Step 0-α: workload 측정<br/>W1-W7 IISWC/ISPASS/MobileAIBench]
-    S0a --> P1[Phase 1: 3 expert × 7 idea = 21 candidate]
-    P1 --> P1a[ai-opt: SHOAL/VESPER/KILN/STELE + TUFA/CINDER/RIVET]
-    P1 --> P1b[legacy-sys: ThermalLoom/PageWeave/DualLane/CacheVeil + FrostHint/TileGate/ShelfSwap]
-    P1 --> P1c[hwpim: Watershed/TGQ/Tessellated/MirrorLake + Pinwheel/Diode/GlacierMigrate]
+<svg viewBox="0 0 880 1280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="학생 연구 실행 흐름 결정 트리" style="width:100%;max-width:880px;height:auto;display:block;margin:1rem auto;font-family:system-ui,-apple-system,'Segoe UI',sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1E2761"/>
+    </marker>
+    <marker id="arrCoral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#F96167"/>
+    </marker>
+  </defs>
 
-    P1a --> P2[Phase 2: 3-reviewer score N/D/I]
-    P1b --> P2
-    P1c --> P2
+  <text x="440" y="28" text-anchor="middle" font-size="20" font-weight="700" fill="#1E2761">학생 연구 실행 흐름 — Tier-1/2 분기 결정 트리</text>
+  <text x="440" y="52" text-anchor="middle" font-size="12" fill="#666" font-style="italic">각 ◇ 분기는 자기 측정값으로 직접 판단. 화살표 옆 숫자 = 권장 주차 (총 12주 가정).</text>
 
-    P2 --> P2c{Tier 분기 결정}
-    P2c -->|Score ≥ 7.5 + Top-tier 적합| T1[Tier-1 진입]
-    P2c -->|Score 5.5-7.0 + 단일 mechanism| T2[Tier-2 진입]
-    P2c -->|Score < 5.5 또는 Concurrent scoop| Drop[미선정 15편]
+  <!-- Step 1 -->
+  <rect x="140" y="80" width="600" height="105" rx="10" fill="#CADCFC" stroke="#1E2761" stroke-width="2"/>
+  <text x="440" y="106" text-anchor="middle" font-size="15" font-weight="700" fill="#1E2761">Step 1 — 가용 Jetson HW + Tier-1 idea 매칭 (Wk 0)</text>
+  <text x="440" y="128" text-anchor="middle" font-size="12" fill="#1a1a1a">Jetson Thor 128GB → ★ CacheVeil (SLC way-partition, MICRO/HPCA)</text>
+  <text x="440" y="146" text-anchor="middle" font-size="12" fill="#1a1a1a">Jetson Orin NX/AGX → SHOAL (DLA tile-stream, MLSys/ASPLOS)</text>
+  <text x="440" y="164" text-anchor="middle" font-size="12" fill="#1a1a1a">Jetson Orin Nano 8GB → VESPER (UMA pruner, OSDI/SOSP) 또는 Tier-2</text>
+  <line x1="440" y1="185" x2="440" y2="215" stroke="#1E2761" stroke-width="2" marker-end="url(#arr)"/>
 
-    T1 --> Br1{Jetson Thor 가용?}
-    Br1 -->|Yes| TopA[CacheVeil: SLC 8-16way / Thor L3 16MB<br/>BPMP IOCTL access 보장]
-    Br1 -->|Orin AGX 64GB 대체| TopB[CacheVeil: 4MB SLC / 8-way scope]
-    Br1 -->|DLA 사용 가능| TopC[SHOAL: DLA NvMediaTensor<br/>residence enum 모두 가용]
-    Br1 -->|UMA-focus single device| TopD[VESPER: NEON CPU pruner<br/>모든 Jetson 적용]
+  <!-- Step 2 -->
+  <rect x="140" y="215" width="600" height="80" rx="10" fill="#CADCFC" stroke="#1E2761" stroke-width="2"/>
+  <text x="440" y="240" text-anchor="middle" font-size="15" font-weight="700" fill="#1E2761">Step 2 — Baseline 재현 (Wk 1-2)</text>
+  <text x="440" y="262" text-anchor="middle" font-size="12" fill="#1a1a1a">Qwen3-VL-4B / InternVL3-2B prefill+decode latency 측정 (3-run avg)</text>
+  <text x="440" y="280" text-anchor="middle" font-size="12" fill="#1a1a1a">Tegrastats + Nsight Compute counter (lts__t_sectors / dram__bytes_read)</text>
+  <line x1="440" y1="295" x2="440" y2="325" stroke="#1E2761" stroke-width="2" marker-end="url(#arr)"/>
 
-    T2 --> Br2{HW + scope 단일성}
-    Br2 -->|Orin Nano 7W only| T2A[TUFA: vision-only early-exit<br/>4p IEEE CAL]
-    Br2 -->|Thermal sustained workload| T2B[ShelfSwap: zone migration<br/>6p ISLPED/DATE]
-    Br2 -->|Thor DLA SRAM 활용| T2C[Glacier Migrate: PIM emulation<br/>8p ICCAD]
+  <!-- Decision 1 -->
+  <polygon points="440,325 720,378 440,430 160,378" fill="#FFFFFF" stroke="#F96167" stroke-width="2.5"/>
+  <text x="440" y="370" text-anchor="middle" font-size="14" font-weight="700" fill="#1E2761">◇ Baseline ±5% 일치?</text>
+  <text x="440" y="390" text-anchor="middle" font-size="11" fill="#666">기준: paper / vendor 보고 latency</text>
+  <text x="450" y="450" font-size="13" font-weight="700" fill="#1E2761">Yes</text>
+  <line x1="440" y1="430" x2="440" y2="465" stroke="#1E2761" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="730" y="372" font-size="12" font-weight="700" fill="#F96167">No → 환경 보정</text>
+  <line x1="720" y1="378" x2="850" y2="378" stroke="#F96167" stroke-width="2" marker-end="url(#arrCoral)"/>
+  <rect x="780" y="395" width="90" height="58" rx="6" fill="#F9E795" stroke="#F96167" stroke-width="1.5"/>
+  <text x="825" y="416" text-anchor="middle" font-size="10" font-weight="600" fill="#1E2761">JetPack /</text>
+  <text x="825" y="430" text-anchor="middle" font-size="10" font-weight="600" fill="#1E2761">CUDA / PyTorch</text>
+  <text x="825" y="445" text-anchor="middle" font-size="10" font-weight="600" fill="#1E2761">버전 정렬</text>
 
-    TopA --> Combo[Tier-1 Top 3 paper portfolio<br/>MICRO + MLSys + OSDI 동시 진행 가능]
-    TopB --> Combo
-    TopC --> Combo
-    TopD --> Combo
-```
+  <!-- Step 3 -->
+  <rect x="140" y="465" width="600" height="85" rx="10" fill="#CADCFC" stroke="#1E2761" stroke-width="2"/>
+  <text x="440" y="490" text-anchor="middle" font-size="15" font-weight="700" fill="#1E2761">Step 3 — Mechanism #1 구현 (Wk 3-6)</text>
+  <text x="440" y="512" text-anchor="middle" font-size="12" fill="#1a1a1a">Source-verified path (R32 ✅) 사용 — vLLM/SGLang/cuDNN/NVDLA primitives</text>
+  <text x="440" y="530" text-anchor="middle" font-size="12" fill="#1a1a1a">Single-mech delta 측정 → 첫 paper-worthy 신호 확보</text>
+  <line x1="440" y1="550" x2="440" y2="580" stroke="#1E2761" stroke-width="2" marker-end="url(#arr)"/>
 
-**분기 조건 caption**:
-- **Jetson Thor 가용성** — CacheVeil 의 8-16-way SLC partition 정확도, SHOAL 의 NVFP4 native 측정, Glacier Migrate 의 DLA SRAM 2-4MB 모두 Thor 의 BPMP/DLA gen-next API 노출 여부에 의존. Orin AGX 64GB 가 fallback (4MB SLC + 8-way 가정).
-- **DLA 사용 여부** — SHOAL 은 DLA scheduling 이 NvMediaTensor 만 가용 시 fallback path (`GPU_HBM ↔ GPU_UMA` 만) 로 축소. Glacier Migrate 도 DLA SRAM physical addr exposure (UMA + IOMMU) 가 필수.
+  <!-- Decision 2 -->
+  <polygon points="440,580 720,633 440,685 160,633" fill="#FFFFFF" stroke="#F96167" stroke-width="2.5"/>
+  <text x="440" y="620" text-anchor="middle" font-size="14" font-weight="700" fill="#1E2761">◇ Mech #1 예상 Δ 도달?</text>
+  <text x="440" y="640" text-anchor="middle" font-size="11" fill="#666">예: latency -10% / energy -8% 일관 측정</text>
+  <text x="440" y="658" text-anchor="middle" font-size="11" fill="#666">(idea 별 "예상 효과" 표 기준)</text>
+  <text x="450" y="705" font-size="13" font-weight="700" fill="#1E2761">Yes</text>
+  <line x1="440" y1="685" x2="440" y2="720" stroke="#1E2761" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="730" y="628" font-size="12" font-weight="700" fill="#F96167">No → Tier-2 단축</text>
+  <line x1="720" y1="633" x2="850" y2="633" stroke="#F96167" stroke-width="2" marker-end="url(#arrCoral)"/>
+  <rect x="780" y="650" width="90" height="58" rx="6" fill="#F9E795" stroke="#F96167" stroke-width="1.5"/>
+  <text x="825" y="671" text-anchor="middle" font-size="10" font-weight="600" fill="#1E2761">single-mech</text>
+  <text x="825" y="685" text-anchor="middle" font-size="10" font-weight="600" fill="#1E2761">Tier-2 spinoff</text>
+  <text x="825" y="700" text-anchor="middle" font-size="10" font-weight="600" fill="#1E2761">으로 마무리</text>
+
+  <!-- Step 4 -->
+  <rect x="140" y="720" width="600" height="90" rx="10" fill="#CADCFC" stroke="#1E2761" stroke-width="2"/>
+  <text x="440" y="745" text-anchor="middle" font-size="15" font-weight="700" fill="#1E2761">Step 4 — Mech #2 + #3 통합 + ablation (Wk 7-12)</text>
+  <text x="440" y="767" text-anchor="middle" font-size="12" fill="#1a1a1a">2^N factorial / per-mech contribution / 3+ peer-reviewed baseline</text>
+  <text x="440" y="785" text-anchor="middle" font-size="12" fill="#1a1a1a">Combined gain 측정 — Tier-1 cut (≥15% latency / ≥20% energy) 검증</text>
+  <text x="440" y="803" text-anchor="middle" font-size="11" fill="#666" font-style="italic">기존 baseline: VL-Cache · VLCache · Nova · throttLL'eM · Four Over Six · FastVLM · SparseDVFS</text>
+  <line x1="440" y1="810" x2="440" y2="840" stroke="#1E2761" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- Decision 3 -->
+  <polygon points="440,840 720,893 440,945 160,893" fill="#FFFFFF" stroke="#F96167" stroke-width="2.5"/>
+  <text x="440" y="880" text-anchor="middle" font-size="14" font-weight="700" fill="#1E2761">◇ Tier-1 threshold 도달 + 3+ baseline?</text>
+  <text x="440" y="898" text-anchor="middle" font-size="11" fill="#666">latency ≥15% / energy ≥20% / OR HW novelty 명확</text>
+  <text x="440" y="916" text-anchor="middle" font-size="11" fill="#666">+ peer-reviewed baseline 비율 ≥50% (R-Reference Integrity)</text>
+
+  <line x1="320" y1="935" x2="220" y2="975" stroke="#1E2761" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="265" y="965" font-size="13" font-weight="700" fill="#1E2761">Yes</text>
+  <line x1="560" y1="935" x2="660" y2="975" stroke="#F96167" stroke-width="2" marker-end="url(#arrCoral)"/>
+  <text x="600" y="965" font-size="13" font-weight="700" fill="#F96167">No</text>
+
+  <!-- Tier-1 outcome -->
+  <rect x="80" y="975" width="300" height="120" rx="12" fill="#E5F0E8" stroke="#2C5F2D" stroke-width="2.5"/>
+  <text x="230" y="1002" text-anchor="middle" font-size="15" font-weight="700" fill="#2C5F2D">★ Tier-1 Submit</text>
+  <text x="230" y="1024" text-anchor="middle" font-size="12" fill="#1a1a1a">CacheVeil → MICRO/HPCA 2027 (12-15p)</text>
+  <text x="230" y="1042" text-anchor="middle" font-size="12" fill="#1a1a1a">SHOAL → MLSys/ASPLOS 2027 (12-18p)</text>
+  <text x="230" y="1060" text-anchor="middle" font-size="12" fill="#1a1a1a">VESPER → OSDI/SOSP 2027 (12-15p)</text>
+  <text x="230" y="1080" text-anchor="middle" font-size="11" fill="#666" font-style="italic">3-mech 모두 + adaptive attacker discussion</text>
+
+  <!-- Tier-2 outcome -->
+  <rect x="500" y="975" width="300" height="120" rx="12" fill="#FFF7DA" stroke="#B8860B" stroke-width="2.5"/>
+  <text x="650" y="1002" text-anchor="middle" font-size="15" font-weight="700" fill="#8B5A00">Tier-2 Submit (Spinoff)</text>
+  <text x="650" y="1024" text-anchor="middle" font-size="12" fill="#1a1a1a">CacheVeil-Lite → DAC 6p (single way-partition)</text>
+  <text x="650" y="1042" text-anchor="middle" font-size="12" fill="#1a1a1a">또는 독립 Tier-2 (TUFA / ShelfSwap / Glacier)</text>
+  <text x="650" y="1060" text-anchor="middle" font-size="12" fill="#1a1a1a">single-mech + single-HW + first-to-report scope</text>
+  <text x="650" y="1080" text-anchor="middle" font-size="11" fill="#666" font-style="italic">IEEE CAL 4p / DATE 6p / ISLPED 6p / ICCAD 8p</text>
+
+  <!-- Caption -->
+  <text x="440" y="1140" text-anchor="middle" font-size="12" font-weight="600" fill="#1E2761">실패 시 회복 경로 (모든 분기)</text>
+  <text x="440" y="1160" text-anchor="middle" font-size="11" fill="#1a1a1a">Step 2 ❌ → Wk 1-2 환경 보정 후 재시도 / Step 3 ❌ → Tier-2 spinoff 으로 마무리</text>
+  <text x="440" y="1178" text-anchor="middle" font-size="11" fill="#1a1a1a">Step 4 ❌ → Tier-1 cut 미달 시 Tier-2 spinoff (single-mech, single-HW) 제출</text>
+  <text x="440" y="1196" text-anchor="middle" font-size="11" fill="#1a1a1a">미선정 15편의 자세한 사유 + 재방문 조건 → "미선정 로그" 페이지 참조</text>
+  <text x="440" y="1228" text-anchor="middle" font-size="11" fill="#666" font-style="italic">Idea 선택은 [Tier-1 표 (§2)] / [Tier-2 표 (§3)] 의 score + venue + Mechanism 행을 본인 자원·관심에 맞춰 결정.</text>
+</svg>
+
+**결정 가이드 요약**:
+- **Step 1 매칭** — 본인이 사용할 수 있는 Jetson HW 기준으로 idea 1 개 선택. Thor 가용 → CacheVeil; Orin NX → SHOAL; Orin Nano 만 → VESPER 또는 Tier-2.
+- **Step 2 baseline** — paper/vendor 가 보고한 latency 와 ±5% 일치 안 하면 mechanism 측정 무의미. JetPack/CUDA/PyTorch 버전 + thermal mode (NVPModel) 정렬 우선.
+- **Step 3 mech #1** — single mechanism 만으로도 본인 idea 의 "예상 효과" 표 첫 행 (예: SHOAL 의 "p50 latency -10%") 에 도달해야 Tier-1 진행 정당화.
+- **Step 4 통합** — 3 개 mechanism 결합 후 Tier-1 cut (latency ≥15% / energy ≥20%) 도달 시 top-tier 제출. 미달 시 single-mech Tier-2 spinoff 으로 빠른 publication.
 - **Score 7.5 cut + Concurrent scoop check** — Phase 2' similarity critique 통해 Nova `arXiv:2509.21301` (50-70% concurrent) 등 강한 scoop 압박 시 mechanism repositioning 또는 미선정.
 
 ### Tier-1 Path 가이드 (가장 유망 ideation 부터)
