@@ -17,14 +17,6 @@ type WikiEntry = {
 const entries: Record<string, WikiEntry[]> = {
   "2026-04": [
     {
-      slug: "2026-04/moe-fingerprint-security-serving",
-      title: "MoE Expert-Activation Fingerprint 기반 보안 + 서빙 최적화 (DISCRETE-VEIL / LOOM' / BEACON-GUARD-Lite)",
-      description:
-        "이방산 학생 (SSU AICA Lab) 의 4 MoE 모델 (Mixtral-8x7B / Qwen1.5-MoE-A2.7B / DeepSeek-V2-Lite / Qwen3-30B-A3B) × 608 configs × ~5,900 runs 실험 (MMLU 4-cat 96.2% / WildJailbreak 2-way 94.0%, 모델 수정 없음 forward 1회) 기반. 사용자 insight ('no-finetune + no-extra-guard-forward + multi-task unified = paper-worthy') 의 Tier-1 novelty 엄밀 검증 결과 그 3 축은 FJD (arXiv:2509.14558 EMNLP 2025 Findings) + OmniGuard (arXiv:2505.23856 120x faster) + MultiTaskGuard (arXiv:2504.19333 14x LoRA-shared) + vLLM Semantic Router Iris v0.1 (2026-01 production merge) 로 이미 커버 → 단독 Tier-1 부족. 진짜 paper-worthy 3 축: (1) MoE discrete routing 의 adaptive-adversarial robustness (Obfuscated Activations arXiv:2412.09565 가 dense hidden probe recall 100→0 붕괴 vs MoE discrete top-k argmax 의 Gumbel-softmax surrogate PGD 반응), (2) token×layer 2D early-exit Pareto, (3) information-theoretic shared-substrate Fisher info Pareto. 2 expert (system-robustness / ai-optimization) × 3 idea = 6 원안 → Tier-1 Top 3 (★ DISCRETE-VEIL' 8.00 S&P 2027 DRO-Attack PGD + Entropy-Sharpen-KS Tripwire / LOOM' 7.38 MLSys-ASPLOS LOOM+EMBER+THRESHOLD+TALLY merge 4-mech / BEACON-GUARD-Lite 7.25 USENIX ATC-DATE paper pair) + Tier-2 독립 Top 3 (DISCRETE-VEIL-Lite IEEE CAL 4p / TALLY-Spinoff DATE 4p WIP / BEACON-GUARD-Lite DATE fallback). THRESHOLD+EMBER+TALLY → LOOM' merge (-7 mechanism, improve-first 준수). GateBreaker (arXiv:2512.21008 weight-ablation ASR 7.4→64.9%) + V-MoE Adversarial Robustness (OpenReview Fd05J4Bu5Sp image PGD) + Expert Selections Reveal (arXiv:2602.04105 91.2% token reconstruction) 와 Venn diagram 의무. 2026-04-21 이전 MoE 세션 (외부 side-channel 전제, FARD-C/ZMSP/PhantomRoute) 과 본 세션 (in-worker forward hook 100% 정확 fingerprint) 은 전제·축 독립.",
-      date: "2026-04-24",
-      tags: ["Mode 1", "MoE", "Security", "Adversarial", "Serving", "Fingerprint", "S&P", "MLSys"],
-    },
-    {
       slug: "2026-04/qwen3vl-deepstack-edge",
       title: "Qwen3-VL (DeepStack) + Qwen3.5 최신 아키텍처의 Edge 배포 최적화 (Loom / Mangrove / Vault / Gale / Forge)",
       description:
