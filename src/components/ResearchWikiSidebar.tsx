@@ -22,50 +22,47 @@ const SIDEBAR: SidebarSection[] = [
     ],
   },
   {
-    title: "⭐ 최근 세션 (2026-04-25, R45 적용 재평가)",
+    title: "⭐ 최근 세션 (2026-04-25 #2, KV cache ECC + RAS)",
     items: [
       {
-        label: "Landing — VLM Context-aware Jetson Edge",
-        href: "/research-wiki/2026-04/vlm-context-edge-jetson",
+        label: "Landing — KV Cache ECC + RAS",
+        href: "/research-wiki/2026-04/kv-ecc-ras",
         emphasis: true,
       },
       {
-        label: "🥇 VESPER (OSDI/SOSP 2027) lead",
-        href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier1/03-vesper",
+        label: "🥇 OAEP-KV (DSN/HPCA/MICRO 2027) lead",
+        href: "/research-wiki/2026-04/kv-ecc-ras/tier1/01-oaep-kv",
       },
       {
-        label: "🥈 SHOAL (MLSys/ASPLOS 2027)",
-        href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier1/02-shoal",
+        label: "🥈 BlockShard (ASPLOS/OSDI 2027)",
+        href: "/research-wiki/2026-04/kv-ecc-ras/tier1/02-blockshard",
       },
       {
-        label: "🥉 DualLane (ISCA/MICRO 2027)",
-        href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier1/04-duallane",
+        label: "🥉 LayerTier (MICRO/DSN 2027)",
+        href: "/research-wiki/2026-04/kv-ecc-ras/tier1/03-layertier",
       },
       {
-        label: "T1 TUFA (IEEE CAL 4p)",
-        href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier2/01-tufa",
+        label: "T1 VLM-MAP (DATE/IEEE TCAD)",
+        href: "/research-wiki/2026-04/kv-ecc-ras/tier2/01-vlm-map",
       },
       {
-        label: "T2 ShelfSwap (ISLPED/DATE 6p)",
-        href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier2/02-shelfswap",
+        label: "T2 FrostFloor (DATE 6p)",
+        href: "/research-wiki/2026-04/kv-ecc-ras/tier2/02-frostfloor",
       },
       {
-        label: "T3 CacheVeil-Sim (DAC/ISLPED 6p)",
-        href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier2/03-cacheveil-sim",
+        label: "T3 EntropyECC (ITC/MTS/IEEE TCAD)",
+        href: "/research-wiki/2026-04/kv-ecc-ras/tier2/03-entropy-ecc",
       },
       {
-        label: "🚨 CacheVeil 원안 (R45 demoted)",
-        href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier1/01-cacheveil",
-      },
-      {
-        label: "미선정 16편 로그 (R45 demotion 포함)",
-        href: "/research-wiki/2026-04/vlm-context-edge-jetson/unselected",
+        label: "미선정 15편 로그",
+        href: "/research-wiki/2026-04/kv-ecc-ras/unselected",
       },
     ],
   },
   {
     title: "📚 이전 Summary",
     items: [
+      { label: "2026-04-25 VLM Context-aware Jetson Edge (R45 적용)", href: "/research-wiki/2026-04/vlm-context-edge-jetson" },
       { label: "2026-04-24 MoE Fingerprint Security+Serving", href: "/research-wiki/2026-04/moe-fingerprint-security-serving" },
       { label: "2026-04-24 Qwen3-VL DeepStack Edge", href: "/research-wiki/2026-04/qwen3vl-deepstack-edge" },
       { label: "2026-04-23 Energy-Efficient Edge VLM", href: "/research-wiki/2026-04/energy-efficient-edge-vlm" },

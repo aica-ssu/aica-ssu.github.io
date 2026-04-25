@@ -20,7 +20,36 @@ type SessionCard = {
 const recentSessions: SessionCard[] = [
   {
     date: "2026-04-25",
-    title: "🥇 VLM Context-aware Serving on Jetson Edge (R45 적용)",
+    title: "🥇 KV Cache Memory ECC + RAS for Quantized AI Serving",
+    href: "/research-wiki/2026-04/kv-ecc-ras",
+    keywords: ["KV cache", "ECC", "Memory RAS", "Page retirement", "Quantization-aware", "Outlier-aware", "DRAM error", "Simulator-only", "R45/R46 strict"],
+    summary:
+      "LLM/VLM prefill stage KV cache memory error correction (ECC) + RAS (page retirement / page migration) — quantization-aware. 시간 제약 학생 (12-16주 simulator-only) 시나리오 위주. 3 expert × 7 idea = 21 candidate → 3 reviewer 평가 (Kelle MICRO 2025 [arXiv:2510.16040](https://arxiv.org/abs/2510.16040) critical missing baseline 식별 + 6 self-scoop pair merge) → Tier-1 Top 3 + Tier-2 Top 3. **R45 strict** (kernel patch / register write 금지, application-level + simulator only): gem5+DRAMSim3 / ChampSim / NeuPIMs / AttAcc / NeuroSim V1.4 / LLMServingSim. **R46 strict**: 모든 reference WebFetch verified (PerfVec 류 hallucination 방지).",
+    detailed: true,
+    tierTable: [
+      { tier: "🥇 Tier-1", idea: "OAEP-KV (lead)", venue: "DSN/HPCA/MICRO 2027 (12p)", score: "8+ / risk 3",
+        href: "/research-wiki/2026-04/kv-ecc-ras/tier1/01-oaep-kv" },
+      { tier: "🥈 Tier-1", idea: "BlockShard", venue: "ASPLOS/OSDI 2027 (12-15p)", score: "8 / risk 3",
+        href: "/research-wiki/2026-04/kv-ecc-ras/tier1/02-blockshard" },
+      { tier: "🥉 Tier-1", idea: "LayerTier", venue: "MICRO/DSN 2027 (12p)", score: "7.5 / risk 4",
+        href: "/research-wiki/2026-04/kv-ecc-ras/tier1/03-layertier" },
+      { tier: "T1", idea: "VLM-MAP", venue: "DATE 6p / IEEE TCAD", score: "6.5 / risk 3",
+        href: "/research-wiki/2026-04/kv-ecc-ras/tier2/01-vlm-map" },
+      { tier: "T2", idea: "FrostFloor", venue: "DATE 6p", score: "6 / risk 3",
+        href: "/research-wiki/2026-04/kv-ecc-ras/tier2/02-frostfloor" },
+      { tier: "T3", idea: "EntropyECC", venue: "ITC/MTS/IEEE TCAD", score: "6 / risk 4",
+        href: "/research-wiki/2026-04/kv-ecc-ras/tier2/03-entropy-ecc" },
+    ],
+    extraLinks: [
+      { label: "📊 Landing (Student Decision Tree SVG)",
+        href: "/research-wiki/2026-04/kv-ecc-ras" },
+      { label: "📜 미선정 15편 로그 (6 self-scoop merge 포함)",
+        href: "/research-wiki/2026-04/kv-ecc-ras/unselected" },
+    ],
+  },
+  {
+    date: "2026-04-25",
+    title: "VLM Context-aware Serving on Jetson Edge (R45 적용)",
     href: "/research-wiki/2026-04/vlm-context-edge-jetson",
     keywords: ["VLM", "Edge", "Jetson Thor", "Jetson Orin NX/Nano", "Context-aware", "Energy", "R45 implementation feasibility", "register-write 금지", "simulator-path"],
     summary:
