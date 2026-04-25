@@ -4,11 +4,15 @@ import Link from "next/link";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { markdownToHtml } from "@/lib/markdown";
+import MermaidScript from "@/components/MermaidScript";
 
 export const metadata: Metadata = {
   title: "Tier-1 Idea — MoE Fingerprint Security + Serving - AICA Lab",
   robots: { index: false, follow: false },
 };
+
+const ROUTE_BASE_DIR =
+  "/research-wiki/2026-04/moe-fingerprint-security-serving/tier1";
 
 export async function generateStaticParams() {
   return [
@@ -32,7 +36,7 @@ export default async function Tier1IdeaPage({
     notFound();
   }
   const content = fs.readFileSync(filePath, "utf-8");
-  const html = await markdownToHtml(content);
+  const html = await markdownToHtml(content, ROUTE_BASE_DIR);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-16">
@@ -47,6 +51,7 @@ export default async function Tier1IdeaPage({
         className="md-content"
         dangerouslySetInnerHTML={{ __html: html }}
       />
+      <MermaidScript />
     </div>
   );
 }
