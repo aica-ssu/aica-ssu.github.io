@@ -4,9 +4,22 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
+type SidebarChild = {
+  label: string;
+  href: string;
+  emphasis?: boolean;
+};
+
+type SidebarItem = {
+  label: string;
+  href: string;
+  emphasis?: boolean;
+  children?: SidebarChild[];
+};
+
 type SidebarSection = {
   title: string;
-  items: { label: string; href: string; emphasis?: boolean }[];
+  items: SidebarItem[];
 };
 
 const SIDEBAR: SidebarSection[] = [
@@ -22,48 +35,52 @@ const SIDEBAR: SidebarSection[] = [
     ],
   },
   {
-    title: "⭐ 최근 세션 (2026-04-26, KV cache ECC + RAS v2)",
+    title: "📚 모든 Summary (역시간순)",
     items: [
       {
-        label: "Landing — KV Cache ECC + RAS v2 (R48-R50 적용)",
+        label: "⭐ 2026-04-26 KV cache ECC + RAS v2",
         href: "/research-wiki/2026-04/kv-ecc-ras-v2",
         emphasis: true,
+        children: [
+          { label: "Landing — KV Cache ECC + RAS v2", href: "/research-wiki/2026-04/kv-ecc-ras-v2" },
+          { label: "🥇 PrefixGuard (OSDI 2027)", href: "/research-wiki/2026-04/kv-ecc-ras-v2/tier1/01-prefixguard" },
+          { label: "🥈 Quarantine (USENIX Security 2027)", href: "/research-wiki/2026-04/kv-ecc-ras-v2/tier1/02-quarantine" },
+          { label: "🥉 PATroller (HPCA 2027)", href: "/research-wiki/2026-04/kv-ecc-ras-v2/tier1/03-patroller" },
+          { label: "T1 ECS-Trace (ITC 2027 / DSN short)", href: "/research-wiki/2026-04/kv-ecc-ras-v2/tier2/01-ecs-trace" },
+          { label: "T2 Quarantine-Mini (DAC 2027 6p)", href: "/research-wiki/2026-04/kv-ecc-ras-v2/tier2/02-quarantine-mini" },
+          { label: "T3 PrefixGuard-Lite (DATE 2027 6p)", href: "/research-wiki/2026-04/kv-ecc-ras-v2/tier2/03-prefixguard-lite" },
+          { label: "미선정 로그", href: "/research-wiki/2026-04/kv-ecc-ras-v2/unselected" },
+        ],
       },
       {
-        label: "🥇 PrefixGuard (OSDI 2027)",
-        href: "/research-wiki/2026-04/kv-ecc-ras-v2/tier1/01-prefixguard",
+        label: "2026-04-25 VLM Context-aware Jetson Edge",
+        href: "/research-wiki/2026-04/vlm-context-edge-jetson",
+        children: [
+          { label: "Landing — VLM Context-aware Jetson Edge", href: "/research-wiki/2026-04/vlm-context-edge-jetson" },
+          { label: "🥇 CacheVeil", href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier1/01-cacheveil" },
+          { label: "🥈 Shoal", href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier1/02-shoal" },
+          { label: "🥉 Vesper", href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier1/03-vesper" },
+          { label: "4️⃣ DualLane", href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier1/04-duallane" },
+          { label: "T1 Tufa", href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier2/01-tufa" },
+          { label: "T2 ShelfSwap", href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier2/02-shelfswap" },
+          { label: "T3 CacheVeil-Sim", href: "/research-wiki/2026-04/vlm-context-edge-jetson/tier2/03-cacheveil-sim" },
+          { label: "미선정 로그", href: "/research-wiki/2026-04/vlm-context-edge-jetson/unselected" },
+        ],
       },
       {
-        label: "🥈 Quarantine (USENIX Security 2027)",
-        href: "/research-wiki/2026-04/kv-ecc-ras-v2/tier1/02-quarantine",
+        label: "2026-04-24 MoE Fingerprint Security+Serving",
+        href: "/research-wiki/2026-04/moe-fingerprint-security-serving",
+        children: [
+          { label: "Landing — MoE Fingerprint Security+Serving", href: "/research-wiki/2026-04/moe-fingerprint-security-serving" },
+          { label: "🥇 DISCRETE-VEIL", href: "/research-wiki/2026-04/moe-fingerprint-security-serving/tier1/01-discrete-veil" },
+          { label: "🥈 LOOM", href: "/research-wiki/2026-04/moe-fingerprint-security-serving/tier1/02-loom" },
+          { label: "🥉 BEACON-GUARD", href: "/research-wiki/2026-04/moe-fingerprint-security-serving/tier1/03-beacon-guard" },
+          { label: "T1 DISCRETE-VEIL-Lite", href: "/research-wiki/2026-04/moe-fingerprint-security-serving/tier2/01-discrete-veil-lite" },
+          { label: "T2 TALLY-Spinoff", href: "/research-wiki/2026-04/moe-fingerprint-security-serving/tier2/02-tally-spinoff" },
+          { label: "T3 BEACON-GUARD-DATE", href: "/research-wiki/2026-04/moe-fingerprint-security-serving/tier2/03-beacon-guard-date" },
+          { label: "미선정 로그", href: "/research-wiki/2026-04/moe-fingerprint-security-serving/unselected" },
+        ],
       },
-      {
-        label: "🥉 PATroller (HPCA 2027)",
-        href: "/research-wiki/2026-04/kv-ecc-ras-v2/tier1/03-patroller",
-      },
-      {
-        label: "T1 ECS-Trace (ITC 2027 / DSN short)",
-        href: "/research-wiki/2026-04/kv-ecc-ras-v2/tier2/01-ecs-trace",
-      },
-      {
-        label: "T2 Quarantine-Mini (DAC 2027 6p)",
-        href: "/research-wiki/2026-04/kv-ecc-ras-v2/tier2/02-quarantine-mini",
-      },
-      {
-        label: "T3 PrefixGuard-Lite (DATE 2027 6p)",
-        href: "/research-wiki/2026-04/kv-ecc-ras-v2/tier2/03-prefixguard-lite",
-      },
-      {
-        label: "미선정 로그",
-        href: "/research-wiki/2026-04/kv-ecc-ras-v2/unselected",
-      },
-    ],
-  },
-  {
-    title: "📚 이전 Summary",
-    items: [
-      { label: "2026-04-25 VLM Context-aware Jetson Edge (R45 적용)", href: "/research-wiki/2026-04/vlm-context-edge-jetson" },
-      { label: "2026-04-24 MoE Fingerprint Security+Serving", href: "/research-wiki/2026-04/moe-fingerprint-security-serving" },
       { label: "2026-04-24 Qwen3-VL DeepStack Edge", href: "/research-wiki/2026-04/qwen3vl-deepstack-edge" },
       { label: "2026-04-23 Energy-Efficient Edge VLM", href: "/research-wiki/2026-04/energy-efficient-edge-vlm" },
       { label: "2026-04-22 VLM+PIM Extension", href: "/research-wiki/2026-04/vlm-pim-extension" },
@@ -71,6 +88,12 @@ const SIDEBAR: SidebarSection[] = [
     ],
   },
 ];
+
+function isActiveSession(itemHref: string, pathname: string | null): boolean {
+  if (!pathname) return false;
+  // 활성 조건: pathname 이 itemHref 와 정확히 일치하거나, itemHref + "/" 로 시작
+  return pathname === itemHref || pathname.startsWith(itemHref + "/");
+}
 
 export default function ResearchWikiSidebar() {
   const [open, setOpen] = useState(false);
@@ -108,22 +131,57 @@ export default function ResearchWikiSidebar() {
             {section.title}
           </h3>
           <ul className="space-y-1">
-            {section.items.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="block text-sm py-1 px-2 rounded hover:underline"
-                  style={{
-                    color: item.emphasis
-                      ? "var(--accent, #F96167)"
-                      : "var(--text-secondary, #333)",
-                    fontWeight: item.emphasis ? 600 : 400,
-                  }}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
+            {section.items.map((item) => {
+              const active = isActiveSession(item.href, pathname);
+              const showChildren = active && item.children && item.children.length > 0;
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="block text-sm py-1 px-2 rounded hover:underline"
+                    style={{
+                      color: item.emphasis
+                        ? "var(--accent, #F96167)"
+                        : "var(--text-secondary, #333)",
+                      fontWeight: item.emphasis ? 600 : 400,
+                    }}
+                  >
+                    {item.label}
+                  </Link>
+                  {showChildren && (
+                    <ul
+                      className="mt-1 ml-3 pl-3 space-y-0.5"
+                      style={{
+                        borderLeft: "2px solid var(--border, #E5E7EB)",
+                      }}
+                    >
+                      {item.children!.map((child) => {
+                        const childActive = pathname === child.href;
+                        return (
+                          <li key={child.href}>
+                            <Link
+                              href={child.href}
+                              className="block text-xs py-0.5 px-2 rounded hover:underline"
+                              style={{
+                                color: childActive
+                                  ? "var(--accent, #F96167)"
+                                  : "var(--text-secondary, #333)",
+                                fontWeight: childActive ? 600 : 400,
+                                backgroundColor: childActive
+                                  ? "rgba(249, 97, 103, 0.08)"
+                                  : "transparent",
+                              }}
+                            >
+                              {child.label}
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </section>
       ))}
@@ -131,7 +189,7 @@ export default function ResearchWikiSidebar() {
         className="text-[10px] mt-8 italic"
         style={{ color: "var(--text-muted, #8893B8)" }}
       >
-        Hidden link — 외부 노출되지 않음 · 사이드바는 모든 research-wiki 페이지에 동일 노출.
+        Hidden link — 외부 노출되지 않음 · 사이드바는 모든 research-wiki 페이지에 동일 노출. 활성 세션의 top idea 는 자동 펼침.
       </p>
     </>
   );
