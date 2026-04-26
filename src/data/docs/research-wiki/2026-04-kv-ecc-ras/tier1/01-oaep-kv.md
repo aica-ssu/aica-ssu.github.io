@@ -19,6 +19,8 @@
 **📊 Score**: Novelty 7.2 / Diff 7.0 / Impact 8.0 = 평균 **7.40**
 **✅ 판정**: Accept strong (Sentinel merge 후 DRAM-stripe alignment 보강)
 
+> **🛠️ R47 path (Simulator-Framework Compatibility)**: **R47.2 application-level (vLLM source 수정 우선)** + 보조 **R47.3 (LLMServingSim built-in ECC config)**. gem5+vLLM 동시 사용 안 함 (R47.1 incompatible). Mech M1 (asymmetric ECC) + Mech M2 (DRAM-row-stripe alignment + sub-page retire) 모두 vLLM source 수정으로 emulate; LLMServingSim 은 ECC encoder power/area overhead cross-validation 용 보조.
+
 ---
 
 ## 1. 개요 (Overview)
@@ -67,14 +69,18 @@ LLM/VLM KV cache 의 quantization 후 INT4/INT8 mantissa 에 대해, AWQ/KVQuant
 
 ### M1: Outlier-Aware Asymmetric ECC (OAEP)
 
-**① 추가되는 Scheme — Source Verified (R32)**:
+**R47 path**: R47.2 application-level vLLM modification (primary) + R47.3 LLMServingSim built-in ECC config (secondary, encoder overhead cross-validation).
 
-vLLM `KVCacheManager.write_kv()` 와 `read_kv()` 경로에 outlier-mask 기반 ECC encoder/decoder 를 삽입 (~600 LoC, vLLM v0.6+ + Triton kernel).
+**① 추가되는 Scheme — Source Verified (R32) + R47.2 vLLM source path**:
+
+vLLM `KVCacheManager.write_kv()` 와 `read_kv()` 경로에 outlier-mask 기반 ECC encoder/decoder 를 삽입 (~600 LoC, vLLM v0.6+ + Triton kernel). 구체적으로 `vllm/v1/core/kv_cache_manager.py::KVCacheManager.allocate` 에서 KV cache block 메타데이터에 (a) outlier mask bit + (b) ECC parity bit 추가, write path 에 ECC encode, read path 에 ECC decode + bit flip injection (`np.random.binomial(1, BER, size)`) inject point.
 
 > ✅ source verified: vllm-project/vllm@`main` `vllm/core/block_manager.py` (확인일: 2026-04-25)
+> ✅ source verified: vllm-project/vllm@`main` `vllm/v1/core/kv_cache_manager.py` (KVCacheManager.allocate)
 > ✅ source verified: vllm-project/vllm@`main` `vllm/attention/backends/abstract.py` (KVCacheManager 인터페이스)
-> ⚠️ source proposed: `vllm/ecc/oaep_codec.py` (~600 LoC, 신규 module — vLLM 내 별도 directory)
+> ⚠️ source proposed: `vllm/ecc/oaep_codec.py` (~600 LoC, 신규 module — vLLM 내 별도 directory, R47.2 application-level path)
 > ✅ external verified: AWQ outlier mask format `awq/quantize/awq_calibrate.py` (mit-han-lab/llm-awq)
+> ✅ external verified: LLMServingSim built-in ECC config (`casys-kaist/LLMServingSim`, R47.3 secondary path, encoder overhead cross-validation)
 
 **② 해결하는 문제 + Workload evidence**:
 
@@ -94,13 +100,15 @@ KVQuant NeurIPS'24 Pre-RoPE Key 측정에서 outlier 1% 채널이 99% sensitivit
 
 ### M2: DRAM-Row-Stripe Alignment + Sub-Page Retirement (Sentinel merged)
 
-**① 추가되는 Scheme — Source Verified (R32)**:
+**R47 path**: R47.2 application-level vLLM `BlockManager.allocate` 의 stripe placement + sub-page retire emulation (primary). gem5/DRAMSim3 는 사용 안 함 (R47.1 — vLLM 동시 실행 불가).
 
-vLLM block allocator 가 outlier 채널을 DRAM row 의 contiguous stripe (≤ row size 1/8) 에 align 시키도록 placement 를 강제. Fault 가 non-outlier stripe 에 발생 시 page 전체가 아닌 stripe 만 retire (sub-page reclaim).
+**① 추가되는 Scheme — Source Verified (R32) + R47.2 vLLM source path**:
 
-> ⚠️ source proposed: `vllm/core/block_manager.py` 의 `align_outlier_stripe()` method (~150 LoC)
-> ✅ external verified: gem5+DRAMSim3 (`gem5/gem5` + `umd-memsys/DRAMSim3`) HBM3 channel mapping 모델
-> ✅ external verified: CHAOSMem (gem5 fault injector, [arXiv:2602.02119](https://arxiv.org/html/2602.02119v1))
+vLLM block allocator 가 outlier 채널을 DRAM row 의 contiguous stripe (≤ row size 1/8) 에 align 시키도록 placement 를 강제. Fault 가 non-outlier stripe 에 발생 시 page 전체가 아닌 stripe 만 retire (sub-page reclaim). DRAM row mapping 은 vLLM-internal model (channel id × bank × row × column index) 으로 emulate, fault syndrome 위치는 `np.random.choice` 로 inject.
+
+> ⚠️ source proposed: `vllm/core/block_manager.py` 의 `align_outlier_stripe()` method (~150 LoC, R47.2)
+> ✅ external verified: DRAMSim3 (`umd-memsys/DRAMSim3`) HBM3 channel mapping config 만 reference (R47.4 trace-driven Tier-2 spinoff 시 사용 가능, vLLM 동시 실행 X)
+> ⚠️ R47.1: gem5+vLLM 동시 사용 금지 — DRAM row mapping 은 vLLM-internal Python emulation 으로 처리
 
 **② 해결하는 문제 + evidence**:
 
@@ -151,11 +159,14 @@ M1 (asymmetric ECC) 은 outlier mask 의 **bit budget 분배**, M2 (stripe align
 
 ### (4) Simulator · Tools
 
-- **gem5 + DRAMSim3** (HBM3 + LPDDR5 channel configs)
-- **CHAOSMem** ([arXiv:2602.02119](https://arxiv.org/html/2602.02119v1)) — bit-flip / stuck-at injection at memory level
-- **vLLM v0.6+** fork (KVCacheManager hook)
-- **Triton kernel** (~600 LoC, OAEP encoder/decoder)
-- **lm-evaluation-harness** (`EleutherAI/lm-evaluation-harness`) for PPL/zero-shot eval after bit injection
+**R47 path**: R47.2 application-level vLLM source 수정 (primary) + R47.3 LLMServingSim built-in ECC config (secondary). gem5 사용 안 함 (R47.1 incompatible — vLLM CUDA/Triton runtime 위에서 cycle-accurate sim 동시 실행 불가).
+
+- **vLLM v0.6.x fork** (application-level ECC encoding/decoding + bit flip injection at `KVCacheManager.allocate/read/write`) — **R47.2 primary**
+- **Triton kernel** (~600 LoC, OAEP encoder/decoder for INT4/INT8 KV)
+- **Python `np.random.binomial(1, BER, size)`** for bit flip injection at read path (no external CHAOSMem dependency)
+- **LLMServingSim** (`casys-kaist/LLMServingSim` v1.0, ISPASS 2026) — **R47.3 secondary**, ECC encoder power/area overhead cross-validation, trace eval option
+- **lm-evaluation-harness** (`EleutherAI/lm-evaluation-harness`) — MMLU 1k / WikiText PPL / MT-Bench / HumanEval 직접 측정 (R47.2 path 의 downstream accuracy gate)
+- ~~gem5 + DRAMSim3~~ — **R47.1 위반, 사용 안 함**. DRAMSim3 channel mapping 은 reference config 만 사용 (vLLM-internal Python emulation 으로 흡수)
 
 ### (5) Ablation · Baseline
 
@@ -180,19 +191,24 @@ Peer-reviewed ratio: 5/6 = **83%** (R2 ≥25% 충족).
 
 ### (6) Implementation Steps (Step-Level, R31)
 
+**R47 path**: 모든 step 이 R47.2 application-level vLLM modification path. Step 1 의 gem5 setup 제거되어 setup 시간 단축. Step 8 Kelle baseline 도 vLLM-internal refresh-counter emulation 으로 재현 (R47.1).
+
 | Step | 의존성 | Component / File (R32 verified) | 사용 API/Library | 완료 판정 |
 |------|--------|---------|---------|---------|
-| Step 1 | — | gem5 SE-mode + DRAMSim3 HBM3 setup. **gem5/gem5 + umd-memsys/DRAMSim3 ✅** | gem5 v22+, DRAMSim3 last release 2024 | unit test 시뮬 1 token KV write/read pass |
-| Step 2 | Step 1 | CHAOSMem fault injector 통합 + BER sweep harness | CHAOSMem [arXiv:2602.02119](https://arxiv.org/html/2602.02119v1) | BER 1e-7 inject + lm-eval baseline 재현 |
+| Step 1 | — | vLLM v0.6.x fork setup + KIVI/AWQ INT4 KV pipeline | vLLM v0.6+, KIVI repo, mit-han-lab/llm-awq | unit test 1 token KV write/read pass |
+| Step 2 | Step 1 | Bit flip injection harness (`np.random.binomial`) at read path | Python, vLLM hook | BER 1e-7 inject + lm-eval baseline 재현 |
 | Step 3 | — | AWQ outlier mask 추출 (Llama-3-8B + Mistral-7B) | mit-han-lab/llm-awq | outlier mask `M` saved (per-head, per-channel) |
 | Step 4 | Step 3 | OAEP encoder/decoder Triton kernel 구현 | Triton 2.x | unit test 64 nibble block roundtrip OK |
-| Step 5 | Step 1, 4 | vLLM KVCacheManager hook 통합 (Mech M1) | vLLM v0.6+ | Llama-3-8B WikiText PPL ±0.05 baseline |
-| Step 6 | Step 5 | DRAM-row-stripe alignment 구현 (Mech M2 from Sentinel) | vLLM block_manager.py + DRAMSim3 row mapping | stripe size 256B alignment 확인 |
-| Step 7 | Step 6 | sub-page reclaim 로직 (vLLM only, no kernel patch) | vLLM extension | fault 후 stripe 만 mark unusable 검증 |
-| Step 8 | Step 5-7 | Kelle 2DRP baseline 재현 + head-to-head | Kelle paper 의 sim setup re-implement | Kelle 의 3.9× speedup 데이터 ±10% 재현 |
-| Step 9 | Step 8 | 5 model × 3 config × 2 baseline = 30 runs 실행 | 위 stack 전체 | 30 runs 결과 dump |
-| Step 10 | Step 9 | manuscript draft + ablation analysis | matplotlib, pandas, lm-eval | 12p draft 70% |
-| Step 11 | Step 10 | polish + artifact prep | git + README | submission-ready |
+| Step 5 | Step 1, 4 | vLLM `KVCacheManager.allocate` hook + outlier mask 메타데이터 + ECC parity (Mech M1) | vLLM v0.6+ | Llama-3-8B WikiText PPL ±0.05 baseline + bit flip rate sweep 결과 |
+| Step 6 | Step 5 | MMLU 1k / MT-Bench accuracy 측정 (downstream gate) | lm-eval-harness | accuracy ±0.5pp baseline 매치 |
+| Step 7 | Step 5 | DRAM-row-stripe alignment 구현 (Mech M2, vLLM-internal Python emulation) | `vllm/core/block_manager.py::align_outlier_stripe` | stripe size 256B alignment 확인 |
+| Step 8 | Step 7 | sub-page reclaim 로직 (vLLM only, no kernel patch) | vLLM extension | fault 후 stripe 만 mark unusable 검증 |
+| Step 9 | Step 5-8 | outlier-aware ECC vs uniform ECC 비교 (M1 ablation) | vLLM-internal | redundancy bits / PPL Pareto 측정 |
+| Step 10 | Step 9 | LLMServingSim built-in ECC config cross-validation (R47.3) | LLMServingSim v1.0 | encoder power/area ±10% cross-validation |
+| Step 11 | Step 9 | Kelle 2DRP baseline 재현 (vLLM-internal refresh counter emulation) + head-to-head | vLLM-internal Python | Kelle 의 3.9× speedup 데이터 ±10% 재현 |
+| Step 12 | Step 11 | 5 model × 3 config × 2 baseline = 30 runs 실행 | 위 stack 전체 | 30 runs 결과 dump |
+| Step 13 | Step 12 | manuscript draft + ablation analysis | matplotlib, pandas, lm-eval | 12p draft 70% |
+| Step 14 | Step 13 | polish + artifact prep | git + README | submission-ready |
 
 **참고 시간 (단일-workstation 기준)**: 약 12-14 weeks 분포.
 

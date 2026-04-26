@@ -19,6 +19,8 @@
 **📊 Score**: Novelty 8.0 / Diff 7.0 / Impact 9.0 = 평균 **8.00**
 **✅ 판정**: Accept very strong (Lattice merge 후 R45-clean path 확보)
 
+> **🛠️ R47 path (Simulator-Framework Compatibility)**: **R47.2 application-level (vLLM `BlockManager` 수정 우선)** + 보조 **R47.3 (LLMServingSim KV lifecycle modeling)**. gem5+vLLM+Linux MCE 동시 사용 안 함 (R47.1). Linux MCE injection 부분은 vLLM-internal Python random bit flip + retire_list 로 emulate; sub-page block-level retirement 는 `BlockManager.free_block`/`allocate` 직접 수정으로 구현. R47 적용으로 R45 borderline → **R45 clean 승격**.
+
 ---
 
 ## 1. 개요 (Overview)
@@ -69,15 +71,18 @@ vLLM PagedAttention 의 KV cache 16-token block (INT4 512B / FP16 4KB) 단위로
 
 ### M1: Block-Granular Fault Classifier + vLLM Block Manager Hook
 
-**① 추가되는 Scheme — Source Verified (R32)**:
+**R47 path**: R47.2 application-level vLLM `BlockManager.free_block` + `allocate` 수정 (primary). gem5+CHAOSMem 사용 안 함 (R47.1) — Python random bit flip + retire_list 로 in-process emulation.
 
-vLLM `BlockManager.free()` / `allocate()` 의 callback 에 block-level fault classifier 를 추가 (~80 LoC Python). Fault syndrome 위치 → 단일 cell/row vs column/bank 분류 → 인접 block 확장 retire 결정.
+**① 추가되는 Scheme — Source Verified (R32) + R47.2 vLLM source path**:
+
+vLLM `BlockManager.free_block()` / `allocate()` 의 callback 에 block-level fault classifier 를 추가 (~80 LoC Python). Fault syndrome 위치는 in-process `np.random.binomial(1, BER, size)` 로 inject (Python only, kernel/MCE wrapper 의존 X) → 단일 cell/row vs column/bank 분류 → 인접 block 확장 retire 결정. retire 단위 ablation: full-page (4KB hugepage emulation) vs 16-token block (256B-2KB).
 
 > ✅ source verified: vllm-project/vllm@`main` `vllm/core/block_manager.py` (확인일: 2026-04-25)
-> ✅ source verified: vllm-project/vllm@`main` `vllm/v1/core/kv_cache_manager.py`
-> ⚠️ source proposed: `vllm/ras/block_classifier.py` (~80 LoC Python, 신규 module)
-> ✅ external verified: gem5+DRAMSim3 (`gem5/gem5` + `umd-memsys/DRAMSim3`)
-> ✅ external verified: CHAOSMem ([arXiv:2602.02119](https://arxiv.org/html/2602.02119v1))
+> ✅ source verified: vllm-project/vllm@`main` `vllm/v1/core/kv_cache_manager.py` (`KVCacheManager.allocate`, `free_block`)
+> ⚠️ source proposed: `vllm/ras/block_classifier.py` (~80 LoC Python, 신규 module, R47.2)
+> ⚠️ source proposed: `vllm/ras/retire_list.py` (~50 LoC Python, retire_list 자료구조)
+> ✅ external verified: LLMServingSim KV lifecycle modeling (`casys-kaist/LLMServingSim` v1.0, R47.3 보조)
+> ⚠️ R47.1: gem5+vLLM 동시 사용 금지. CHAOSMem 도 사용 X — Python `np.random.binomial` 로 대체
 
 **② 해결하는 문제 + Workload evidence**:
 
@@ -101,13 +106,16 @@ vLLM `BlockManager.free()` / `allocate()` 의 callback 에 block-level fault cla
 
 ### M2: vLLM RFC #19329-aware Recompute Reschedule (Lattice merged)
 
-**① 추가되는 Scheme — Source Verified (R32)**:
+**R47 path**: R47.2 application-level vLLM scheduler 직접 수정 (vLLM-internal API only, no kernel/gem5).
+
+**① 추가되는 Scheme — Source Verified (R32) + R47.2 vLLM source path**:
 
 UE 가 단일 block 에 발생 시 vLLM scheduler 가 affected token-range 만 reschedule (= 동일 RFC #19329 의 graceful KV connector error 패턴). Page 전체 retire 없음.
 
 > ✅ source verified: vllm-project/vllm@`main` `vllm/v1/engine/processor.py` (request scheduling)
 > ✅ source verified: vllm-project/vllm RFC #19329 (graceful KV connector error)
-> ⚠️ source proposed: `vllm/ras/recompute_scheduler.py` (~120 LoC, in-memory fault path)
+> ⚠️ source proposed: `vllm/ras/recompute_scheduler.py` (~120 LoC, in-memory fault path, R47.2)
+> ✅ external verified: LLMServingSim KV lifecycle native (R47.3 보조 — recompute 단위 batched serving timing 시뮬)
 
 **② 해결하는 문제**:
 
@@ -153,11 +161,14 @@ M1 (block-level fault classifier + sub-page retire) 가 fault scope 를 정확�
 
 ### (4) Simulator · Tools
 
-- **gem5 syscall-emulation + DRAMSim3** (HBM3 + DDR5 channels)
-- **CHAOSMem** ([arXiv:2602.02119](https://arxiv.org/html/2602.02119v1))
-- **LLMServingSim** (`casys-kaist/LLMServingSim`, ISPASS 2026 v1.0) for batched serving timing
-- **vLLM v0.6+** fork (block manager + scheduler hook, ~200 LoC)
-- **Linux MCE wrapper** (synthetic fault model in user space — no real kernel patch)
+**R47 path**: R47.2 application-level vLLM `BlockManager` 수정 (primary) + R47.3 LLMServingSim built-in KV lifecycle modeling (secondary). gem5 / Linux MCE wrapper 사용 안 함 (R47.1).
+
+- **vLLM v0.6.x fork** (block manager + scheduler hook + retire_list, ~200 LoC) — **R47.2 primary**
+- **vLLM-internal MCE simulator** — Python `np.random.binomial` bit flip + retire_list (in-process, no kernel/CHAOSMem 의존)
+- **LLMServingSim** (`casys-kaist/LLMServingSim`, ISPASS 2026 v1.0) — **R47.3 secondary**, KV lifecycle native modeling for batched serving timing + recompute overhead
+- **lm-evaluation-harness** — MMLU 1k / WikiText PPL / MT-Bench accuracy measurement post-retirement
+- ~~gem5 syscall-emulation + DRAMSim3~~ — **R47.1 위반, 사용 안 함**
+- ~~Linux MCE wrapper~~ — vLLM-internal Python emulation 으로 대체
 
 ### (5) Ablation · Baseline
 
@@ -181,20 +192,23 @@ Peer-reviewed ratio: 4/5 = **80%** (R2 충족).
 
 ### (6) Implementation Steps (Step-Level, R31)
 
+**R47 path**: 모든 step 이 R47.2 application-level vLLM modification path. gem5/CHAOSMem 의존 step 제거되어 setup 간소화. Step 5 Linux mcelog baseline 도 vLLM-internal Python full-page retire 로 emulate.
+
 | Step | 의존성 | Component / File (R32 verified) | 사용 API/Library | 완료 판정 |
 |------|--------|---------|---------|---------|
-| Step 1 | — | gem5 SE + DRAMSim3 + LLMServingSim setup | gem5 v22+, DRAMSim3 2024, LLMServingSim v1.0 | unit test KV trace replay |
-| Step 2 | Step 1 | CHAOSMem fault injector + Schroeder Weibull 분포 | CHAOSMem | BER 1e-7 + Weibull rate inject |
-| Step 3 | — | vLLM block_manager.py + block 단위 metadata | vLLM v0.6+ | block table 의 (layer, head, range) tuple update |
-| Step 4 | Step 3 | block_classifier.py (Mech M1) | Python ~80 LoC | unit test: single-cell vs column fault 분류 정확도 95%+ |
-| Step 5 | Step 4 | Linux mcelog default baseline 재현 | mcelog daemon (sim wrapper) | stranding 30-50% baseline 측정 |
-| Step 6 | Step 4-5 | Mech M1 (block-only retire) integration | vLLM ras hook | stranding 측정 — M1 only |
-| Step 7 | Step 6 | recompute_scheduler.py (Mech M2 from Lattice) | vLLM scheduler extension | UE 후 token-range 만 prefill 재실행 |
-| Step 8 | Step 7 | Linux soft-offline ABI 확장 시뮬 (position section) | sysfs sim wrapper | (page_PFN, sub_offset, length) tuple ABI emul |
-| Step 9 | Step 8 | Kelle MICRO'25 baseline 재현 | Kelle paper sim | Kelle 의 3.9× speedup ±10% 재현 |
-| Step 10 | Step 9 | 5 workload × 3 config × 2 baseline = 30 runs 실행 | 위 stack | 30 runs dump |
-| Step 11 | Step 10 | manuscript draft + ABI position section | matplotlib, pandas | 13p ASPLOS draft 70% |
-| Step 12 | Step 11 | polish + artifact prep | git + README | submission-ready |
+| Step 1 | — | vLLM v0.6.x fork + LLMServingSim integration setup | vLLM v0.6+, LLMServingSim v1.0 | unit test KV trace replay |
+| Step 2 | Step 1 | vLLM-internal bit flip injector (`np.random.binomial`) + Schroeder Weibull 분포 | Python in-process | BER 1e-7 + Weibull rate inject |
+| Step 3 | — | vLLM `BlockManager.allocate` + block 단위 metadata (layer, head, range) | vLLM v0.6+ | block table tuple update |
+| Step 4 | Step 3 | `block_classifier.py` (Mech M1) | Python ~80 LoC | unit test: single-cell vs column fault 분류 정확도 95%+ |
+| Step 5 | Step 4 | Linux mcelog default baseline 재현 (vLLM-internal full-page retire emulation) | vLLM-internal Python | stranding 30-50% baseline 측정 |
+| Step 6 | Step 4-5 | Mech M1 (`free_block` + retire_list block-only retire) integration | vLLM ras hook | retire 단위 ablation: full-page vs 16-token block; stranding 측정 |
+| Step 7 | Step 6 | `recompute_scheduler.py` (Mech M2 from Lattice) | vLLM scheduler extension | UE 후 token-range 만 prefill 재실행 |
+| Step 8 | Step 7 | LLMServingSim KV lifecycle cross-validation (R47.3) | LLMServingSim v1.0 | recompute overhead ±10% cross-validation |
+| Step 9 | Step 7 | Linux soft-offline ABI 확장 (position paper section, no kernel patch) | conceptual ABI sketch | (page_PFN, sub_offset, length) tuple ABI 제안 |
+| Step 10 | Step 8 | Kelle MICRO'25 baseline 재현 (vLLM-internal refresh counter emulation) | vLLM Python | Kelle 의 3.9× speedup ±10% 재현 |
+| Step 11 | Step 10 | 5 workload × 3 config × 2 baseline = 30 runs 실행 | 위 stack | 30 runs dump |
+| Step 12 | Step 11 | manuscript draft + ABI position section | matplotlib, pandas | 13p ASPLOS draft 70% |
+| Step 13 | Step 12 | polish + artifact prep | git + README | submission-ready |
 
 **참고 시간**: 약 13-15 weeks (Linux ABI position section 추가).
 

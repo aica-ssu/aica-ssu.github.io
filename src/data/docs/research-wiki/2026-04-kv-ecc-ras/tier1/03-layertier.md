@@ -18,6 +18,8 @@
 **📊 Score**: Novelty 6.8 / Diff 6.0 / Impact 7.5 = 평균 **6.77**
 **✅ 판정**: Accept (KVTuner / TTKV 와의 axis 분리 명확 시)
 
+> **🛠️ R47 path (Simulator-Framework Compatibility)**: **R47.2 application-level (vLLM layer access counter + migration policy 직접 구현)** primary. **R47.4 ChampSim trace-driven** 은 Tier-2 spinoff 한정 (long-run access pattern characterization). gem5+vLLM 동시 사용 안 함 (R47.1).
+
 ---
 
 ## 1. 개요 (Overview)
@@ -66,14 +68,18 @@ LLM serving 에서 **layer access frequency 가 8-12× 편차** (early hot, late
 
 ### M1: Layer-Tag + Reliability-Zoned Migration
 
-**① 추가되는 Scheme — Source Verified (R32)**:
+**R47 path**: R47.2 application-level vLLM layer access counter + migration policy 직접 구현 (primary). ChampSim 은 Tier-2 spinoff 로 분리 (R47.4).
 
-vLLM/SGLang KV manager 에 layer-tag attribute 추가 (~120 LoC). Block 할당 시 layer_id, access_class (hot/warm/cold) 결정. Reliability-zoned migration policy 가 cold-layer block 을 unreliable zone 으로, hot-layer block 을 reliable zone 으로 placement.
+**① 추가되는 Scheme — Source Verified (R32) + R47.2 vLLM source path**:
+
+vLLM/SGLang KV manager 에 layer-tag attribute 추가 (~120 LoC). Block 할당 시 layer_id, access_class (hot/warm/cold) 결정. Reliability-zoned migration policy 가 cold-layer block 을 unreliable zone 으로, hot-layer block 을 reliable zone 으로 placement. vLLM `vllm/attention/backends/abstract.py` 에 layer-별 KV cache access counter 추가 → application-level access frequency 직접 측정.
 
 > ✅ source verified: vllm-project/vllm@`main` `vllm/core/block_manager.py` (확인일: 2026-04-25)
+> ✅ source verified: vllm-project/vllm@`main` `vllm/attention/backends/abstract.py` (layer access path)
 > ✅ source verified: sgl-project/sglang@`main` `python/sglang/srt/managers/scheduler.py`
-> ⚠️ source proposed: `vllm/ras/layer_tier.py` (~120 LoC, layer-tag + migration policy)
-> ✅ external verified: `move_pages(2)` man page (Linux kernel 4.x+)
+> ⚠️ source proposed: `vllm/ras/layer_tier.py` (~120 LoC, layer-tag + migration policy + access counter, R47.2)
+> ✅ external verified: `move_pages(2)` man page (Linux kernel 4.x+) — userspace migration only (R45 clean)
+> ✅ external verified: ChampSim (`ChampSim/ChampSim`) — **R47.4 trace-driven, Tier-2 spinoff 만**
 
 **② 해결하는 문제 + Workload evidence**:
 
@@ -93,6 +99,8 @@ vLLM/SGLang KV manager 에 layer-tag attribute 추가 (~120 LoC). Block 할당 �
 (a) RL-DRAM HPDC'24 가 node-level checkpoint, application 무관 → 본 연구는 **KV 의 layer 단위 migration**. (b) KVTuner 가 layer sensitivity 를 quantization 에만 → 본 연구는 **reliability**. (c) TTKV/LMCache/BanaServe 가 bandwidth/capacity tier → 본 연구는 **reliability tier**.
 
 ### M2 (minor): Calibration-Stability Lemma (MigGate B2 merged)
+
+**R47 path**: R47.2 application-level vLLM layer access counter 로 직접 측정 (primary). 별도 simulator 의존 없음.
 
 **① 추가되는 Scheme — Source Verified (R32)**:
 
@@ -147,11 +155,15 @@ M1 의 hot/cold split 결정에 M2 의 calibration-once 결과를 사용. M1 단
 
 ### (4) Simulator · Tools
 
-- **ChampSim** (cache hierarchy + memory, `ChampSim/ChampSim`)
-- **LLMServingSim** (`casys-kaist/LLMServingSim`, ISPASS 2026 v1.0) — batched serving timing + KV migration cost
-- **vLLM/SGLang** layer-tag patch (~120 LoC)
-- **CHAOSMem** ([arXiv:2602.02119](https://arxiv.org/html/2602.02119v1)) — fault injection at zoned reliability synthetic (10% high-CE region, 90% reliable)
+**R47 path**: R47.2 application-level vLLM layer access counter + migration policy (primary) + R47.3 LLMServingSim built-in (secondary, batched serving timing). R47.4 ChampSim trace-driven 은 Tier-2 spinoff 만.
+
+- **vLLM/SGLang v0.6.x fork** layer-tag patch + `vllm/ras/layer_tier.py` access counter (~120 LoC) — **R47.2 primary**
+- **LLMServingSim** (`casys-kaist/LLMServingSim`, ISPASS 2026 v1.0) — **R47.3 secondary**, batched serving timing + KV migration cost native modeling
+- **vLLM-internal zoned BER injector** — Python `np.random.binomial` with zone-conditional rate (10% high-CE region, 90% reliable), no CHAOSMem
 - **scipy.stats** — Spearman ρ + Kendall τ (M2 lemma)
+- **lm-evaluation-harness** — MMLU / LongBench / RULER accuracy
+- **ChampSim** (`ChampSim/ChampSim`) — **R47.4 Tier-2 spinoff only**, trace-driven characterization paper 한정 (long-run access pattern visualization)
+- ~~CHAOSMem~~ — vLLM-internal Python emulation 으로 대체
 
 ### (5) Ablation · Baseline
 

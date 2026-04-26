@@ -20,6 +20,8 @@
 **📊 Score**: Novelty 6.5 / Diff 7.0 / Impact 5.5 = 평균 **6.33**
 **✅ 판정**: Accept Tier-2 (ModalSplit + ECCLite merged, single-mech tightened)
 
+> **🛠️ R47 path (Simulator-Framework Compatibility)**: **R47.3 AttAcc built-in (modality flag 추가 + ECC overhead 측정)** primary + **R47.2 vLLM/SGLang `vllm/multimodal/inputs.py` modality-asymmetric ECC** 병행. AttAcc built-in 이 KV cache hierarchy + modality flag 직접 지원하면 R47.3 메인, 미지원 시 R47.2 fallback. gem5+vLLM 동시 사용 안 함 (R47.1).
+
 ---
 
 ## 1. 개요 (Overview)
@@ -68,15 +70,18 @@ VLM (Qwen3-VL / LLaVA-Next / InternVL) 의 **vision-token KV 가 heavier-tailed*
 
 ### M1: Modality-Conditioned ECC Strength + Chip-Kill Region Selection
 
-**① 추가되는 Scheme — Source Verified (R32)**:
+**R47 path**: R47.3 AttAcc built-in (modality flag 추가 — KV cache hierarchy 확장 + ECC overhead 측정) primary + R47.2 vLLM/SGLang modality-asymmetric ECC 병행 (cross-validation).
 
-SGLang KV cache manager 에 modality flag 를 KV write path 에 carry (~300 LoC). Vision token → SEC-DED Hamming(72,64) + chip-kill region (sim emulation), text token → XOR parity per 64-nibble block.
+**① 추가되는 Scheme — Source Verified (R32) + R47.3 AttAcc + R47.2 vLLM/SGLang source path**:
+
+SGLang KV cache manager 에 modality flag 를 KV write path 에 carry (~300 LoC). Vision token → SEC-DED Hamming(72,64) + chip-kill region (sim emulation), text token → XOR parity per 64-nibble block. AttAcc 의 KV cache hierarchy 에 modality flag 추가 → ECC overhead (power/area/latency) 측정 (R47.3 primary). vLLM/SGLang `vllm/multimodal/inputs.py` modality flag 가 이미 존재 → SGLang `modality_ecc.py` 가 directly carry.
 
 > ✅ source verified: sgl-project/sglang@`main` `python/sglang/srt/managers/scheduler.py` (modality flag 존재)
 > ✅ source verified: vllm-project/vllm@`main` `vllm/multimodal/inputs.py` (vision token tagging)
-> ⚠️ source proposed: `sglang/ras/modality_ecc.py` (~300 LoC, single-mech merge)
-> ✅ external verified: AttAcc simulator (`scale-snu/attacc_simulator`, ASPLOS 2024)
-> ✅ external verified: NeuroSim V1.4 ECC encoder (`neurosim/DNN_NeuroSim_V1.4`, TCAS-I 2024)
+> ⚠️ source proposed: `sglang/ras/modality_ecc.py` (~300 LoC, single-mech merge, R47.2)
+> ✅ external verified: AttAcc simulator (`scale-snu/attacc_simulator`, ASPLOS 2024) — **R47.3 primary**, KV cache hierarchy + modality flag 확장
+> ✅ external verified: NeuroSim V1.4 ECC encoder (`neurosim/DNN_NeuroSim_V1.4`, TCAS-I 2024) — **R47.3 secondary**, chip-kill / SECDED encoder power/area
+> ⚠️ R47.1: gem5+vLLM 동시 사용 금지 — chip-kill region 은 AttAcc/NeuroSim 또는 vLLM-internal Python emulation
 
 **② 해결하는 문제 + Workload evidence**:
 
@@ -129,11 +134,15 @@ SGLang KV cache manager 에 modality flag 를 KV write path 에 carry (~300 LoC)
 
 ### (4) Simulator · Tools
 
-- **AttAcc simulator** (`scale-snu/attacc_simulator`, ASPLOS 2024) — VLM attention bound
-- **NeuroSim V1.4** (`neurosim/DNN_NeuroSim_V1.4`) — chip-kill / SECDED ECC encoder power+area
+**R47 path**: R47.3 AttAcc + NeuroSim built-in (primary) + R47.2 SGLang modality flag patch 병행 (secondary). gem5+vLLM 동시 사용 안 함 (R47.1).
+
+- **AttAcc simulator** (`scale-snu/attacc_simulator`, ASPLOS 2024) — **R47.3 primary**, KV cache hierarchy + modality flag 확장 + ECC overhead
+- **NeuroSim V1.4** (`neurosim/DNN_NeuroSim_V1.4`) — **R47.3 secondary**, chip-kill / SECDED ECC encoder power+area
+- **SGLang v0.4+ fork** modality flag patch (~300 LoC) — **R47.2**, modality-asymmetric ECC encoding/decoding direct emulation
 - **LLMServingSim VLM extension** (`casys-kaist/LLMServingSim` v1.0)
-- **SGLang KV manager modality flag patch** (~300 LoC)
-- **CHAOSMem** ([arXiv:2602.02119](https://arxiv.org/html/2602.02119v1)) — fault injection w/ column/row/single-bit 분포 (MICRO'25 fault classification: column 30% / row 40% / single-bit 30%)
+- **vLLM-internal fault injector** — Python `np.random.binomial` with column/row/single-bit 분포 (MICRO'25 fault classification: column 30% / row 40% / single-bit 30%), no CHAOSMem
+- **lm-evaluation-harness** + **VQAv2/DocVQA/MMVet** — VLM accuracy gate
+- ~~CHAOSMem~~ — vLLM-internal Python emulation 으로 대체
 
 ### (5) Ablation · Baseline
 

@@ -245,6 +245,8 @@
 
 R46 verified 0 missing. R45 strict 평가 — 4 idea borderline (모두 미선정 또는 merge 시 R45-clean path 로 우회).
 
+**R47 적용 결과 (2026-04-25 신규)**: 15 미선정 idea 의 simulator path 도 R47 규칙 (gem5+vLLM 동시 사용 금지 + R47.2 application-level 우선) 에 준해 재평가됨. 미선정 idea 모두 (a) merged target idea 의 R47 path 에 흡수되거나 (b) 단독 부활 시 R47.2 vLLM source 수정 path 가 default. ScaleShield/ModalSplit 등 R45 borderline idea 도 R47.2 적용 시 application-level path 로 R45 clean 승격 가능. 전체 미선정 표는 변경 X — sim path 재평가만 추가 명시.
+
 ---
 
 ## Kelle MICRO 2025 baseline 보강 종합 (R46 의무)

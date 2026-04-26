@@ -17,6 +17,8 @@
 **📊 Score**: Novelty 6.0 / Diff 5.0 / Impact 6.5 = 평균 **5.83**
 **✅ 판정**: Accept Tier-2 (Driftwood characterization merged, MiKV/KITTY 비교 의무)
 
+> **🛠️ R47 path (Simulator-Framework Compatibility)**: **R47.2 application-level (vLLM `vllm/ecc/entropy_ecc.py` block entropy 계산 + ECC tag 결정 + lm-eval MMLU/PPL)** primary. **R47.4 ChampSim trace-driven** 은 Tier-2 characterization spinoff 한정 (long-run access pattern). gem5+vLLM 동시 사용 안 함 (R47.1).
+
 ---
 
 ## 1. 개요 (Overview)
@@ -65,14 +67,17 @@
 
 ### M1: Block Entropy → ECC Strength + Position Recency Weighting
 
-**① 추가되는 Scheme — Source Verified (R32)**:
+**R47 path**: R47.2 application-level vLLM `entropy_ecc.py` block entropy 계산 + Triton kernel + lm-eval (primary). R47.4 ChampSim trace-driven 은 Tier-2 characterization spinoff 한정.
 
-KIVI quantization step 에 entropy 계산 hook 추가 (~200 LoC, vLLM Triton kernel). Block (16-token × head_dim × INT4) histogram + Shannon entropy 계산 → ECC tag (2 bits) 결정. Driftwood 의 position-bias 를 long-context (32K+) 시 entropy threshold 의 recency 가중치로 반영.
+**① 추가되는 Scheme — Source Verified (R32) + R47.2 vLLM source path**:
+
+KIVI quantization step 에 entropy 계산 hook 추가 (~200 LoC, vLLM Triton kernel). Block (16-token × head_dim × INT4) histogram + Shannon entropy 계산 → ECC tag (2 bits) 결정. Driftwood 의 position-bias 를 long-context (32K+) 시 entropy threshold 의 recency 가중치로 반영. vLLM-internal entropy 계산 path (Python or Triton) 가 KIVI quantization 시 함께 실행 → cost 0.
 
 > ✅ source verified: vllm-project/vllm@`main` `vllm/attention/backends/abstract.py`
 > ✅ source verified: KIVI repo (`jy-yuan/KIVI`) for quantization step integration
-> ⚠️ source proposed: `vllm/ecc/entropy_ecc.py` (~200 LoC, single-mech merge)
-> ✅ external verified: ChampSim (`ChampSim/ChampSim`) bit-flip injection module (~80 LoC `src/`)
+> ⚠️ source proposed: `vllm/ecc/entropy_ecc.py` (~200 LoC, single-mech merge, R47.2)
+> ✅ external verified: ChampSim (`ChampSim/ChampSim`) — **R47.4 Tier-2 spinoff only**, characterization paper 한정
+> ⚠️ R47.1: gem5+vLLM 동시 사용 금지. ChampSim 도 vLLM 분리 trace-driven 만 (Tier-2 spinoff)
 
 **② 해결하는 문제 + Workload evidence**:
 
@@ -125,11 +130,14 @@ KIVI quantization step 에 entropy 계산 hook 추가 (~200 LoC, vLLM Triton ker
 
 ### (4) Simulator · Tools
 
-- **ChampSim** (`ChampSim/ChampSim`) + bit-flip injection module (~80 LoC `src/`)
-- **NeuroSim V1.4** (option: DRAM cell wear → time-varying BER)
-- **vLLM v0.6+** + KIVI quantization step hook (~200 LoC Triton)
-- **lm-evaluation-harness** (`EleutherAI/lm-evaluation-harness`)
-- **scipy.stats** (R² calculation, Pearson r)
+**R47 path**: R47.2 vLLM `entropy_ecc.py` + Triton + lm-eval (primary). R47.4 ChampSim trace-driven 은 Tier-2 characterization spinoff 만.
+
+- **vLLM v0.6.x fork** + KIVI quantization step hook (`vllm/ecc/entropy_ecc.py` ~200 LoC Triton) — **R47.2 primary**
+- **vLLM-internal bit-flip injection** — Python `np.random.binomial(1, BER, size)` (no external CHAOSMem)
+- **lm-evaluation-harness** (`EleutherAI/lm-evaluation-harness`) — MMLU/PPL/HumanEval accuracy gate
+- **scipy.stats** (R² calculation, Pearson r) — entropy vs MiKV/Kelle importance ablation
+- **NeuroSim V1.4** (option, R47.3 secondary) — DRAM cell wear → time-varying BER
+- **ChampSim** (`ChampSim/ChampSim`) — **R47.4 Tier-2 spinoff only**, trace-driven characterization 한정 (long-run access pattern)
 
 ### (5) Ablation · Baseline
 

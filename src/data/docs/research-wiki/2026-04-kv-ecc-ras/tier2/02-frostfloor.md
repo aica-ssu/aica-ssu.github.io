@@ -16,6 +16,8 @@
 **📊 Score**: Novelty 5.0 / Diff 5.5 / Impact 4.5 = 평균 **5.00**
 **✅ 판정**: Accept Tier-2 (single-mechanism, edge-only scope tightened)
 
+> **🛠️ R47 path (Simulator-Framework Compatibility)**: **R47.2 vLLM-edge fork 의 KV manager 에 sub-page bitmap 추가 + synthetic bit-flip injection** 만으로 충분. **Jetson 실측 X (시간 제약)** — 본 Tier-2 6p scope 에서는 simulator-only path 로 한정. NeuroSim V1.4 LPDDR5 cell wear model 만 R47.3 보조로 사용. gem5+vLLM 동시 사용 안 함 (R47.1).
+
 ---
 
 ## 1. 개요 (Overview)
@@ -48,13 +50,17 @@ Edge LLM (Jetson Orin 8-32GB LPDDR5) 은 **LPDDR ECC 가 약함** (in-DRAM ECC �
 
 ### M1: Sub-Page Bitmap Allocator + Frozen Sub-Block Skip
 
-**① 추가되는 Scheme — Source Verified (R32)**:
+**R47 path**: R47.2 application-level vLLM-edge bitmap allocator (Python) primary. NeuroSim V1.4 cell wear model 만 R47.3 보조. Jetson 실측 X (시간 제약).
 
-vLLM-edge fork 의 KV manager 에 INT4 block (256-512B) 단위 sub-page bit error map 추가 (~150 LoC). 1KB bitmap per 64KB physical region. Application 시작 시 page 내 "frozen" sub-block (>3 누적 error in last 1h) 을 자동 skip.
+**① 추가되는 Scheme — Source Verified (R32) + R47.2 vLLM source path**:
 
-> ⚠️ source proposed: `vllm/edge/frostfloor_alloc.py` (~150 LoC)
-> ✅ external verified: vLLM-edge fork (community-maintained Jetson port)
-> ✅ external verified: memtest86-style synthetic bit-flip stress (`stressapptest`)
+vLLM-edge fork 의 KV manager 에 INT4 block (256-512B) 단위 sub-page bit error map 추가 (~150 LoC). 1KB bitmap per 64KB physical region. Application 시작 시 page 내 "frozen" sub-block (>3 누적 error in last 1h) 을 자동 skip. Bit-flip injection 은 vLLM-internal Python `np.random.binomial` 로 emulate (LPDDR5 stress 도 simulator path 한정).
+
+> ⚠️ source proposed: `vllm/edge/frostfloor_alloc.py` (~150 LoC, R47.2)
+> ✅ external verified: vLLM-edge fork (community-maintained Jetson port) — code structure만 reference
+> ✅ external verified: NeuroSim V1.4 LPDDR5 cell wear model (`neurosim/DNN_NeuroSim_V1.4`, R47.3 secondary)
+> ⚠️ R47.2: Jetson 실측 X — simulator-only (vLLM-edge fork code path + NeuroSim cell wear)
+> ~~stressapptest~~ — vLLM-internal Python bit-flip injection 으로 대체
 
 **② 해결하는 문제 + Workload evidence**:
 
@@ -102,10 +108,13 @@ vLLM-edge fork 의 KV manager 에 INT4 block (256-512B) 단위 sub-page bit erro
 
 ### (4) Simulator · Tools
 
-- **vLLM-edge fork** (community Jetson port)
-- **memtest86 / stressapptest** (LPDDR5 synthetic bit-flip stress)
-- **NeuroSim V1.4** — LPDDR5 cell wear model (chosen over real hardware for R45 strict)
-- **lm-evaluation-harness** (`EleutherAI/lm-evaluation-harness`)
+**R47 path**: R47.2 vLLM-edge fork bitmap allocator primary (Python only, Jetson 실측 X) + R47.3 NeuroSim V1.4 LPDDR5 cell wear secondary.
+
+- **vLLM-edge fork** (community Jetson port) — **R47.2 primary**, code path reference + bitmap allocator 직접 구현
+- **vLLM-internal Python bit-flip injection** — `np.random.binomial(1, BER, size)` (no stressapptest, no real hardware)
+- **NeuroSim V1.4** — **R47.3 secondary**, LPDDR5 cell wear model (time-varying BER 시뮬)
+- **lm-evaluation-harness** (`EleutherAI/lm-evaluation-harness`) — accuracy gate
+- ~~memtest86 / stressapptest~~ — vLLM-internal Python emulation 으로 대체 (Jetson 실측 X, R47.2)
 
 ### (5) Ablation · Baseline
 

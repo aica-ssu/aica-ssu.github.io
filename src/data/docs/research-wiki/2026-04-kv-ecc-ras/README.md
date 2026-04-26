@@ -88,9 +88,11 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 1280" width="880" height="1280" font-family="Inter, system-ui, sans-serif" font-size="13">
 <rect x="0" y="0" width="880" height="1280" fill="#fafafa"/>
-<rect x="280" y="20" width="320" height="60" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
-<text x="440" y="44" text-anchor="middle" font-weight="bold">Step 1 — Simulator 환경 selection</text>
-<text x="440" y="64" text-anchor="middle">gem5+DRAMSim3 / ChampSim / NeuPIMs / AttAcc / LLMServingSim</text>
+<rect x="240" y="14" width="400" height="72" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+<text x="440" y="34" text-anchor="middle" font-weight="bold">Step 1 — Simulator 환경 selection (R47)</text>
+<text x="440" y="52" text-anchor="middle">R47.2 vLLM-internal application-level (default)</text>
+<text x="440" y="68" text-anchor="middle">R47.3 LLMServingSim/NeuroSim built-in</text>
+<text x="440" y="82" text-anchor="middle">R47.4 trace-driven gem5 standalone (Tier-2 only) · R47.1 gem5+vLLM 동시 사용 금지</text>
 <rect x="40" y="110" width="240" height="56" rx="6" fill="#fef3c7" stroke="#d97706"/>
 <text x="160" y="132" text-anchor="middle" font-weight="bold">Tier-1 OAEP-KV</text>
 <text x="160" y="152" text-anchor="middle">gem5+DRAMSim3 (HBM3 BER inj.)</text>
@@ -354,6 +356,47 @@
 | **VLM-MAP** | Kelle 의 token importance 가 vision/text modality 와 어떻게 다른지 ablation 필수. modality 가 importance score 의 specialization 인지 별도 signal 인지. |
 | **(미선정) Chameleon** | Kelle 의 bit-position 보호 (MSB > LSB) 와 ScaleShield 의 scale-vs-mantissa hierarchy 의 redundancy / orthogonality. |
 | **(미선정) Sentinel** | DRAM-row-stripe alignment 가 Kelle 의 bit-position axis 와 직교하는 *spatial* axis 임을 명시. |
+
+---
+
+## 6.4 R47 적용 결과 — Simulator-Framework Compatibility 재평가
+
+**R47 핵심 규칙 (2026-04-25 신규)**:
+
+- **(R47.1)** **gem5 + vLLM 동시 사용 금지** — incompatible. gem5 syscall-emulation 또는 full-system 위에서 vLLM 의 CUDA/Triton GPU runtime 실행 불가. 모든 "gem5 + vLLM trace 통합" 표현은 (a) trace 추출 + (b) gem5 standalone replay 의 두 단계로 분리해야 함.
+- **(R47.2)** **Application-level emulation 우선 (Tier-1 default path)** — vLLM source 수정으로 error injection (`np.random.binomial` bit flip) / ECC encoding/decoding (Python or Triton) / page retirement (BlockManager hook) / refresh (counter) 모두 emulate. 학생 1인 12-16주 budget 에 가장 fit. lm-eval-harness MMLU/MT-Bench 으로 downstream accuracy 직접 측정.
+- **(R47.3)** **Specialized simulator built-in 활용** — LLMServingSim / NeuroSim V1.4 / AttAcc / NeuPIMs 등이 native 로 mechanism 지원하면 사용. ECC encoder power/area, KV lifecycle, modality flag 등을 simulator-side 로 offload 가능 시 R47.2 와 병행.
+- **(R47.4)** **Trace-driven gem5 (vLLM 분리, Tier-2 한정 권장)** — vLLM 으로 KV access trace 를 dump 한 후 gem5 standalone 에서 replay. 시간 오래걸림 (수일~수주) → Tier-2 spinoff / characterization paper 한정.
+- **(R47.5)** 각 mechanism 마다 **`R47 path:` 1줄 annotation 의무**. 형식: `[application-level vLLM modification | LLMServingSim built-in | NeuroSim built-in | AttAcc built-in | trace + gem5 standalone (Tier-2 only)]`.
+
+### R47 적용 결과 — 6 selected idea path 재구성
+
+| # | Idea | Tier | 1차 path (pre-R47) | R47 reframe path | R47 의 학기 fit |
+|---|------|------|---------------------|------------------|----------------|
+| 1 | **OAEP-KV** | T1 | gem5+DRAMSim3+vLLM trace (R47.1 부분 위반: path 모호) | **R47.2 primary** vLLM `vllm/v1/core/kv_cache_manager.py::KVCacheManager.allocate` 수정 → outlier mask 메타데이터 + ECC parity bit 추가 + `np.random.binomial` bit flip injection + lm-eval MMLU/MT-Bench 직접 측정. 보조 R47.3 LLMServingSim built-in ECC config (encoder overhead). | ★★★ 12-14주 fit, gem5 의존 제거로 Wk 1-2 setup 단축 |
+| 2 | **BlockShard** | T1 | gem5 syscall + Linux MCE injection (R47.1 부분 위반) | **R47.2 primary** vLLM `BlockManager.free_block` + `allocate` 수정으로 `retire_list` 구현 + retire 단위 ablation (full-page 4KB vs 16-token block 256B-2KB) + memory stranding 직접 측정 (vLLM page allocator stat). 보조 R47.3 LLMServingSim KV lifecycle modeling. Linux MCE 부분은 Python random bit flip + retire_list 로 in-process emulation. | ★★★ 13-14주 fit, kernel patch 의존 제거로 R45 borderline → R45 clean 승격 |
+| 3 | **LayerTier** | T1 | ChampSim + LRU-extended (R47 OK) | **R47.2 보강** vLLM layer-별 KV cache access counter 추가 (`vllm/attention/backends/abstract.py` 확장) + page migration policy 직접 구현. **R47.4 ChampSim trace-driven** 은 Tier-2 spinoff 로 분리 (long-run sim 시 access pattern 시각화). | ★★★ 13주 fit, vLLM-internal counter 가 main path |
+| 4 | **VLM-MAP** | T2 | AttAcc simulator (R47.3 OK, built-in 확인 필요) | **R47.3 primary** AttAcc 의 KV cache hierarchy 에 modality flag 추가 + ECC overhead 측정. **R47.2 병행** vLLM/SGLang `vllm/multimodal/inputs.py` modality flag carry → modality-asymmetric ECC 직접 emulation. | ★★★ 8-10주 fit |
+| 5 | **FrostFloor** | T2 | Jetson Orin LPDDR5 stress (real hardware 부담) | **R47.2 only** vLLM-edge fork 의 KV manager 에 sub-page bitmap 추가 + synthetic bit-flip injection 만으로 충분 (Jetson 실측 X — 시간 제약). NeuroSim V1.4 는 LPDDR5 cell wear model 만 사용 (R47.3 보조). | ★★★ 8주 fit, Jetson 의존 제거 |
+| 6 | **EntropyECC** | T2 | ChampSim + lm-eval (R47.4 OK) | **R47.2 primary** vLLM `vllm/ecc/entropy_ecc.py` block entropy 계산 + ECC tag 결정 + lm-eval MMLU/PPL 측정. **R47.4 spinoff** ChampSim trace-driven 은 Tier-2 characterization 으로. | ★★★ 8-10주 fit |
+
+### R47 의 ideation gating 효과
+
+- **gem5+vLLM 동시 사용 ideation 모두 자동 reject**: 본 세션 ideation phase 에서 "gem5+vLLM co-simulation" 표현이 등장하면 (R47.1) 위반 → 즉시 (a) trace+gem5 standalone 또는 (b) vLLM-only application-level 의 둘 중 하나로 분리하도록 강제.
+- **R47.2 application-level emulation 이 모든 Tier-1 의 primary path**: 6 idea 중 4 (OAEP-KV / BlockShard / LayerTier / FrostFloor / EntropyECC) 가 vLLM source 수정만으로 mechanism 평가 완료. 학생 1인 12-16주 budget 와 강하게 호환.
+- **R47.3 LLMServingSim/NeuroSim/AttAcc built-in** 은 power/area overhead 측정 + native modality/lifecycle modeling 시 보조 path 로 사용. R47.2 의 결과 검증 / cross-validation 도구.
+- **R47.4 trace+gem5 standalone** 은 LayerTier / EntropyECC 의 Tier-2 spinoff 에서 long-run access pattern characterization 시 사용. Tier-1 main path 에는 사용 안 함 (시간 부담).
+
+### R47 simulator path 표 (R45 표 갱신)
+
+| Idea | R47 primary path | R47 secondary path | R45 risk (R47 적용 후) |
+|------|-------------------|----------------------|------------------------|
+| Tier-1 OAEP-KV | R47.2 vLLM `kv_cache_manager.py` + Triton ECC encoder | R47.3 LLMServingSim built-in ECC config | 낮음 (R45 clean) |
+| Tier-1 BlockShard | R47.2 vLLM `BlockManager.free/allocate` + retire_list | R47.3 LLMServingSim KV lifecycle | **낮음 (R45 borderline → clean 승격)** |
+| Tier-1 LayerTier | R47.2 vLLM layer access counter + migration policy | R47.4 ChampSim trace-driven (Tier-2 spinoff) | 낮음 |
+| Tier-2 VLM-MAP | R47.3 AttAcc modality flag built-in | R47.2 vLLM modality-asymmetric ECC | 낮음 |
+| Tier-2 FrostFloor | R47.2 vLLM-edge bitmap allocator (Python) | R47.3 NeuroSim V1.4 LPDDR5 cell wear | 낮음 |
+| Tier-2 EntropyECC | R47.2 vLLM `entropy_ecc.py` + Triton kernel | R47.4 ChampSim trace-driven (spinoff) | 낮음 |
 
 ---
 
