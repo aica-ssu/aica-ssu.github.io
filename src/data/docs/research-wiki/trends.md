@@ -4,6 +4,39 @@
 
 ---
 
+### KV cache reliability + Modern Memory Standard (LPDDR5x/HBM3/CXL 3.x) — 2026-04 시점 미니 트렌드 (v2)
+
+- **Date analyzed**: 2026-04-26
+- **Session**: [링크](/research-wiki/2026-04/kv-ecc-ras-v2)
+- **Experts**: system-robustness-expert (primary), legacy-system-expert, ai-optimization-expert
+- **Papers analyzed**: 24 paper + 9 workload sources + 4 modern memory standard documents
+
+#### 신호 1 — **CXL 3.x CCI mailbox + ECS 가 KV cache reliability research 의 신규 surface 로 부상 (2026-Q1 이후)**
+
+CXL 3.1 RAS Whitepaper (Aug 2024) + CXL 3.2 Patrol Scrub Control + Linux 6.16 EDAC scrub_subsystem upstream (2025-08) 가 동시 도착하면서 **CXL-attached KV cache (LMCache [arXiv:2510.09665](https://arxiv.org/abs/2510.09665) / TraCT [arXiv:2512.18194](https://arxiv.org/abs/2512.18194) / Beluga [arXiv:2511.20172](https://arxiv.org/abs/2511.20172))** 의 reliability axis 가 갑자기 mature 함. KVCache-in-Wild USENIX ATC'25 ([arXiv:2506.02634](https://arxiv.org/abs/2506.02634)) 가 prefix lifetime hour-scale 측정 — long-lived prefix 와 scrub interval alignment 의 first work 가 가능. 본 세션 P1 PrefixGuard / V1 PrefixGuard-Lite / P3 Quarantine / V3 Quarantine-Mini 모두 이 trend 직접 활용. **3 LMCache/TraCT/Beluga concurrent paper 가 latency/throughput axis 만 — reliability axis 는 향후 1-2 년 first-mover 기회**.
+
+#### 신호 2 — **HBM3 PAT counter 의 KV cache hot block identification 활용 가능성**
+
+HBM3 JESD238B 의 **PAT (Pseudo-channel Activation Timing)** counter 가 hot-row 를 hardware-level 로 식별. PRAC family (MOAT [arXiv:2407.09995](https://arxiv.org/abs/2407.09995) / QPRAC [arXiv:2501.18861](https://arxiv.org/abs/2501.18861) / CnC-PRAC [arXiv:2506.11970](https://arxiv.org/abs/2506.11970)) 가 모두 DRAM-level mitigation 만 — KV-aware 부재. Meta Reliability ([arXiv:2410.21680](https://arxiv.org/abs/2410.21680)) Llama-3 405B 16384 H100 cluster 의 54일 419 failure 중 HBM3 72건 (3hr 당 1건) 측정으로 hot row 가 fault dominant origin 확인. 본 세션 P4 PATroller / P8 ECS-Trace / V4 PATroller-Solo 가 이 trend 직접 활용. **clear (<25%) 분류 — first work 기회 강함**.
+
+#### 신호 3 — **Bit-flip attack 의 KV cache 표적이 LM weight 표적 대비 단가 1/100 (SilentStriker 2024 / Two-Decade-Old Prophecy 2025)**
+
+SilentStriker ([arXiv:2509.06939](https://arxiv.org/abs/2509.06939)) 가 INT8-quant Llama-3.1-8B 에서 50 bits flip 으로 GSM8K 65.7% → 7.6% naturalness 유지. Two-Decade-Old Prophecy ([arXiv:2510.00490](https://arxiv.org/abs/2510.00490)) 가 .gguf quantized LLM 에서 **단 1 bit** flip 으로 73.5% → 0% (31.7s @464.3 flips/s). GenBFA ([arXiv:2411.13757](https://arxiv.org/abs/2411.13757)) 도 INT4 quant 에서 3 critical bits → MMLU 0%. **공통 finding**: vulnerable bit 이 attention mechanism + output layer 집중 — KV cache attention key 도 동일 vulnerability 영역. 단 KV cache 는 weight 보다 **temporal volatility 가 높아 detection latency budget 이 sub-second 필요**. Defense paper (LM-Fix [arXiv:2511.02866](https://arxiv.org/abs/2511.02866) / RoR [arXiv:2603.16382](https://arxiv.org/abs/2603.16382) / BitFlipScope [arXiv:2512.22174](https://arxiv.org/abs/2512.22174)) 가 모두 weight 영역 — **KV cache 영역 defense 는 본 세션 P3 Quarantine + V3 Quarantine-Mini + P5 Watermark 의 first stack-able layer**.
+
+#### Top-tier venue alignment 2026-2027
+
+- **OSDI 2027 / ASPLOS 2027**: CXL prefix cache reliability + multi-tenant LLM serving (P1 PrefixGuard).
+- **USENIX Security 2027**: multi-agent KV poison isolation + agent-level BFA defense (P3 Quarantine).
+- **HPCA 2027 / DSN 2027**: HBM3 PAT counter × KV migration (P4 PATroller).
+- **ITC 2027 / DSN short**: HBM3 ECS mailbox × LLM lifetime (P8 ECS-Trace).
+- **DAC 2027 / DATE 2027 6p**: CXL DPA poison recompute latency profile, EDAC scrub interval calibration (V3, V1).
+
+#### 본 세션과의 연결
+
+본 세션 6 final idea (P1 / P3 / P4 / P8 / V3 / V1) 모두 위 3 신호 중 1+ 직접 활용. **R50.2 modern memory standard 의 신규 RAS feature 핵심 mechanism integration** 이 v1 (2026-04-25) 의 "feature 인용만 motivation" 사고를 회피하는 핵심 차별점.
+
+---
+
 ### VLM + PIM / GPU-PIM Heterogeneous Serving — 2026-04 시점 미니 트렌드
 - **Date analyzed**: 2026-04-22
 - **Session**: [링크](/research-wiki/2026-04/vlm-pim-extension)

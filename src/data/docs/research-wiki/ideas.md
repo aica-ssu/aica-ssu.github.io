@@ -4,6 +4,86 @@
 
 ---
 
+## Selected Ideas (2026-04-26 KV cache ECC + Memory RAS v2)
+
+### PrefixGuard ★ — Reliability-Aware Prefix Cache Eviction & Scrub Scheduling for CXL-Attached KV Storage in Multi-Tenant LLM Serving (Tier-1 Top 1)
+- **Date**: 2026-04-26 | **Session**: [링크](/research-wiki/2026-04/kv-ecc-ras-v2) / Summary
+- **Tier**: Top-tier lead | **Target**: OSDI 2027 (13p, primary) / ASPLOS 2027 / DSN 2027
+- **Experts**: system-robustness-expert (메인). Phase 1'' scores: Nov **9.0** / Diff **9.5** / Imp **8.0** / Feas **9.0** → avg **8.9**
+- **Hypothesis**: CXL-attached prefix block 의 hour-scale lifetime (KVCache-in-Wild USENIX ATC'25) 에 맞춰 Patrol Scrub Control hour-단위 interval 차등 (long-lived 1hr / short-lived disabled) → silent corruption 90% 감소 + scrub overhead <30%.
+- **Mechanism (3, improve-only, ΔM=0)**:
+  - M1 **8-bit Lifetime Tracker Tag**: PagedAttention 16-token block hash table 에 lifetime tag 추가 (0=ephemeral / 1-127=lifetime in 10-min units / 128-255=permanent prefix).
+  - M2 **3-tier scrub interval × prefix lifetime alignment**: `LMCacheConnector` 측 별도 thread 가 Linux 6.16 EDAC scrub_subsystem sysfs polling — long-lived 1hr scrub, medium-lived 5min, short-lived disabled.
+  - M3 **LLMServingSim 8-32 GPU + 256GB CXL pool cluster**: ECS history × prefix hit ratio trade-off + Meta C5 cross-check.
+- **GAP**: D1 LMCache ([arXiv:2510.09665](https://arxiv.org/abs/2510.09665)) / D2 TraCT ([arXiv:2512.18194](https://arxiv.org/abs/2512.18194)) / Beluga ([arXiv:2511.20172](https://arxiv.org/abs/2511.20172)) 가 모두 latency/throughput axis — reliability/scrub axis 부재. CXL 3.2 Patrol Scrub Control + Linux 6.16 EDAC scrub_subsystem 활용 first work.
+- **예상 효과**: silent corruption rate 90% 감소, scrub overhead <30%, prefix hit ratio drop <2%.
+
+### Quarantine — Per-Agent DPA-Level KV Cache Poison Isolation for Agentic Multi-Turn LLM Serving on CXL Pools (Tier-1 #2)
+- **Date**: 2026-04-26 | **Session**: [링크](/research-wiki/2026-04/kv-ecc-ras-v2) / Summary
+- **Tier**: Top-tier | **Target**: USENIX Security 2027 (13p, primary) / OSDI 2027 / DSN 2027
+- **Experts**: system-robustness-expert (메인). Phase 1'' scores: Nov **9.0** / Diff **8.5** / Imp **8.5** / Feas **8.0** → avg **8.5**
+- **Hypothesis**: KVFlow multi-agent prefix cache 환경에서 한 agent 의 KV CE 가 다른 agent 로 silent propagate. Targeted BFA on Agents ([arXiv:2603.10042](https://arxiv.org/abs/2603.10042)) 직접 threat. CXL 3.x DPA tracking + poison + ECS mailbox + Memory Event Record 4 feature 결합 → cross-agent corruption 100% 차단 + throughput drop <5%.
+- **Mechanism (3, improve-only, ΔM=0)**:
+  - M1 **agent_id × DPA_range 2-level sparse hash table**: top agent_id → DPA-block-list, leaf DPA → KV block hash. worst 128MB → average 4-16MB.
+  - M2 **CXL ECS mailbox query (5s poll + on-demand poison event)**: trusted (within-tenant) / untrusted (cross-tenant) zoning + vLLM RFC #19329 affected token-range recompute.
+  - M3 **LLMServingSim 4-16 multi-agent cluster**: corruption injection × isolation effectiveness 측정.
+- **GAP**: CacheSolidarity ([arXiv:2603.10726](https://arxiv.org/abs/2603.10726)) timing side-channel 만, KVFlow ([arXiv:2507.07400](https://arxiv.org/abs/2507.07400)) reliability axis 부재, TraCT 도 poison/DPA tracking 미언급. CXL DPA × multi-agent KV poison isolation first work.
+- **예상 효과**: cross-agent corruption rate 100% 차단, multi-agent throughput drop <5%, recompute < TPOT 5× (200ms).
+
+### PATroller — HBM3 Pseudo-channel Activation Timing Counter as a Hot-Block Identifier for Reliability-Aware KV Migration (Tier-1 #3)
+- **Date**: 2026-04-26 | **Session**: [링크](/research-wiki/2026-04/kv-ecc-ras-v2) / Summary
+- **Tier**: Top-tier | **Target**: HPCA 2027 (12p, primary) / DSN 2027 / MICRO 2027
+- **Experts**: system-robustness-expert (메인). Phase 1'' scores: Nov **8.0** / Diff **8.0** / Imp **8.0** / Feas **8.5** → avg **8.1**
+- **Hypothesis**: HBM3 PAT counter top-k row (1s polling, top-32) 를 software-level KV migration trigger 로 활용 (8K activations/sec threshold) → Rowhammer-induced silent corruption 95% 감소 + migration overhead <3%.
+- **Mechanism (3, improve-only, ΔM=0)**:
+  - M1 **PAT-counter polling thread + reverse-mapping table**: 1s default polling, top-32 row, KV block hash → HBM row single-direction map.
+  - M2 **Threshold-based migration via BlockManager.swap**: PAT > 8K activations/sec threshold, BlockManager.swap_in/swap_out 50 line.
+  - M3 **NeuroSim V1.4 HBM3 cell wear validation + LLMServingSim cluster**: BTI/HCI fault rate calibration + Meta C5 cross-check.
+- **GAP**: PRAC family (MOAT [arXiv:2407.09995](https://arxiv.org/abs/2407.09995) / QPRAC [arXiv:2501.18861](https://arxiv.org/abs/2501.18861) / CnC-PRAC [arXiv:2506.11970](https://arxiv.org/abs/2506.11970)) 모두 KV-aware 부재. v1 LayerTier 도 PAT counter 미사용. HBM3 PAT × KV migration first work (similarity clear <25%).
+- **예상 효과**: silent corruption 95% 감소, migration overhead <3%, throughput drop <2%.
+
+### ECS-Trace — HBM3 Error-Check-Scrub Mailbox History as Reliability Trace for KV Cache Block Lifetime Management (Tier-2 독립 #1)
+- **Date**: 2026-04-26 | **Session**: [링크](/research-wiki/2026-04/kv-ecc-ras-v2) / Summary
+- **Tier**: Tier-2 독립 | **Target**: ITC 2027 6p (primary) / IEEE TCAD short / DSN short
+- **Experts**: system-robustness-expert. Phase 1'' scores: Nov **8.0** / Diff **8.0** / Imp **7.5** / Feas **8.0** → avg **7.9**
+- **Hypothesis**: HBM3 ECS mailbox (IEEE 1500 TAP, 10s query interval, self-refresh cycle 32ms 와 align) history 를 KV block lifetime reliability trace 로 활용 → 누적 CE 가 collapse 직전인 block prefetch eviction → long-context (>128k) silent corruption 90% 차단.
+- **Mechanism (3, improve-only)**:
+  - M1 **ECS-history query thread (10s)**: IEEE 1500 TAP register sim emulated query.
+  - M2 **LRU + ECS history threshold stack**: evict priority = LRU rank * 0.6 + cumulative CE rate * 0.4.
+  - M3 **LLMServingSim + NeuroSim V1.4 (Meta C5 cross-check + Aliyun replay)**: 8 category 별 ECS pattern.
+- **GAP**: HCache (EuroSys'25) state restoration, NACL/CaR eviction — 모두 ECS history axis 부재. HBM3 ECS mailbox × LLM KV lifetime first work.
+- **예상 효과**: silent corruption 90% 차단, hit ratio drop <3%, ECS query overhead <0.1%.
+
+### Quarantine-Mini — Single-Agent CXL DPA Poison Detection-to-Recompute Latency Profile for vLLM Token-Range Recovery (Tier-2 독립 #2, paper pair V3 ↔ P3)
+- **Date**: 2026-04-26 | **Session**: [링크](/research-wiki/2026-04/kv-ecc-ras-v2) / Summary
+- **Tier**: Tier-2 독립 (Paper pair P3 ↔ V3 1 쌍) | **Target**: DAC 2027 6p / IEEE TCAD short / IEEE CAL 4p
+- **Phase 1'' scores**: Nov **7.0** / Diff **7.0** / Imp **7.0** / Feas **9.0** → avg **7.5**
+- **Hypothesis**: CXL ECS mailbox poison event detect 후 vLLM RFC #19329 affected token-range recompute latency 가 token range × layer linear → 8K token + 32 layer 에서 detect-to-recompute < 200ms (TPOT 40ms × 5 budget 내).
+- **Mechanism (1, scope-shrink design)**: M1 single-agent ECS poison detect-to-recompute latency profile only.
+- **GAP**: vLLM RFC #19329 / vLLM-ascend RFC #5067 (mainstream Q2 2026 upstream) 의 production-ready latency profile 부재.
+- **예상 효과**: detect-to-recompute < 200ms, throughput drop <3%, ECS poll overhead <0.05%.
+
+### PrefixGuard-Lite — Empirical Calibration of Linux 6.16 EDAC Scrub Interval for CXL-Attached LLM Prefix Cache (Tier-2 독립 #3)
+- **Date**: 2026-04-26 | **Session**: [링크](/research-wiki/2026-04/kv-ecc-ras-v2) / Summary
+- **Tier**: Tier-2 독립 (P1 의 M2 분리, sister paper) | **Target**: DATE 2027 6p / IEEE CAL 4p
+- **Phase 1'' scores**: Nov **7.0** / Diff **7.0** / Imp **6.0** / Feas **9.0** → avg **7.25**
+- **Hypothesis**: Linux 6.16 EDAC scrub_subsystem hour-단위 interval knob 을 vLLM prefix lifetime histogram 에 fit → optimal scrub interval = p75 lifetime → silent corruption 70% 감소 + scrub overhead <5%.
+- **Mechanism (1, scope-shrink design)**: M1 prefix lifetime histogram (1-min bucket, 8 Aliyun category) → p75 lifetime → EDAC sysfs write calibration.
+- **GAP**: Linux 6.16 EDAC scrub_subsystem 은 kernel-side primitive 만 — application-level prefix lifetime 과 align 한 calibration first work.
+- **예상 효과**: corruption 70% 감소, scrub overhead <5%, throughput drop <2%.
+
+---
+
+## 미선정 로그 (2026-04-26 KV cache ECC + Memory RAS v2)
+
+- **P2 SinkShield (Tier-1 후보)** → **REPLACE 권고**. 사유: KVSink ([arXiv:2508.04257](https://arxiv.org/abs/2508.04257)) + SinkQ concurrent 55-65%, v1 EntropyECC 와 차별성 약화, HBM3 RFM granularity row/bank-level mismatch. 재방문 조건: KVSink 와 stack-able layer (RFM hardware × quantization software) reposition + sink_flag → row aggregation 정확 문서화.
+- **P5 Watermark (Tier-2 후보)** → **Tier-2 보조 (Top 3 외)**. 사유: LM-Fix ([arXiv:2511.02866](https://arxiv.org/abs/2511.02866)) / RoR ([arXiv:2603.16382](https://arxiv.org/abs/2603.16382)) / BitFlipScope ([arXiv:2512.22174](https://arxiv.org/abs/2512.22174)) concurrent 60-70%, R21 paper pair 한계. 재방문 조건: KV cache vs weight axis stack 가치 정량 입증, attention kernel fuse 0.2-0.4ms overhead 실측.
+- **P6 VideoVeil (Tier-2 후보)** → **REPLACE 권고**. 사유: Sali-Cache ([arXiv:2602.14236](https://arxiv.org/abs/2602.14236)) frame-importance source 동일 (compression vs reliability axis 차별화 부족), v1 VLM-MAP overlap. 재방문 조건: video-specific RAS 의 다른 axis (예: vision token outlier × HBM3 RFM, video stream temporal outlier × ECS) reposition.
+- **P7 EdgeARM (Tier-2 후보)** → **Tier-2 보조 (Top 3 외)**. 사유: Kelle ([arXiv:2510.16040](https://arxiv.org/abs/2510.16040)) MICRO 2025 adjacent 35-45%, R21 paper pair 1 쌍 한계 (V3+V1 우선), Qualcomm/Samsung/MediaTek vendor-specific TAP register layout 검증 필요. 재방문 조건: 3 vendor register map 검증 + commodity SoC deployment generality 백서 + Kelle 와 deployment differential.
+- **V4 PATroller-Solo (Tier-2 variant)** → **R21 paper pair 1 쌍 한계로 미선정 (Option C 선택)**. 사유: V3 ↔ P3 + V4 ↔ P4 동시 포함 시 2 쌍 위반. system-robustness-expert 권고: V3 가 vLLM RFC #5067 mainstream supplement 로 production impact 강함, narrative fit 우선. 재방문 조건: 추가 Tier-2 venue slot 확보 시 (IEEE CAL 추가 등) V3 와 swap 또는 독립 진입.
+
+---
+
 ## Selected Ideas (2026-04-24 MoE Fingerprint Security+Serving)
 
 ### DISCRETE-VEIL' ★ — MoE Discrete Routing Adaptive-Adversarial Robustness (Tier-1 S&P lead)

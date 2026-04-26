@@ -4,6 +4,44 @@
 
 ---
 
+## CXL Patrol Scrub Control (P1 PrefixGuard / V1 origin)
+**정의**: CXL 3.2 spec 의 background scrub mechanism. **host 가 hour-단위 interval 을 device 에 설정**할 수 있는 read/correct/writeback 정책. Linux 6.16 EDAC scrub_subsystem 으로 mainstream upstream 됨 (2025-08, [docs.kernel.org/edac/scrub.html](https://docs.kernel.org/edac/scrub.html)). sysfs `/sys/bus/edac/devices/<dev>/scrubX/cycle_duration` interface. CXL Type-3 device 가 internally read-correct-writeback 수행 — host bandwidth 영향 0, ECS mailbox query 만 host 측 latency overhead (ms 단위).
+**관련 논문**: [CXL 3.1 RAS Whitepaper](https://computeexpresslink.org/wp-content/uploads/2024/08/An-Overview-of-RAS-for-Compute-Express-Link-3.1-Whitepaper.pdf) / [Linux 6.16 EDAC docs](https://docs.kernel.org/edac/scrub.html) / [Phoronix 2025 CXL upstream](https://www.phoronix.com/news/Linux-6.16-CXL)
+**관련 아이디어**: P1 PrefixGuard (3-tier scrub interval) / V1 PrefixGuard-Lite (p75 lifetime calibration) (2026-04-26 세션)
+**Open Questions**: (a) Linux 6.16 EDAC sysfs minimum interval 5min 의 vendor-specific 실측, (b) prefix lifetime histogram 의 p75 vs p90 alignment 의 corruption rate 차이, (c) CXL 3.2 Patrol Scrub 의 device-internal bandwidth 가 host bandwidth 와 contention 발생 여부.
+
+## HBM3 PAT Counter (P4 PATroller / V4 origin)
+**정의**: HBM3 JESD238B 의 **PAT (Pseudo-channel Activation Timing)** counter. pseudo-channel 단위 row activation count tracking. PRAC (Per-Row Activation Counter, DDR5 JESD79-5C April 2024) 의 HBM 버전. **IEEE 1500 Test Access Port (TAP)** 으로 host 가 mailbox query 가능 (vendor-specific register layout). PAT counter top-k row = hot row 식별 → KV cache reliability-aware migration trigger 로 재활용 가능. Meta Reliability ([arXiv:2410.21680](https://arxiv.org/abs/2410.21680)) 의 Llama-3 405B 16384 H100 cluster 54일 419 failure 중 HBM3 72건 (3hr 당 1건) — hot row 가 fault dominant origin.
+**관련 논문**: [HBM3 JESD238B](https://www.jedec.org/standards-documents/docs/jesd238b01) / [MOAT arXiv:2407.09995](https://arxiv.org/abs/2407.09995) [HPCA 2025] / [QPRAC arXiv:2501.18861](https://arxiv.org/abs/2501.18861) [HPCA 2025] / [CnC-PRAC arXiv:2506.11970](https://arxiv.org/abs/2506.11970) [DSN 2025] / [Meta Reliability arXiv:2410.21680](https://arxiv.org/abs/2410.21680)
+**관련 아이디어**: P4 PATroller (1s polling, top-32) / V4 PATroller-Solo (polling overhead profile, 미선정) (2026-04-26 세션)
+**Open Questions**: (a) IEEE 1500 TAP register layout 의 NVIDIA H100 / SK hynix HBM3 / Samsung HBM3e vendor 별 차이, (b) PAT polling interval 1s default 의 8K activations/sec threshold 가 PRAC family threshold (10K-50K) 와 align 하는가, (c) NeuroSim V1.4 cell wear model 이 Meta C5 의 fault rate 와 quantitatively cross-check 가능한가.
+
+## DPA Poison Tracking (P3 Quarantine / V3 origin)
+**정의**: CXL 3.x spec 의 corrupted data 격리 mechanism. HPA (Host Physical Address) → DPA (Device Physical Address) translation 후 **device 가 corrupted DPA range 를 internally mark + Memory Event Record 로 host 에 report**. CXL Type-3 device 의 mailbox interface 로 query. AER (Advanced Error Reporting) 의 "memory error address 미log" 한계를 보완. multi-tenant CXL pool 에서 cross-tenant Rowhammer / SDC 의 격리 핵심.
+**관련 논문**: [CXL 3.1 RAS Whitepaper §8.2.9.9.11.2](https://computeexpresslink.org/wp-content/uploads/2024/08/An-Overview-of-RAS-for-Compute-Express-Link-3.1-Whitepaper.pdf) / [CacheSolidarity arXiv:2603.10726](https://arxiv.org/abs/2603.10726) / [Targeted BFA on Agents arXiv:2603.10042](https://arxiv.org/abs/2603.10042)
+**관련 아이디어**: P3 Quarantine (agent_id × DPA_range 2-level sparse hash) / V3 Quarantine-Mini (single-agent recompute latency profile) (2026-04-26 세션)
+**Open Questions**: (a) CXL Type-3 device mailbox interface 의 vendor-specific layout 이 sim emulated 만으로 충분한가 (Phase 2 industrial deployment 추가 검증 필요), (b) agent_id × DPA_range 2-level sparse hash 의 worst-case 128MB → average 4-16MB 가정의 fill rate 1/8 이 multi-tenant cloud 실측과 일치, (c) vLLM RFC #19329 / vLLM-ascend RFC #5067 의 mainstream upstream timeline (Q2 2026 추정).
+
+## Outlier-Aware ECC for KV Cache (KV cache reliability axis)
+**정의**: KV cache 의 양자화 후 outlier 분포 (KIVI [arXiv:2402.02750](https://arxiv.org/abs/2402.02750) / KVQuant [arXiv:2401.18079](https://arxiv.org/abs/2401.18079) / VecInfer [arXiv:2510.06175](https://arxiv.org/abs/2510.06175) 등) 를 ECC strength 결정 input 으로 활용. 1% outlier channel 이 99% bit-flip sensitivity — strong ECC (DEC-3) 적용, 나머지 SEC-DED. Outlier 가 spatially clustered (특정 channel 에 누적) → bit-protection target 의 spatial locality 가짐. Pre-RoPE Key 에서 channel 단위 strong, post-RoPE 에서 RoPE rotation 으로 spatially scrambling.
+**관련 논문**: [KIVI ICML 2024 arXiv:2402.02750](https://arxiv.org/abs/2402.02750) / [KVQuant NeurIPS 2024 arXiv:2401.18079](https://arxiv.org/abs/2401.18079) / [VecInfer arXiv:2510.06175](https://arxiv.org/abs/2510.06175) / [KITTY arXiv:2511.18643](https://arxiv.org/abs/2511.18643) / [Outlier Tokens Tracing ACL 2025 Findings](https://aclanthology.org/2025.acl-long.631.pdf)
+**관련 아이디어**: v1 OAEP-KV (outlier-channel × ECC strength, 2026-04-25) / v2 P5 Watermark (KV-cache-specific lightweight CRC, 2026-04-26 세션)
+**Open Questions**: (a) Hadamard transform 후 outlier magnitude variance 균일화 시 strong code 균일 적용 vs adaptive 의 trade-off, (b) Channel sensitivity ranking 이 calibration 100 prompt 만으로 95%+ stable 한가 (KITTY 측정), (c) outlier 가 token-axis × channel-axis 양쪽 분산 — ECC tagging 에 2D index 가 single index 보다 정확도 차이.
+
+## KV Cache Block Granularity Page Retirement (BlockShard origin, v1)
+**정의**: vLLM PagedAttention 의 16-token block (≈ 512B-2KB INT4 / 4KB FP16) 단위로 page retirement 수행하는 RAS 정책. Linux mcelog 의 4KB / 2MB hugepage 단위 retirement 가 8-64× stranding 발생. block table 의 logical→physical mapping update 만으로 부분 retire 가능. **vLLM 가 ECC granularity unit 을 OS page (4KB) 가 아닌 KV block (16-token) 으로 재정의**. v1 BlockShard 의 핵심 axis. v2 P3 Quarantine 의 agent_id × DPA_range 격리 정책의 base.
+**관련 논문**: [vLLM PagedAttention SOSP 2023 arXiv:2309.06180](https://arxiv.org/abs/2309.06180) / [Linux mcelog hard-offline](http://www.mcelog.org/badpageofflining.html) / [vLLM RFC #19329 graceful KV connector error](https://github.com/vllm-project/vllm/issues/19329)
+**관련 아이디어**: v1 BlockShard (Linux soft-offline ABI, 2026-04-25) / v2 P3 Quarantine (agent_id × DPA, 2026-04-26)
+**Open Questions**: (a) Linux soft-offline ABI 가 sub-page granularity 로 확장 가능한가 (kernel patch 필요 vs application-level emulation), (b) vLLM RFC #19329 token-range recompute path 의 vLLM-ascend RFC #5067 mainstream upstream timeline.
+
+## KVSink Sink Token (P2 SinkShield origin, 미선정)
+**정의**: Attention sink token 의 활성 outlier 기반 dynamic 예측. StreamingLLM ([arXiv:2309.17453](https://arxiv.org/abs/2309.17453)) 의 fixed first-N (PFN) 대비 향상. KVSink ([arXiv:2508.04257](https://arxiv.org/abs/2508.04257), COLM 2025) 가 plug-and-play 형식. SinkQ ([OpenReview bJ33TvbJW0](https://openreview.net/forum?id=bJ33TvbJW0)) 가 2-bit KV quant + dynamic sink tracking. 본 세션 P2 SinkShield 가 hardware refresh axis (HBM3 RFM frequency boost) 로 attention sink 보존을 시도했으나 KVSink/SinkQ concurrent (motivation 동일) + v1 EntropyECC overlap 으로 미선정.
+**관련 논문**: [StreamingLLM ICLR 2024 arXiv:2309.17453](https://arxiv.org/abs/2309.17453) / [KVSink COLM 2025 arXiv:2508.04257](https://arxiv.org/abs/2508.04257) / [SinkQ OpenReview bJ33TvbJW0](https://openreview.net/forum?id=bJ33TvbJW0) / [Visual Attention Sink arXiv:2503.03321](https://arxiv.org/abs/2503.03321)
+**관련 아이디어**: P2 SinkShield (미선정, 2026-04-26 세션) — 재방문 조건: KVSink stack-able layer reposition.
+**Open Questions**: (a) HBM3 RFM granularity (row/bank-level) 와 sink token block (16-token) 의 mapping aggregation 정확도, (b) attention sink dynamic 예측 의 quantization layer (KVSink) 와 hardware refresh layer (P2) stack 가능성.
+
+---
+
 ## Adaptive Adversarial Robustness of Discrete Routing (DISCRETE-VEIL origin)
 **정의**: MoE router 의 top-k selection 은 **discrete argmax** 연산이므로, continuous hidden state (dense LLM 의 residual stream) 에 대한 embedding-space PGD 공격 (e.g., Obfuscated Activations 가 recall 100→0 로 파괴) 과 **질적으로 다른 attack surface** 를 가질 수 있다는 가설. DRO-Attack 은 joint loss `L = CE(jailbreak) + λ·MSE(topk_surrogate, benign_pattern)` 를 Gumbel-softmax hard=True surrogate 로 discrete argmax 를 미분 가능하게 풀어 PGD 적용. **핵심 측정**: "clean WildJailbreak recall → DRO-attack 후 recall" drop 이 dense hidden-state linear probe 대비 얼마나 작은가 (목표: > 30%p 격차 시 discrete-robust 가설 성립).
 **관련 논문**: [Obfuscated Activations arXiv:2412.09565](https://arxiv.org/abs/2412.09565) (dense probe 무력화) / [V-MoE Adversarial Robustness OpenReview Fd05J4Bu5Sp](https://openreview.net/pdf?id=Fd05J4Bu5Sp) (image PGD, 가설과 상충 가능) / [GateBreaker arXiv:2512.21008](https://arxiv.org/abs/2512.21008) (weight-level ablation) / [Expert Selections Reveal arXiv:2602.04105](https://arxiv.org/abs/2602.04105) (privacy attack)

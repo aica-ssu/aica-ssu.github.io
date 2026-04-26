@@ -22,40 +22,40 @@ const SIDEBAR: SidebarSection[] = [
     ],
   },
   {
-    title: "⭐ 최근 세션 (2026-04-25 #2, KV cache ECC + RAS)",
+    title: "⭐ 최근 세션 (2026-04-26, KV cache ECC + RAS v2)",
     items: [
       {
-        label: "Landing — KV Cache ECC + RAS",
-        href: "/research-wiki/2026-04/kv-ecc-ras",
+        label: "Landing — KV Cache ECC + RAS v2 (R48-R50 적용)",
+        href: "/research-wiki/2026-04/kv-ecc-ras-v2",
         emphasis: true,
       },
       {
-        label: "🥇 OAEP-KV (DSN/HPCA/MICRO 2027) lead",
-        href: "/research-wiki/2026-04/kv-ecc-ras/tier1/01-oaep-kv",
+        label: "🥇 PrefixGuard (OSDI 2027)",
+        href: "/research-wiki/2026-04/kv-ecc-ras-v2/tier1/01-prefixguard",
       },
       {
-        label: "🥈 BlockShard (ASPLOS/OSDI 2027)",
-        href: "/research-wiki/2026-04/kv-ecc-ras/tier1/02-blockshard",
+        label: "🥈 Quarantine (USENIX Security 2027)",
+        href: "/research-wiki/2026-04/kv-ecc-ras-v2/tier1/02-quarantine",
       },
       {
-        label: "🥉 LayerTier (MICRO/DSN 2027)",
-        href: "/research-wiki/2026-04/kv-ecc-ras/tier1/03-layertier",
+        label: "🥉 PATroller (HPCA 2027)",
+        href: "/research-wiki/2026-04/kv-ecc-ras-v2/tier1/03-patroller",
       },
       {
-        label: "T1 VLM-MAP (DATE/IEEE TCAD)",
-        href: "/research-wiki/2026-04/kv-ecc-ras/tier2/01-vlm-map",
+        label: "T1 ECS-Trace (ITC 2027 / DSN short)",
+        href: "/research-wiki/2026-04/kv-ecc-ras-v2/tier2/01-ecs-trace",
       },
       {
-        label: "T2 FrostFloor (DATE 6p)",
-        href: "/research-wiki/2026-04/kv-ecc-ras/tier2/02-frostfloor",
+        label: "T2 Quarantine-Mini (DAC 2027 6p)",
+        href: "/research-wiki/2026-04/kv-ecc-ras-v2/tier2/02-quarantine-mini",
       },
       {
-        label: "T3 EntropyECC (ITC/MTS/IEEE TCAD)",
-        href: "/research-wiki/2026-04/kv-ecc-ras/tier2/03-entropy-ecc",
+        label: "T3 PrefixGuard-Lite (DATE 2027 6p)",
+        href: "/research-wiki/2026-04/kv-ecc-ras-v2/tier2/03-prefixguard-lite",
       },
       {
-        label: "미선정 15편 로그",
-        href: "/research-wiki/2026-04/kv-ecc-ras/unselected",
+        label: "미선정 로그",
+        href: "/research-wiki/2026-04/kv-ecc-ras-v2/unselected",
       },
     ],
   },

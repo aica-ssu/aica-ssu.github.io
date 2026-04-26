@@ -4,6 +4,88 @@
 
 ---
 
+## 2026-04-26 Mode 1 Session — KV cache ECC + Memory RAS v2
+
+Step 0 + Step 0-α + Step 0-β = **24 paper + 9 workload sources + R50.2 modern memory standard survey**. R46 verified. R50.1 70%+ 충족 (24 ref 중 17/24 = 71% 가 2024-2026, 5년 초과 4편 모두 R50.1 정당화).
+
+### A. KV Cache Quantization & Outlier Distribution (5편, 2024-2025)
+
+- **KIVI** — [arXiv:2402.02750](https://arxiv.org/abs/2402.02750), **ICML 2024**. Per-channel Key + per-token Value 2-bit quant, 2.6× memory reduction. **Hidden insight**: outlier 가 spatially clustered (특정 channel 에 누적) — ECC bit-protection target 의 spatial locality 시사. 본 세션 P5 outlier protection axis 인접.
+- **KVQuant** — [arXiv:2401.18079](https://arxiv.org/abs/2401.18079), **NeurIPS 2024** (UCB Hooper et al.). Per-Channel + Pre-RoPE + Non-Uniform + Per-Vector Dense-and-Sparse 4 기법, <0.1 PPL drop @3-bit, 10M context. **Hidden insight**: pre-RoPE Key outlier 가 post-RoPE 보다 channel-localized — RoPE rotation 이 outlier spatially scrambling. 본 세션 motivation.
+- **VecInfer** — [arXiv:2510.06175](https://arxiv.org/abs/2510.06175). Smooth + Hadamard transform 으로 outlier suppress, 2-bit @196k context FP16-comparable. **Hidden insight**: Hadamard transform 후 outlier magnitude variance 균일화 — strong code 균일 적용 vs adaptive trade-off.
+- **KITTY** — [arXiv:2511.18643](https://arxiv.org/abs/2511.18643). Channel sensitivity 기반 4-bit/2-bit mixed, 8× larger batch. **Hidden insight**: Channel sensitivity 100 prompt calibration 만으로 95%+ stable — ECC tag calibration-only 충분.
+- **Outlier Tokens Tracing** — [aclanthology 2025.acl-long.631](https://aclanthology.org/2025.acl-long.631.pdf), **ACL 2025 Findings**. Online outlier-token tracing. **Hidden insight**: Outlier 가 token-axis + channel-axis 양쪽 분산 — ECC tagging 에 2D index 시사.
+
+### B. Bit-Flip Attack & Reliability on Quantized LLM (4편, 2024-2025)
+
+- **SilentStriker** — [arXiv:2509.06939](https://arxiv.org/abs/2509.06939). INT8-quant Llama-3.1-8B 에서 50 bits flip 으로 GSM8K 65.7% → 7.6%, naturalness 유지. **Hidden insight**: stealthy attack 은 detection-resistant — scrub-based defense 만으로 부족, KV cache strong ECC (DEC-3) 필요. 본 세션 P5 직접 attack baseline.
+- **Two-Decade-Old Prophecy** — [arXiv:2510.00490](https://arxiv.org/abs/2510.00490). .gguf quantized LLM 에서 **단 1 bit** flip 으로 73.5% → 0% (31.7s @464.3 flips/s). **Hidden insight**: vulnerable bit 이 attention mechanism + output layer 집중 — KV cache attention key 도 동일 vulnerability. 본 세션 P3 Quarantine motivation 핵심.
+- **GenBFA** — [arXiv:2411.13757](https://arxiv.org/abs/2411.13757). INT4 quant 에서 3 critical bits → MMLU 0%. **Hidden insight**: 3 bits 만으로 functional collapse → application-level fault injection (R47.2) 충분 재현.
+- **GLSVLSI BFA** — [dl.acm.org 10.1145/3716368.3735278](https://dl.acm.org/doi/10.1145/3716368.3735278), **GLSVLSI 2025**. **Hidden insight**: bit-position MSB/LSB 차이 4-7× — ECC strength bit-position aware 효율적.
+
+### C. DRAM/Memory Reliability — Modern Standard 시대 (5편, 2024-2026)
+
+- **Phoenix Rowhammer** — [comsec.ethz.ch/phoenix](https://comsec.ethz.ch/research/dram/phoenix/), **IEEE S&P 2026** (USENIX Security 2025 ext.). DDR5 SK Hynix 15/15 DIMM 109s root, on-die ECC 무력화. **Hidden insight**: DDR5 PRAC (April 2024) 도입에도 미배포 DIMM 다수 — KV cache software 단 추가 방어선 필요.
+- **MOAT** — [arXiv:2407.09995](https://arxiv.org/abs/2407.09995), **HPCA 2025**. PRAC secure mitigation, slowdown <1%. **Hidden insight**: PRAC counter memory controller 노출 가능 — ECC 결합 시 hot-row 식별로 KV cache page migration 활용. 본 세션 P4 PATroller direct baseline.
+- **QPRAC** — [arXiv:2501.18861](https://arxiv.org/abs/2501.18861), **HPCA 2025**. Priority queue PRAC. **Hidden insight**: PRAC counter top-k = hot-row → KV cache RAS migration trigger.
+- **CnC-PRAC** — [arXiv:2506.11970](https://arxiv.org/abs/2506.11970), **DSN 2025**. PRAC counter in-DRAM coalescing. **Hidden insight**: counter overflow soft-error indicator — KV cache sub-page retire 트리거.
+- **Meta Reliability** — [arXiv:2410.21680](https://arxiv.org/abs/2410.21680). 11개월 4M jobs 150M A100-hour. **Hidden insight**: **Llama-3 405B 16384 H100 cluster 54일 419 failure 중 HBM3 72건 (3hr 당 1건 실패)** — 본 세션 P4 PATroller / P8 ECS-Trace 의 evidence 핵심.
+
+### D. CXL / KV Cache Disaggregation (3편, 2024-2025)
+
+- **LMCache** — [arXiv:2510.09665](https://arxiv.org/abs/2510.09665). KV cache GPU 외부 (DRAM/CPU/storage/network) 추출, vLLM/SGLang 통합, 15× throughput. **Hidden insight**: context truncation prefix hit ratio 50% 감소 — prefix cache reliability = throughput 핵심. 본 세션 P1 PrefixGuard direct baseline.
+- **TraCT** — [arXiv:2512.18194](https://arxiv.org/abs/2512.18194) (SK hynix Yoon et al.). CXL load/store + DMA, TTFT 9.8× / P99 6.2× / throughput 1.6× vs LMCache. **Hidden insight**: CXL shared memory NIC hop 제거 — 그러나 CXL poison/AER/Patrol Scrub 기존 RAS feature KV cache 미적용 (gap).
+- **Scalable PNM** — [arXiv:2511.00321](https://arxiv.org/abs/2511.00321) (SK hynix + Hanyang). CXL 안 PNM accelerator, non-eviction KV cache. **Hidden insight**: RAS feature 미언급 — CXL PNM ECC overhead 분석 gap.
+
+### E. Baseline / 5년 초과 인용 (R50.1 정당화)
+
+- **StreamingLLM** — [arXiv:2309.17453](https://arxiv.org/abs/2309.17453), ICLR 2024. 5년 이내, attention sink 표준 reference. 본 세션 P2 SinkShield motivation.
+- **vLLM PagedAttention** — [arXiv:2309.06180](https://arxiv.org/abs/2309.06180), SOSP 2023. R47.2 application path base infra.
+- **DRAM Errors in the Wild (Schroeder SIGMETRICS 2009)** — hyperscale DRAM error rate historical baseline. R50.1 정당화: Meta C5 (2024) 가 primary, E3 secondary 1회 인용.
+- **Sridharan ASPLOS'15 chip-kill** — column-fault residual UE 100× 감소. R50.1 정당화: LPDDR5x JESD209-5C ARM (2023) 의 modern interface cross-reference.
+
+### F. Bonus / 보조 reference
+
+- **KVCache Cache in the Wild** — [arXiv:2506.02634](https://arxiv.org/abs/2506.02634), **USENIX ATC 2025**. Aliyun Tongyi 2024-12 ~ 2025-02 trace. **Hidden insight**: single+multi-turn KV reuse 모두 significant, request category 별 reuse timing predictable. 본 세션 P1/P8/V1 의 핵심 workload evidence.
+- **KVFlow** — [arXiv:2507.07400](https://arxiv.org/abs/2507.07400). Multi-agent prefix caching. 본 세션 P3 Quarantine direct workload.
+- **Kelle eDRAM KV cache** — [arXiv:2510.16040](https://arxiv.org/abs/2510.16040), **MICRO 2025**. 2DRP refresh adaptive. v1 baseline, P7 EdgeARM 35-45% adjacent.
+
+### Phase 1' / 1'' similarity critique 추가 baseline
+
+- **Beluga** — [arXiv:2511.20172](https://arxiv.org/abs/2511.20172). CXL switch KV cache 89.6% TTFT 감소. P1 adjacent (latency vs reliability axis).
+- **TU Berlin SDC** — [arXiv:2604.00726](https://arxiv.org/abs/2604.00726). LLM training SDC reliability challenge. P1/P8 inference axis 직교 baseline.
+- **CacheSolidarity** — [arXiv:2603.10726](https://arxiv.org/abs/2603.10726). Timing side-channel defense via selective isolation, 70% reuse + 30% latency. P3 axis 직교 (security attack vs hardware fault model).
+- **SafeKV** — [arXiv:2508.08438](https://arxiv.org/abs/2508.08438). Cross-tenant privacy. P3 axis 직교 (hardware-induced poison 미고려).
+- **Oneiros** — [arXiv:2507.11507](https://arxiv.org/abs/2507.11507). Multi-tenant parameter remapping. P3 axis 직교.
+- **Targeted BFA on Agents** — [arXiv:2603.10042](https://arxiv.org/abs/2603.10042). Agent-level bit-flip attack. P3 의 defense target 강화 baseline.
+- **KVSink (COLM 2025)** — [arXiv:2508.04257](https://arxiv.org/abs/2508.04257). Activation outlier 로 sink dynamic 예측. P2 SinkShield concurrent 55-65%.
+- **SinkQ** — [OpenReview bJ33TvbJW0](https://openreview.net/forum?id=bJ33TvbJW0). 2-bit KV quant + dynamic sink tracking. P2 concurrent.
+- **LM-Fix** — [arXiv:2511.02866](https://arxiv.org/abs/2511.02866). Reference tensor audit, 94%/100% detection, 1.9-7.7% overhead. P5 Watermark concurrent 60-70%.
+- **BitFlipScope** — [arXiv:2512.22174](https://arxiv.org/abs/2512.22174). Differential analysis fault localization. P5 concurrent.
+- **Rotated Robustness** — [arXiv:2603.16382](https://arxiv.org/abs/2603.16382). Householder rotation, 50-bit BFA → 17,000+ bit. P5 concurrent (prevention axis).
+- **SBFA** — [arXiv:2509.21843](https://arxiv.org/abs/2509.21843). Single-bit attack. P5 detect target 강화.
+- **Sali-Cache** — [arXiv:2602.14236](https://arxiv.org/abs/2602.14236). Saliency + optical flow video VLM 압축. P6 VideoVeil adjacent 40-50%.
+- **NeoMem** — [arXiv:2403.18702](https://arxiv.org/abs/2403.18702). CXL hotness tiering. P1/V1 adjacent (hotness vs reliability axis).
+
+### Workload Sources (R23, 9 source)
+
+- **LLMServingSim** — IISWC 2024 ([dblp iiswc2024](https://dblp.org/db/conf/iiswc/iiswc2024.html)) + ISPASS 2026 v1.0 ([github.com/casys-kaist/LLMServingSim](https://github.com/casys-kaist/LLMServingSim)). 본 세션 R47.3 cluster validation 의 핵심 simulator.
+- **Performance Modeling Distributed LLM** — IISWC 2024. P4 PATroller workload evidence.
+- **Understanding LLM CPU Inference** — IISWC 2024.
+- **I/O Characterization NVMe SSD KV** — Cheops 2025 ([atlarge-research.com 2025-cheops-llm](https://atlarge-research.com/pdfs/2025-cheops-llm.pdf)). 본 세션 P7 EdgeARM workload evidence.
+- **MLPerf Inference v5.0** — [mlcommons.org 2025/04](https://mlcommons.org/2025/04/mlperf-inference-v5-0-results/). TTFT P99 6s, TPOT 175ms.
+- **MLPerf Inference v5.1** — [mlcommons.org 2025/09](https://mlcommons.org/2025/09/mlperf-inference-v5-1-results/). TPOT 40ms / TTFT 450ms tight bound.
+- **vLLM blog** — [blog.vllm.ai 2025/09/05](https://blog.vllm.ai/2025/09/05/anatomy-of-vllm.html). 16-token PagedAttention block, BlockManager.allocate() hot path.
+
+### Modern Memory Standard Documents (R50.2)
+
+- **LPDDR5x JESD209-5C** — [JEDEC](https://www.jedec.org/standards-documents/docs/jesd209-5c). ARM (Adaptive Refresh Management) / RFM / On-Die ECC.
+- **HBM3 JESD238B** — [JEDEC](https://www.jedec.org/standards-documents/docs/jesd238b01). On-Die ECC + ECS + PAT + RFM + RCC + IEEE 1500 TAP.
+- **CXL 3.1 RAS Whitepaper** — [computeexpresslink.org](https://computeexpresslink.org/wp-content/uploads/2024/08/An-Overview-of-RAS-for-Compute-Express-Link-3.1-Whitepaper.pdf). ECS mailbox + Patrol Scrub Control + DPA + poison + Memory Event Record.
+- **Linux 6.16 EDAC scrub_subsystem** — [docs.kernel.org/edac/scrub.html](https://docs.kernel.org/edac/scrub.html), 2025-08 upstream merge ([Phoronix](https://www.phoronix.com/news/Linux-6.16-CXL)).
+
+---
+
 ## 2026-04-24 Mode 1 Session — MoE Fingerprint Security+Serving
 
 Step 0 Phase + novelty-reviewer 추가 search = 35+ 편 참조. Peer-reviewed ratio ~38-50% (baseline 에 따라 다름). 주요 신규 (이전 세션 중복 제외):
