@@ -1,0 +1,83 @@
+# 일반 search engine — research-wiki 만 차단
+User-agent: *
+Disallow: /research-wiki/
+Disallow: /research-wiki
+
+# AI / LLM training crawler — 전체 사이트 차단 (research-wiki 우선)
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: OAI-SearchBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: Perplexity-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: cohere-ai
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+User-agent: Meta-ExternalAgent
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: DuckAssistBot
+Disallow: /
+
+User-agent: YouBot
+Disallow: /
+
+User-agent: ImagesiftBot
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+User-agent: AwarioRssBot
+Disallow: /
+
+User-agent: AwarioSmartBot
+Disallow: /
+
+User-agent: Omgilibot
+Disallow: /
+
+User-agent: Omgili
+Disallow: /
+
+User-agent: TurnitinBot
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
