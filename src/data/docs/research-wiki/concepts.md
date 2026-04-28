@@ -4,6 +4,133 @@
 
 ---
 
+## DeepStack-aware NVFP4 Anchor — 2026-04-28 vlm-edge-layerwise-context 세션
+**정의**: Blackwell native NVFP4 (E2M1, 16-element block scaling) 의 transformer layer 별 sensitivity 분포를 Qwen3-VL DeepStack architecture (visual_indexes=[8,16,24] inject point) 와 정합시켜 layer 별 NVFP4/FP8/INT4 mixed precision 결정. ATRIUM-R(AI) M1 LayerClassifier 의 evolution 으로 본 세션 PRISM-FOG-FX 의 unique axis. FGMP / MicroMix 의 LLM-only mixed precision 과 차별 (DeepStack 인지).
+**관련 자료**: [NVFP4 NVIDIA Tech Blog](https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/), [FGMP arXiv:2504.14152](https://arxiv.org/abs/2504.14152), [MicroMix arXiv:2508.02343](https://arxiv.org/abs/2508.02343), [Qwen3-VL arXiv:2511.21631](https://arxiv.org/abs/2511.21631)
+**관련 아이디어**: PRISM-FOG-FX (Tier-1, 2026-04-28), OBELISK-5090-R (Tier-2 per-stage cap)
+
+## Phase-aware Visual LSH Hash — 2026-04-28 vlm-edge-layerwise-context 세션
+**정의**: VLM serving 의 encode / prefill / decode 3 phase 마다 다른 LSH (Locality-Sensitive Hashing) granularity policy 적용 — encode 단계 fine-grain (visual token 단위), prefill 단계 coarse-grain (image-level), decode 단계 cache-only (lookup). VLCache (encoder cache + content hash) 와 차별 — single-policy → phase-policy 분리. PRISM-VL-R 의 unique axis. Green Context CUDA 12.4 SM partition 과 통합되어 LSH lookup overhead 분산.
+**관련 자료**: [VLCache arXiv:2512.12977](https://arxiv.org/abs/2512.12977), [SimCache (CVPR 2025W)](https://www.lmsys.org/blog/2024-01-17-sglang/), [SGLang RadixAttention arXiv:2312.07104](https://arxiv.org/abs/2312.07104)
+**관련 아이디어**: PRISM-VL-R (Tier-1 W12 동적 분기, 2026-04-28)
+
+## Cross-Frame Visual KV Cluster Reuse (CFCR) — 2026-04-28 vlm-edge-layerwise-context 세션
+**정의**: 연속 프레임 간 visual token 의 semantic embedding similarity (cosine ≥ 0.85) 을 활용해 K-means cluster centroid level 에서 KV reuse. Layer-Adaptive Cluster Budget (LACB, HOT layer 더 많은 cluster) 와 결합. ClusterKV (LLM only, single-frame) + Sali-Cache (saliency single-axis) 와 차별 — VLM-specific + cross-frame + layer-adaptive. Mosaic ([arXiv:2604.10060](https://arxiv.org/abs/2604.10060)) 와 55-65% concurrent (Phase 2' 검출).
+**관련 자료**: [ClusterKV arXiv:2412.03213](https://arxiv.org/abs/2412.03213), [Sali-Cache arXiv:2602.14236](https://arxiv.org/abs/2602.14236), [VL-Cache ICLR 2025 arXiv:2410.23317](https://arxiv.org/abs/2410.23317)
+**관련 아이디어**: BIVOUAC-SLATE-R (Tier-1 🥈, 2026-04-28)
+
+## Stratified KV Layout (L2 / GDDR7 / LPDDR5x UMA) — 2026-04-28 vlm-edge-layerwise-context 세션
+**정의**: VLM KV cache 를 layer score (visual_attn_ratio) 기반으로 4-tier 가 아닌 3-tier physical layout 에 매핑 — HOT layer → GPU L2 carveout (cudaCacheConfigure persistent) / MEDIUM → GDDR7 또는 LPDDR5x UMA (RTX 5090 / Jetson Thor 다름) / COLD → LPDDR5x bottom rank. Page-color affinity 로 UMA bank-level partitioning 추가 (ATRIUM-R(Sys) 흡수). PagedAttention single-tier 와 차별. Bluefield-4 ICMS 4-tier 와 다른 axis (single-system + page-color).
+**관련 자료**: [NVIDIA Bluefield-4 ICMS](https://developer.nvidia.com/blog/introducing-nvidia-bluefield-4-powered-inference-context-memory-storage-platform-for-the-next-frontier-of-ai/), [Sarathi-Serve OSDI 2024](https://www.usenix.org/conference/osdi24/presentation/agrawal)
+**관련 아이디어**: STRATA-K-R (Tier-2 T1, 2026-04-28)
+
+---
+
+## R55 5-Axis Gain Target — 본 harness ideation scope (2026-04-27 v2-r55 등록)
+**정의**: 본 harness 의 selected idea 는 다음 5(+2 sub) axis 중 1+ 정량 gain target 의무. **[Performance]** (latency / throughput / TTFT / decode tps) / **[Robustness]** (adversarial / fault tolerance / silent corruption) / **[Energy]** (energy/token / energy/inference) / **[Power]** (thermal envelope / nvpmodel / DVFS) / **[Security]** (encryption / GMAC unforgeable / privacy ε-DP) + sub-axis **[Memory eff.]** (KV / weight / max batch) / **[Cost eff.]** (cost per token / 학기 budget fit). **R55.1** simulator infrastructure / extension / tool / benchmark / dataset 신규 release 자체 contribution idea 는 자동 배제. **R55.2** 예상 효과 표 첫 column 에 [axis] tag 의무.
+**관련 자료**: skill.md Rule 27, references/no-simulator-building-concrete-gain.md
+**관련 아이디어**: 모든 2026-04-27 v2-r55 selected idea (ATRIUM/BREAKWATER-T/VEILSEAL-KV/CASCADE-PREFILL/STORMGLASS/ROBUSTOKEN) 5-axis 균형 cover
+
+## VEILSEAL-KV (Adversarial-Secure Multi-Tenant Edge VLM KV Cache) — 2026-04-27 v2-r55 Tier-1
+**정의**: Edge multi-tenant VLM 의 SGLang RadixAttention prefix block 에 per-tenant ARMv8 PMULL GMAC seal + visual prompt injection detector + PII redaction + ε-DP composition 통합 idea. 본 harness 의 [Security] axis 첫 selected idea. WARDEN-KV (linear CRC, forgeable) + EPSILON-VEIL (ε-DP) + PIIVEIL-Q (PII) sub-mechanism 흡수.
+**관련 자료**: USENIX Security / S&P / OSDI 2027 target. ARMv8 PMULL spec, [Visual Prompt Injection arXiv:2403.09766](https://arxiv.org/abs/2403.09766), [Mironov 2017 ε-DP arXiv:1702.07476](https://arxiv.org/abs/1702.07476)
+**관련 아이디어**: VEILSEAL-KV (Tier-1, v2-r55), KEYSTONE (2026-04-26 rowhammer 세션 KV GMAC for rowhammer)
+
+## ROBUSTOKEN (5-Cluster Robustness Merge) — 2026-04-27 v2-r55 Tier-2
+**정의**: VLM robustness 의 통합 paradigm — adversarial (FGSM/PGD on visual token) + silent corruption (FP16 NaN/Inf) + OOD detection 3 axis 통합 inference-time + training-free + edge-fit. 5 sub-mechanism cluster merge: SCRIVENER (warp-ballot NaN detect) + NAN-SAFENET (INT8 fallback) + PROBE-DECODE (cross-attention spike detect) + REEFCAST (5-class confidence reject + smaller-model fallback) + OOD-CALIB (energy-based OOD).
+**관련 자료**: [Energy-OOD NeurIPS 2020 arXiv:2010.03759](https://arxiv.org/abs/2010.03759), [Robust ViT CVPR 2024 arXiv:2402.07004](https://arxiv.org/abs/2402.07004), [GPUHammer USENIX Sec 2025 arXiv:2507.08166](https://arxiv.org/abs/2507.08166)
+**관련 아이디어**: ROBUSTOKEN (Tier-2, v2-r55, NeurIPS / ICLR target)
+
+## STORMGLASS (Skin-Temp Leading-Indicator Power Tuning) — 2026-04-27 v2-r55 Tier-2
+**정의**: Edge VLM 의 thermal envelope (7-130W) 안 sustained workload 안정화 idea. Tegrastats `temp` field 1Hz polling + skin-temp leading-indicator hysteresis (±2°C) 로 nvpmodel mode 동적 switch + UMA GPU/CPU power split + thermal-aware admission control 통합. 자동차/robotics 산업 직접 정합.
+**관련 자료**: NVIDIA Jetson Power Tuning Guide, Tegrastats spec, nvpmodel CLI
+**관련 아이디어**: STORMGLASS (Tier-2, v2-r55, ISLPED 6p / DAC target)
+
+## ARMv8 PMULL (AArch64 Crypto Extension) — 2026-04-27 v2-r55 (VEILSEAL-KV M1)
+**정의**: ARMv8.2-A Crypto Extension 의 polynomial multiplication HW instruction (`aes64gmac`). GCM/GMAC 의 HW accel — 1.5-3 cycle per byte. Jetson AGX Thor (Neoverse-V3AE = ARMv9-A + crypto) / AGX Orin (Cortex-A78AE = ARMv8.2-A + crypto) 모두 지원. gcc `-march=armv8.2-a+crypto` flag 표준.
+**관련 자료**: ARMv8.2-A spec, [NIST SP 800-38D AES-GCM](https://csrc.nist.gov/pubs/sp/800/38/d/final)
+**관련 아이디어**: VEILSEAL-KV M1 (multi-tenant block GMAC, 1.5-3 cycle/byte)
+
+## ε-DP / Rényi-DP Composition — 2026-04-27 v2-r55 (VEILSEAL-KV M3)
+**정의**: ε-Differential Privacy 의 Rényi-DP composition (Mironov 2017) — multi-request 누적 budget tracking. Inference-time KV outlier mask 에 noise injection 시 reconstruction attack 방어. ε=4.0 / δ=10⁻⁶ default.
+**관련 자료**: [Mironov 2017 arXiv:1702.07476](https://arxiv.org/abs/1702.07476), [Abadi DP-SGD arXiv:1607.00133](https://arxiv.org/abs/1607.00133), Opacus PyTorch framework
+**관련 아이디어**: VEILSEAL-KV M3 (PII redaction + ε-DP composition)
+
+## DeepStack Injection Schedule — VLM Architecture (2026-04-27 세션 ATRIUM/BREAKWATER-T 활용)
+**정의**: Qwen3-VL ([arXiv:2511.21631](https://arxiv.org/abs/2511.21631)) 의 핵심 architecture upgrade — ViT intermediate output 을 LLM 의 여러 layer 에 inject. Default schedule: ViT layer-1 → LLM layer-4 inject, ViT layer-4 → LLM layer-8, ViT layer-N → LLM layer-12. 일반 VLM (LLaVA-1.5) 의 last-layer-only injection 대비 minimal additional cost 로 visual token 4× 증가 효과. **DeepStack 자체는 [NeurIPS 2024 arXiv:2406.04334](https://arxiv.org/abs/2406.04334) (Meng et al., Fudan/Microsoft)** 에서 처음 제안됨.
+**관련 논문**: [DeepStack NeurIPS 2024](https://arxiv.org/abs/2406.04334), [Qwen3-VL Tech Report](https://arxiv.org/abs/2511.21631)
+**관련 아이디어**: ATRIUM (DeepStack L0-3 alloc skip 으로 GPU HBM 절약), BREAKWATER-T (ViT split point = DeepStack tap point 일치), BIMODAL-MASK-T2 (DeepStack OR-merge per-layer mask)
+
+## Layer-wise Visual Attention Asymmetry — VLM Inference Property (2026-04-27 세션 motivation)
+**정의**: Qwen3-VL-4B inference 에서 measured layer-wise visual token attention 비율 — L17-21 평균 24.5% / L0-7 평균 2.6% (5-10× 비대칭). LLM 의 forward pass 동안 visual token 이 각 layer 별로 받는 attention weight 가 매우 비균등 분포. L0-7 region 의 BW waste 86% sequential read / 11% attention 측정 (내부 측정 자료 `VLM_exploration_PIM_260407.pdf`). 이 비대칭이 layer-aware system optimization (SM partition / L2 carveout / KV residence policy) 의 motivation.
+**관련 논문**: [Qwen3-VL Tech Report](https://arxiv.org/abs/2511.21631), [SparseVLM ICML 2025](https://arxiv.org/abs/2410.04417)
+**관련 아이디어**: ATRIUM (layer-aware SM partition + L2 carveout), BIMODAL-MASK-T2 (modality outlier topology Moran's I), CASCADE-PREFILL (chunk-AI dispatch GPU↔CPU)
+
+## VLM Prefill TTFT Explosion — VLM vs LLM Workload Asymmetry (2026-04-27 세션 motivation)
+**정의**: VLM 의 visual token (1 image → 100~4096 token) 추가로 인한 prefill phase 길이 폭증. 측정: Qwen3-VL-4B 672×672 server BS=8 = 353 ms vs LLM 56 ms (6.13×), FHD 1920×1080 = 1285 ms vs 57 ms (22.4×). Decode tok/s 는 LLM=573 vs VLM=554 거의 동일 — visual KV 가 있어도 decode 성능 차이 미미, 즉 **prefill 이 VLM 의 unique bottleneck**. 이 axis 가 dual-Jetson disaggregation (BREAKWATER-T) + chunked prefill GPU↔CPU dispatch (CASCADE-PREFILL) 의 motivation.
+**관련 논문**: 내부 측정 (`VLM_exploration_PIM_260407.pdf`), [DistServe OSDI 2024](https://arxiv.org/abs/2401.09670), [Nexus arXiv:2507.06608](https://arxiv.org/abs/2507.06608)
+**관련 아이디어**: BREAKWATER-T (prefill -28% via dual-Jetson sensor-proximity split), CASCADE-PREFILL (prefill -12~17% via chunk-AI GPU↔CPU dispatch)
+
+## Visual KV Capacity Saturation — VLM Memory Asymmetry (2026-04-27 세션 motivation)
+**정의**: VLM visual KV size 가 LLM 대비 17× 큰 capacity 점유. 측정: Qwen3-VL-4B FHD 1920×1080 = 305 MB/req vs LLM 18 MB/req. Max batch = 118 vs 2002 (16.97× 감소). 단일 FHD image 가 KV cache 의 거의 전부 점유 → edge serving 에서 capacity bottleneck. 본 세션 ATRIUM 의 DeepStack L0-3 alloc skip + BIMODAL-MASK-T2 의 modality-conditioned dtype dispatch 의 motivation.
+**관련 논문**: 내부 측정 (`VLM_exploration_PIM_260407.pdf`), [VL-Cache arXiv:2410.23317](https://arxiv.org/abs/2410.23317)
+**관련 아이디어**: ATRIUM (alloc skip), BIMODAL-MASK-T2 (per-block dtype dispatch -23~29% memory)
+
+## USB-C 3.2 gen2x2 Edge Interconnect — Dual-Jetson topology (2026-04-27 세션 BREAKWATER-T)
+**정의**: Jetson 은 PCIe / NVLink 미가용 (datacenter GPU 와 차별화). Dual-Jetson serving 의 sole 고대역 interconnect 는 **USB-C 3.2 gen2x2 (20 Gbps, full-duplex)** 또는 Ethernet (1/2.5/10 GbE). 단방향 30us roundtrip + ±5ms cable burst variance 가정. NVIDIA Holoscan SDK 가 이 topology 의 reference cable + spec.
+**관련 자료**: NVIDIA Holoscan SDK, [TensorRT Edge-LLM blog](https://developer.nvidia.com/blog/accelerating-llm-and-vlm-inference-for-automotive-and-robotics-with-nvidia-tensorrt-edge-llm/), [DiP-SD arXiv:2604.20919](https://arxiv.org/abs/2604.20919)
+**관련 아이디어**: BREAKWATER-T (4-bit channel-wise tap stream USB-C 부담 ¼), JETTYSIM (USB-C link model 30us+variance), LIGHTLINK-SD reframed (USB-C link-aware speculative decoding)
+
+## Modality-conditioned Outlier Topology (Moran's I) — VLM KV Quantization (2026-04-27 BIMODAL-MASK-T2)
+**정의**: VLM KV cache 의 outlier (high-magnitude value) 분포가 modality 마다 다른 spatial topology — vision KV 는 spatial cluster (Moran's I = 0.34, 인접 토큰 끼리 outlier 집중), text KV 는 channel-uniform (Moran's I = 0.02). Spatial autocorrelation 통계량 Moran's I 가 modality-aware quantization 의 정량 지표.
+**관련 논문**: KIVI ([ICML 2024](https://arxiv.org/abs/2402.02750)), KVTuner (ICML 2025), MBQ (CVPR 2025), MadaKV (ACL 2025)
+**관련 아이디어**: BIMODAL-MASK-T2 (Moran's I 기반 cluster=BF16 + sparse=NVFP4 + weight band=INT8 dispatch)
+
+## RFM (Refresh Management) — DDR5/LPDDR5 표준 명령 (2026-04-26 PM 세션 RFM-COP 활용)
+**정의**: DDR5 JESD79-5C / LPDDR5 JESD209-5C 표준의 host MC → DRAM 명령. PRAC counter 가 ACT-N 도달 시 MC 가 발행 → DRAM 이 victim row 를 preventive refresh. **McSee (USENIX Sec'25)** 측정: 29 DDR5 UDIMM 중 16 RFM 지원, 4 require — 그러나 Intel/AMD CPU 어느 것도 rowhammer workload 에서 RFM 명령을 보내지 않음. **RFM-COP** 는 이 host-MC 부재 문제를 직접 해결.
+**관련 논문**: [McSee USENIX Sec'25](https://www.usenix.org/conference/usenixsecurity25/presentation/jattke), [ARFM arXiv:2501.14328](https://arxiv.org/abs/2501.14328), [QPRAC arXiv:2501.18861](https://arxiv.org/abs/2501.18861), JEDEC JESD79-5C
+**관련 아이디어**: RFM-COP (4-pillar host-MC scheduler), RAMPART (Hot bucket RFM trigger 활용)
+
+## DRFM (Directed Refresh Management) — DDR5 표준 (2026-04-26 PM)
+**정의**: RFM 명령에 specific row id 를 첨부하여 victim row 만 정밀 refresh 하는 DDR5 표준. Sampling 기반 statistical mitigation 가능성 — Salman Qazi (Google) DRAMSec'25.
+**관련 논문**: [DRFM DRAMSec'25 paper](https://dramsec.ethz.ch/dramsec25-papers/drfm-dramsec25.pdf)
+**관련 아이디어**: RFM-COP Mechanism 4 (DRFM packet builder ~2k gates)
+
+## TPRAC (Timing channel attack on PRAC) — 2026-04-26 PM
+**정의**: ISCA'25 발표 ([arXiv:2505.10111](https://arxiv.org/abs/2505.10111))의 attack 명. PRAC counter update 가 tRC 를 증가시켜 attacker 가 victim 의 access pattern 추론 가능. Defense: constant-noise RFM injection (LFSR Fuzzing).
+**관련 논문**: [TPRAC arXiv:2505.10111](https://arxiv.org/abs/2505.10111)
+**관련 아이디어**: RFM-COP Mechanism 3 (RogueRFM Fuzzing 으로 TPRAC mutual info < 0.1 bit/access 차단)
+
+## Phoenix CVE-2025-6202 (2026-04-26 PM 세션 motivation)
+**정의**: 2025-09 disclosure 된 CVE — ETH Zurich 가 SK Hynix DDR5 의 in-DRAM mitigation (PRAC + auto-RFM) 을 109초 만에 우회. S&P'26 publication 예정. host-MC fallback 의 결정적 가치를 입증.
+**관련 논문**: S&P 2026 Phoenix paper (TBD arxiv), 2025-09 NVD entry CVE-2025-6202
+**관련 아이디어**: RFM-COP 의 핵심 narrative
+
+## PAT (Probabilistic Aggressor Tracker) — HBM3 base die counter (2026-04-26 PM RAMPART)
+**정의**: HBM3 base die 의 in-memory counter — bank/row 별 activation 빈도를 tracking. 본 세션 RAMPART 가 2-tier (Hot 8K SRAM-PAT + Cold 64K CAM-PAT) 로 분리하여 PRAC counter promotion + ECC tier promotion 동시 운영.
+**관련 논문**: [HBM3 RAS Gurumurthi & Lee, AMD](https://www.semanticscholar.org/paper/HBM3-RAS:-Enhancing-Resilience-at-Scale-Gurumurthi-Lee/68d2787d4edd16dd52b0bf789b31692529fbd59c), [Hydra HPCA'22](https://safari.ethz.ch/architecture_seminar/spring2023/lib/exe/fetch.php?media=hydra.pdf), [Mithril DSN'22], [PVAC arXiv:2604.20576](https://arxiv.org/abs/2604.20576)
+**관련 아이디어**: RAMPART (PAT + ECC tier coupling), RFM-COP (PAT 활용 indirectly)
+
+## GMAC (Galois/Counter Mode Authentication Code) — KEYSTONE (2026-04-26 PM)
+**정의**: AES-128-GCM 의 authentication 부분 — universal hash function (over GF(2^128)) 으로 unforgeable MAC 생성. Linear checksum (CRC-32, Adler) 의 forgeable 약점을 해결. Block 64KB 당 64-bit tag, FAR < 2⁻⁶⁴.
+**관련 논문**: [NIST SP 800-38D AES-GCM](https://csrc.nist.gov/publications/detail/sp/800-38d/final), Bonsai Merkle Tree (Intel TDX), Apple MIE (2025-09), AMD SEV-SNP, [KV-Cache Bit-Flip arXiv:2604.17249](https://arxiv.org/abs/2604.17249)
+**관련 아이디어**: KEYSTONE (PagedAttention 64KB block GMAC adversarial-secure)
+
+## DPA Poison List (CXL.mem RAS register) — 2026-04-26 PM HARBOR
+**정의**: CXL 3.x 표준의 RAS register set — Device Physical Address (DPA) 단위 poison entry 를 host 에서 add/remove 가능. Linux 6.16 EDAC mainline 이 generic interface 제공. HARBOR 의 64-entry CAM 으로 hardware lookup.
+**관련 논문**: [CXL RAS Whitepaper](https://computeexpresslink.org/wp-content/uploads/2023/12/CXL-RAS-Whitepaper-Post-WG-Revision_FINAL.pdf), [Linux 6.16 EDAC docs](https://lwn.net/Articles/982190/)
+**관련 아이디어**: HARBOR Mechanism 1 (DPA poison CAM + RAS coordinator)
+
+## Memory Event Record (MER) — CXL RAS (2026-04-26 PM HARBOR)
+**정의**: CXL 3.x RAS register — DRAM error event 를 hardware-stream 으로 host 에 push. Mailbox polling 회피. HARBOR 의 256-entry × 256-bit ring buffer (8KB SRAM) 로 구현.
+**관련 논문**: CXL 3.0/3.1 spec
+**관련 아이디어**: HARBOR Mechanism 1
+
+## ECS (Error Check & Scrub) — HBM3 / CXL self-diagnostic mode
+**정의**: HBM3 / CXL Type-3 device 의 self-diagnostic mode — self-refresh idle 또는 host refresh-all 명령 시 internal scrub 수행. **HBM3** 은 self-refresh-only (active workload 미적용) — sliding-window scrub 필요성. **CXL** 은 ECS mailbox 로 host 가 trigger 가능.
+**관련 논문**: [HBM3 ISSCC 2022 IEEE 9830391](https://ieeexplore.ieee.org/document/9830391/), CXL RAS Whitepaper
+**관련 아이디어**: HARBOR (CXL ECS mailbox 통합), L1 MOSAIC (HBM3 ECS scheduler), LIGHTHOUSE (ECS scheme 비교)
+
 ## CXL Patrol Scrub Control (P1 PrefixGuard / V1 origin)
 **정의**: CXL 3.2 spec 의 background scrub mechanism. **host 가 hour-단위 interval 을 device 에 설정**할 수 있는 read/correct/writeback 정책. Linux 6.16 EDAC scrub_subsystem 으로 mainstream upstream 됨 (2025-08, [docs.kernel.org/edac/scrub.html](https://docs.kernel.org/edac/scrub.html)). sysfs `/sys/bus/edac/devices/<dev>/scrubX/cycle_duration` interface. CXL Type-3 device 가 internally read-correct-writeback 수행 — host bandwidth 영향 0, ECS mailbox query 만 host 측 latency overhead (ms 단위).
 **관련 논문**: [CXL 3.1 RAS Whitepaper](https://computeexpresslink.org/wp-content/uploads/2024/08/An-Overview-of-RAS-for-Compute-Express-Link-3.1-Whitepaper.pdf) / [Linux 6.16 EDAC docs](https://docs.kernel.org/edac/scrub.html) / [Phoronix 2025 CXL upstream](https://www.phoronix.com/news/Linux-6.16-CXL)

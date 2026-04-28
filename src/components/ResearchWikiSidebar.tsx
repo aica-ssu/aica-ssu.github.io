@@ -38,9 +38,23 @@ const SIDEBAR: SidebarSection[] = [
     title: "📚 모든 Summary (역시간순)",
     items: [
       {
-        label: "⭐ 2026-04-26 KV cache ECC + RAS v2",
-        href: "/research-wiki/2026-04/kv-ecc-ras-v2",
+        label: "⭐ 2026-04-28 VLM Edge Layer-Wise + Context",
+        href: "/research-wiki/2026-04/vlm-edge-layerwise-context",
         emphasis: true,
+        children: [
+          { label: "Landing — VLM Edge Layer-Wise + Context-Semantic", href: "/research-wiki/2026-04/vlm-edge-layerwise-context" },
+          { label: "🥇 PRISM-FOG-FX (MLSys 2027)", href: "/research-wiki/2026-04/vlm-edge-layerwise-context/tier1/01-prism-fog-fx" },
+          { label: "🥈 BIVOUAC-SLATE-R (NeurIPS 2026)", href: "/research-wiki/2026-04/vlm-edge-layerwise-context/tier1/02-bivouac-slate-r" },
+          { label: "🥉 PRISM-VL-R (OSDI 2026, W12 분기)", href: "/research-wiki/2026-04/vlm-edge-layerwise-context/tier1/03-prism-vl-r" },
+          { label: "T1 STRATA-K-R (DAC 2027)", href: "/research-wiki/2026-04/vlm-edge-layerwise-context/tier2/01-strata-k-r" },
+          { label: "T2 HARBINGER-CLOVER-R (ISLPED 2027)", href: "/research-wiki/2026-04/vlm-edge-layerwise-context/tier2/02-harbinger-clover-r" },
+          { label: "T3 OBELISK-5090-R (MLSys 2027)", href: "/research-wiki/2026-04/vlm-edge-layerwise-context/tier2/03-obelisk-5090-r" },
+          { label: "미선정 로그", href: "/research-wiki/2026-04/vlm-edge-layerwise-context/unselected" },
+        ],
+      },
+      {
+        label: "2026-04-26 KV cache ECC + RAS v2",
+        href: "/research-wiki/2026-04/kv-ecc-ras-v2",
         children: [
           { label: "Landing — KV Cache ECC + RAS v2", href: "/research-wiki/2026-04/kv-ecc-ras-v2" },
           { label: "🥇 PrefixGuard (OSDI 2027)", href: "/research-wiki/2026-04/kv-ecc-ras-v2/tier1/01-prefixguard" },

@@ -4,10 +4,109 @@
 
 ---
 
+### VLM Edge Layer-Wise + Context-Semantic 통합 트렌드 — 2026-04-28 시점 (R57 신규 적용)
+
+- **Date analyzed**: 2026-04-28
+- **Session**: [세션](sessions/2026-04-28-mode1-vlm-edge-layerwise-context.md) / [Summary](summary/2026-04-28-mode1-vlm-edge-layerwise-context/)
+- **트렌드 한 줄**: VLM edge inference 의 production deployment 가 단순 KV compression 단일 axis 에서 **layer-wise mixed precision (NVFP4/FP8/INT4 Blackwell native) + Context/Semantic-aware KV management (cross-frame cluster reuse / phase-aware caching) + Power-envelope adaptive DVFS** 3-축 통합으로 부상. RTX 5090 32GB GDDR7 single-GPU 의 large MoE local serving 도 신규 axis.
+- **근거 paper (peer-reviewed backbone, R56.2 시스템 65%+)**:
+  - **VL-Cache** ([ICLR 2025 arXiv:2410.23317](https://arxiv.org/abs/2410.23317)) — VLM KV cache eviction 의 published baseline
+  - **Mooncake** (USENIX FAST 2025 Best Paper) — KVCache disaggregation의 production direction
+  - **AttAcc** ([ASPLOS 2024 arXiv:2403.15388](https://arxiv.org/abs/2403.15388)) — KV PIM accelerator
+  - **CLONE** ([USENIX ATC 2025 arXiv:2506.02847](https://arxiv.org/abs/2506.02847)) — LLM inference energy DVFS
+  - **Sarathi-Serve** ([USENIX OSDI 2024](https://www.usenix.org/conference/osdi24/presentation/agrawal)) — chunked prefill + continuous batching
+- **주요 supporting evidence (arxiv preprint)**:
+  - **FGMP** ([arXiv:2504.14152](https://arxiv.org/abs/2504.14152)) — fine-grained mixed precision
+  - **MicroMix** ([arXiv:2508.02343](https://arxiv.org/abs/2508.02343)) — NVFP4+FP8 layer-wise
+  - **ClusterKV** ([arXiv:2412.03213](https://arxiv.org/abs/2412.03213)) — KV cluster centroid
+  - **VLCache** ([arXiv:2512.12977](https://arxiv.org/abs/2512.12977)) — visual encoder cache
+  - **Spec-LLaVA** ([arXiv:2509.11961](https://arxiv.org/abs/2509.11961)) — VLM speculative
+
+### Single-GPU Large MoE Local Serving 트렌드 — 2026-04-28 시점
+
+- **트렌드 한 줄**: RTX 5090 32GB GDDR7 (Blackwell consumer) 가 Qwen3-VL-30B-A3B (3B activated) MoE 의 local serving 을 가능하게 하는 turning point — cluster GPU 가정 없이 single-GPU 에서 large VLM serving.
+- **근거**: RTX 5090 32GB + Qwen3-VL-30B-A3B (3B activated, expert routing 후 ~12 GB working set) + DynaExq ([arXiv:2511.15015](https://arxiv.org/abs/2511.15015)) MoE expert routing
+- **세션 idea**: OBELISK-5090-R (Tier-2 T3)
+
+---
+
+### Edge VLM 의 5-Axis Production Readiness 트렌드 — 2026-04 시점 (R55 적용 + v1+v2 종합)
+
+- **Date analyzed**: 2026-04-27 (v2-r55 통합)
+- **Session**: [세션](sessions/2026-04-27-mode1-vlm-llm-asym-dual-jetson-v2-r55.md) / [Summary](summary/2026-04-27-mode1-vlm-llm-asym-dual-jetson-v2-r55/)
+- **트렌드 한 줄**: Edge VLM serving 의 production deployment 가 단순 [Performance]/[Energy]/[Memory eff.] 단일 axis 만 아닌 **[Power]** (sustained thermal envelope) + **[Robustness]** (adversarial / silent corruption / OOD) + **[Security]** (multi-tenant / visual injection / PII) 7-axis 통합으로 부상. 자동차 / robotics / smart camera 산업의 직접 정합.
+- **근거 paper (peer-reviewed backbone)**:
+  - **NVIDIA TensorRT Edge-LLM** (2026, Jetson Thor + DRIVE AGX) + **NVIDIA Cosmos Reason2** (2026) — 자동차 / robotics 산업의 5-axis production paths
+  - **GPUHammer** ([USENIX Sec 2025 arXiv:2507.08166](https://arxiv.org/abs/2507.08166)) — HW fault attack 의 edge VLM 영향
+  - **Visual Prompt Injection** ([CMU 2024 arXiv:2403.09766](https://arxiv.org/abs/2403.09766)) — image-based instruction hijack
+  - **Robust ViT** ([CVPR 2024 arXiv:2402.07004](https://arxiv.org/abs/2402.07004)) — adversarial training
+  - **Energy-OOD** ([NeurIPS 2020 arXiv:2010.03759](https://arxiv.org/abs/2010.03759)) — OOD baseline
+- **본 세션 활용**: VEILSEAL-KV ([Security]), STORMGLASS ([Power]), ROBUSTOKEN ([Robustness]) 3 신규 axis idea — v1 의 [Performance]/[Energy]/[Memory eff.] 3 axis 와 결합하여 7-axis 모두 cover. JETTYSIM 류 simulator infrastructure 자체 contribution idea 는 R55.1 자동 배제 — production-ready idea 만 retain.
+
+### Simulator-Building 자체 Contribution 의 본 harness 배제 — 2026-04-27 R55 등록 (사용자 명시)
+
+- **Date analyzed**: 2026-04-27
+- **트렌드 한 줄**: 본 harness 의 ideation scope 를 **명확한 gain/benefit (5-axis)** 으로 한정 — simulator infrastructure / extension / tool / benchmark / dataset 신규 release 자체를 main contribution 으로 하는 idea 자동 배제 (R55.1). ISPASS / IISWC tool track 류 paper 는 별도 venue 진행.
+- **근거**: Rule 27 (R55) 신규 등록. 학생 / 사용자 입장에서 measurable gain (성능 / robustness / 에너지 / 전력 / 보안 / 메모리 / 비용) 만 본 harness 의 selected idea 로 진입.
+- **본 세션 활용**: v1 의 JETTYSIM (simulator infra paper) 자동 배제 → v2 의 VEILSEAL-KV / STORMGLASS / ROBUSTOKEN 3 신규 axis idea 진입.
+
+### LLM↔VLM Asymmetry 의 system-level 활용 부상 — 2026-04 시점 (VLM edge inference 트렌드)
+
+- **Date analyzed**: 2026-04-27
+- **Session**: [세션](sessions/2026-04-27-mode1-vlm-llm-asym-dual-jetson.md) / [Summary](summary/2026-04-27-mode1-vlm-llm-asym-dual-jetson/)
+- **트렌드 한 줄**: VLM 의 LLM 대비 비대칭성 (prefill TTFT 22.4× / visual KV 305MB vs LLM 18MB 17× / layer-wise visual attention L17-21=24.5% vs L0-7=2.6% 5-10× 비대칭) 이 단순 token pruning (SparseVLM/FastV) 을 넘어 **system-level 자원 분할** (SM partition / L2 carveout / DeepStack injection schedule mapping) 의 axis 로 부상.
+- **근거 paper (peer-reviewed backbone)**:
+  - **DeepStack** ([NeurIPS 2024, arXiv:2406.04334](https://arxiv.org/abs/2406.04334)) — ViT intermediate output → LLM 여러 layer inject, layer-wise visual context distribution 변형
+  - **Qwen3-VL Tech Report** ([arXiv:2511.21631](https://arxiv.org/abs/2511.21631)) — DeepStack integration native + 256K context
+  - **SparseVLM** ([ICML 2025, arXiv:2410.04417](https://arxiv.org/abs/2410.04417)) — attention pattern → visual token importance 1-shot 추론
+  - **DistServe** ([OSDI 2024, arXiv:2401.09670](https://arxiv.org/abs/2401.09670)) — prefill compute-bound vs decode memory-bound 분리
+  - **DuetServe** ([arXiv:2511.04791](https://arxiv.org/abs/2511.04791)) — SM-level partitioning prefill/decode contention 해결
+  - **EPDServe** (ICML 2025) — encode-prefill-decode 3-way disaggregation, dual-Jetson disagg cluster scoop trigger
+  - 내부 측정 (`/home/yhgong/paper/vlm/VLM_exploration_PIM_260407.pdf`) — Qwen3-VL-4B layer-wise visual attn 24.5% vs 2.6% 직접 측정 + TTFT 22.4×
+- **본 세션 활용**: ATRIUM (layer-aware SM partition), BREAKWATER-T (ViT-internal split + DeepStack tap), CASCADE-PREFILL (chunked prefill AI dispatch GPU↔CPU), BIMODAL-MASK-T2 (modality outlier topology) 모두 본 trend 의 직접 mechanism.
+
+### Dual-Jetson edge serving 의 USB-C/Ethernet topology 첫 commercialization — 2026-04 시점
+
+- **Date analyzed**: 2026-04-27
+- **Session**: [세션](sessions/2026-04-27-mode1-vlm-llm-asym-dual-jetson.md)
+- **트렌드 한 줄**: NVIDIA TensorRT Edge-LLM (2026, Jetson Thor + DRIVE AGX) + Holoscan SDK + Cosmos Nemotron 의 출시로 dual-Jetson 연결 inference 가 자동차 / robotics 산업의 default 가 됨. NVLink 가 Jetson 에서 미가용 → USB-C 3.2 gen2x2 (20 Gbps) 또는 2.5/10 GbE 가 sole interconnect. EPDServe/DiP-SD (2026-04) 류 distributed pipelined speculative decoding 이 edge 도 cluster 도 아닌 **dual-edge** 환경으로 진출.
+- **근거 paper**:
+  - **DiP-SD** ([arXiv:2604.20919](https://arxiv.org/abs/2604.20919), 2026-04) — distributed pipelined speculative decoding for **edge devices**
+  - **DSD** ([arXiv:2511.21669](https://arxiv.org/abs/2511.21669)) — distributed speculative decoding
+  - **NVIDIA TensorRT Edge-LLM blog** (2026)
+  - **Distributed VLMs** (Columbia 2025) — cloud-edge collaboration
+  - **NVIDIA Holoscan SDK** — sensor-proximity dual-device reference
+- **본 세션 활용**: BREAKWATER-T (sensor-proximity dual-{Orin Nano + AGX Orin} ViT-internal split via USB-C 20Gbps) + JETTYSIM (LLMServingSim dual-Jetson UMA + USB-C topology extension first-to-report).
+
+### Phoenix CVE 시대 host-MC RAS 의 부상 — 2026-04 시점 (rowhammer 후속 트렌드)
+
+- **Date analyzed**: 2026-04-26 (PM)
+- **Session**: [세션](sessions/2026-04-26-mode1-rowhammer-ecc-ras.md) / [Summary](summary/2026-04-26-mode1-rowhammer-ecc-ras/)
+- **트렌드 한 줄**: SK Hynix DDR5 의 in-DRAM mitigation 이 Phoenix CVE-2025-6202 (S&P'26, 2025-09 disclosure) 에서 109초 만에 우회되면서, **host-side memory controller** 가 다시 RAS 의 핵심 위치로 복귀.
+- **근거 paper**: McSee ([USENIX Sec'25](https://www.usenix.org/conference/usenixsecurity25/presentation/jattke)) 가 측정한 Intel/AMD MC 의 RFM 명령 미발행 + Phoenix CVE post-disclosure context + ARFM ([arXiv:2501.14328](https://arxiv.org/abs/2501.14328)) workload-aware MC throttle + RogueRFM ([arXiv:2501.06646](https://arxiv.org/abs/2501.06646)) covert channel + TPRAC ([arXiv:2505.10111](https://arxiv.org/abs/2505.10111)) timing channel = **host-MC scheduler 가 4 attack vector 모두 응답해야 한다** 는 합의.
+- **본 세션 활용**: RFM-COP idea 의 직접 motivation. 4-pillar 통합 narrative 핵심.
+
+### Datatype-asymmetric ECC 의 commodity 화 (REACH 점유) — 2026-04 시점
+
+- **Date analyzed**: 2026-04-26 (PM)
+- **Session**: [세션](sessions/2026-04-26-mode1-rowhammer-ecc-ras.md)
+- **트렌드 한 줄**: REACH ([arXiv:2512.18152](https://arxiv.org/abs/2512.18152), 2025-12) + Domain-Specific ECC AI ([arXiv:2507.02654](https://arxiv.org/abs/2507.02654), 2025-09) 가 **FP16/BF16 exponent 우선 보호 + tunable importance + controller-managed two-level RS** 의 핵심 contribution 을 점유 — datatype-asymmetric ECC 가 commodity 화. 후속 work 은 (a) MoE expert routing weight 비대칭, (b) INT4/INT8 magnitude bit, (c) speculative decoding draft model 등 niche axis 만 가능.
+- **본 세션 활용**: Cluster A (S1/H4/L2) 전체 drop. KV cache (KEYSTONE) 와 cross-policy hot-row (RAMPART) 로 reposition.
+
+### CXL controller integrated RAS engine 의 commercialization — 2026-04 시점
+
+- **Date analyzed**: 2026-04-26 (PM)
+- **Session**: [세션](sessions/2026-04-26-mode1-rowhammer-ecc-ras.md)
+- **트렌드 한 줄**: Microchip SMC2100 (2025 commercial CXL controller) 이 Patrol Scrub Engine + DPA poison list + ECS mailbox + MER ring buffer 통합 RAS engine 을 제공하기 시작 → host CPU mailbox polling 부담 경감. Linux 6.16 EDAC mainline 도 generic RAS Control Feature Driver 제공. 학계의 unique contribution 은 **workload-phase-adaptive** + **app-driven hint** 두 차원.
+- **근거 paper**: CXL RAS Whitepaper (CXL Consortium 2023) + Linux 6.16 EDAC ([LWN.net 982190](https://lwn.net/Articles/982190/)) + Melody (ASPLOS'25) + M5 (ASPLOS'25) + Microchip SMC2100 (2025).
+- **본 세션 활용**: HARBOR idea (H2+L4 merge) 의 motivation — workload-phase-adaptive scrub rate + PyTorch/vLLM annotation app-hint stack.
+
+---
+
 ### KV cache reliability + Modern Memory Standard (LPDDR5x/HBM3/CXL 3.x) — 2026-04 시점 미니 트렌드 (v2)
 
 - **Date analyzed**: 2026-04-26
-- **Session**: [링크](/research-wiki/2026-04/kv-ecc-ras-v2)
+- **Session**: [링크](sessions/2026-04-26-mode1-kv-ecc-ras-v2.md)
 - **Experts**: system-robustness-expert (primary), legacy-system-expert, ai-optimization-expert
 - **Papers analyzed**: 24 paper + 9 workload sources + 4 modern memory standard documents
 
@@ -39,7 +138,7 @@ SilentStriker ([arXiv:2509.06939](https://arxiv.org/abs/2509.06939)) 가 INT8-qu
 
 ### VLM + PIM / GPU-PIM Heterogeneous Serving — 2026-04 시점 미니 트렌드
 - **Date analyzed**: 2026-04-22
-- **Session**: [링크](/research-wiki/2026-04/vlm-pim-extension)
+- **Session**: [링크](sessions/2026-04-22-mode2-vlm-pim-extension.md)
 - **Experts**: hw-pim-accelerator-expert (primary), ai-optimization-expert, legacy-system-expert
 
 **신호 1 — VLM-specific HW accelerator 가 2025-Q4 ~ 2026-Q1 폭발적 증가**: Focus ([arXiv:2512.14661](https://arxiv.org/abs/2512.14661), HPCA 2026 Best Paper Candidate, Duke), V-Rex ([arXiv:2512.12284](https://arxiv.org/abs/2512.12284), HPCA 2026, KAIST), ORCHES (MICRO 2025, vision reasoning 3.10×), Pimba ([arXiv:2507.10178](https://arxiv.org/abs/2507.10178), MICRO 2025 post-transformer) 등 4편이 6개월 내 연속 등장. 공통 테마: **VLM 특이성 (visual token 비대칭, multi-image long-context, video streaming) 을 HW 에 직접 반영**. AttAcc (ASPLOS 2024) / NeuPIMs / IANUS / TransPIM 의 LLM 가정은 이미 outdated.
@@ -78,7 +177,7 @@ SilentStriker ([arXiv:2509.06939](https://arxiv.org/abs/2509.06939)) 가 INT8-qu
 
 ### BNN/TNN + CIM + Non-Image 도메인 — 2026-04 시점 미니 트렌드
 - **Date analyzed**: 2026-04-22
-- **Session**: 링크
+- **Session**: [링크](sessions/2026-04-22-mode1-bnn-tnn-domain-extension.md)
 - **Experts**: algorithm-expert, hw-pim-accelerator-expert
 - **Papers analyzed**: 25+ (ISLPED/ISSCC/Interspeech/arxiv 2022-2026)
 - **Trigger**: 공영호 교수의 PRISM (ISLPED'26 투고) 확장 쿼리. scratch training + small model + CIM target 제약.
@@ -121,7 +220,7 @@ SilentStriker ([arXiv:2509.06939](https://arxiv.org/abs/2509.06939)) 가 INT8-qu
 
 ### MoE Expert Fingerprinting (Security + Systems Dual Axis) — 2026-04 시점 미니 트렌드
 - **Date analyzed**: 2026-04-21
-- **Session**: 링크
+- **Session**: [링크](sessions/2026-04-21-mode1-moe-fingerprinting.md)
 - **Experts**: system-robustness-expert, ai-optimization-expert
 - **Papers analyzed**: 30+ (Phase 1 expert-memory 기반 + Phase 2 리뷰어 arxiv 재검색)
 - **Trigger**: User 공영호 교수가 "fingerprinting accuracy 85-90%, expert 많은 Qwen3에서 더 잘 됨" premise 공유 후 보안+시스템 연구 주제 도출 요청.
@@ -164,7 +263,7 @@ SilentStriker ([arXiv:2509.06939](https://arxiv.org/abs/2509.06939)) 가 INT8-qu
 
 ### VLM/VLA Software-Side Serving Optimization — 2026-04 시점 미니 트렌드 분석
 - **Date analyzed**: 2026-04-21
-- **Session**: 링크
+- **Session**: [링크](sessions/2026-04-21-mode2-ace-moe-vlm-vla-extension.md)
 - **Experts**: ai-optimization-expert
 - **Papers analyzed**: 2 (in-depth) + 7 (referenced)
 - **Trigger**: ACE-MoE의 future direction (VLM/VLA 확장)을 user가 명시적으로 요청
