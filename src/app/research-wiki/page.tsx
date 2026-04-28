@@ -19,6 +19,37 @@ type SessionCard = {
 
 const recentSessions: SessionCard[] = [
   {
+    date: "2026-04-28",
+    title: "🥇 VLM Edge Layer-Wise + Context-Semantic Optimization on Single-GPU/Jetson (R57 신규 적용 첫 세션, ATRIUM Tier-1 4번째 retain)",
+    href: "/research-wiki/2026-04/vlm-edge-layerwise-context",
+    keywords: ["R57 Summary Entry-Friendly", "Research Questions 최상단", "Essential Reading 5편", "Glossary 맨 뒤 + CTRL+F", "RTX 5090", "Jetson Thor", "Jetson Orin NX", "NVFP4 mixed precision", "DeepStack-aware", "visual KV cluster", "cross-frame reuse", "Phase-aware LSH", "ATRIUM Tier-1 retain", "BIVOUAC-SLATE-R Mosaic concurrent 잔존", "OBELISK-5090-R DynaExq adjacent"],
+    summary:
+      "최신 VLM (Qwen3-VL/LLaVA-Next/InternVL3) 의 RTX 5090 / Jetson Thor (LPDDR5x 273 GB/s) / Jetson Orin NX (10-25W) edge inference 에서 **layer-wise 최적화 + Context/Semantic 특성** 활용 ideation. 3 expert × 13 candidate → Phase 2 (3 reviewer) → Phase 1' refinement (cluster merge: PRISMATIC-FOG ⊕ PRISM-FX → PRISM-FOG-FX, ATRIUM-R(AI) M2 ⊕ BIVOUAC-SLATE → BIVOUAC-SLATE-R) → Phase 2' (최근 6개월 scoop 재검증) → **Tier-1 Top 4** (PRISM-FOG-FX / BIVOUAC-SLATE-R / PRISM-VL-R W12 분기 / **ATRIUM** 사용자 명시 retain) **+ Tier-2 독립 Top 3** (STRATA-K-R / HARBINGER-CLOVER-R / OBELISK-5090-R). **Drop 4**: CARILLON (Nova arXiv:2509.21301 80%+ scoop), BREAKWATER-T-R (Jetson Thor T5000 MIG single-partition only 2026-04 infeasible), TIDEGATE (R56.2 30% 미달), HARBOR-DLA (DLA 2.0 LayerNorm 제외). **Critical scoop 잔존**: BIVOUAC-SLATE-R ↔ Mosaic ([arXiv:2604.10060](https://arxiv.org/abs/2604.10060), 2026-04-11) 55-65% concurrent / OBELISK-5090-R ↔ DynaExq ([arXiv:2511.15015](https://arxiv.org/abs/2511.15015), 2025-11-19) 35-45% adjacent. **R57 신규 적용 첫 세션** — Summary README 가 학부생/AI agent 진입장벽 완화 구조 (Research Questions → Essential Reading → 연구 개요+GAP outline → Decision Tree → Tier-1/2 + contribution bullet → Glossary 맨 뒤 + CTRL+F).",
+    detailed: true,
+    tierTable: [
+      { tier: "🥇 Tier-1", idea: "PRISM-FOG-FX (Cluster A merge)", venue: "MLSys 2027 / ASPLOS 2027 / NeurIPS 2026", score: "7.5/8.0/9.0",
+        href: "/research-wiki/2026-04/vlm-edge-layerwise-context/tier1/01-prism-fog-fx" },
+      { tier: "🥈 Tier-1", idea: "BIVOUAC-SLATE-R", venue: "NeurIPS 2026 / ICML 2026 / MICRO 2027", score: "7.5/8.5/8.0",
+        href: "/research-wiki/2026-04/vlm-edge-layerwise-context/tier1/02-bivouac-slate-r" },
+      { tier: "🥉 Tier-1", idea: "PRISM-VL-R (W12 동적 분기)", venue: "OSDI 2026 / SOSP 2027", score: "5.5/7.5/8.5",
+        href: "/research-wiki/2026-04/vlm-edge-layerwise-context/tier1/03-prism-vl-r" },
+      { tier: "4️⃣ Tier-1", idea: "ATRIUM (retain, v2-r55 origin)", venue: "HPCA 2027 / MICRO 2027 / ASPLOS 2027", score: "7.7/7.5/8.0",
+        href: "/research-wiki/2026-04/vlm-edge-layerwise-context/tier1/04-atrium" },
+      { tier: "T1", idea: "STRATA-K-R (page-color affinity)", venue: "DAC 2027 / DATE 2027", score: "6.5/8.0/7.5",
+        href: "/research-wiki/2026-04/vlm-edge-layerwise-context/tier2/01-strata-k-r" },
+      { tier: "T2", idea: "HARBINGER-CLOVER-R", venue: "ISLPED 2027 / DATE 2027", score: "7.0/7.5/6.5",
+        href: "/research-wiki/2026-04/vlm-edge-layerwise-context/tier2/02-harbinger-clover-r" },
+      { tier: "T3", idea: "OBELISK-5090-R (RTX 5090 large MoE)", venue: "MLSys 2027 / DAC 2027", score: "6.0/6.5/7.5",
+        href: "/research-wiki/2026-04/vlm-edge-layerwise-context/tier2/03-obelisk-5090-r" },
+    ],
+    extraLinks: [
+      { label: "📊 Landing (R57 신규 구조 README — RQ + Essential Reading + GAP outline + Decision Tree)",
+        href: "/research-wiki/2026-04/vlm-edge-layerwise-context" },
+      { label: "📜 미선정 / Drop 4 로그 (CARILLON Nova scoop / BREAKWATER-T-R MIG infeasible / TIDEGATE / HARBOR-DLA)",
+        href: "/research-wiki/2026-04/vlm-edge-layerwise-context/unselected" },
+    ],
+  },
+  {
     date: "2026-04-25",
     title: "🥇 KV Cache Memory ECC + RAS for Quantized AI Serving",
     href: "/research-wiki/2026-04/kv-ecc-ras",
