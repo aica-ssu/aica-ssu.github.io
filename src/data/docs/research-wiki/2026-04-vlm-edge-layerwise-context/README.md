@@ -14,7 +14,7 @@
 - **RQ-Master-2**: Context/Semantic 특징 (visual token semantic similarity / cross-frame redundancy / DeepStack tap point) 을 KV cache management 와 결합했을 때 long-form video VLM 의 KV memory footprint 를 **-50% 이상** 줄이면서 accuracy drop **≤ 1.5pp** 유지 가능한가?
 - **RQ-Master-3**: Layer-wise mixed precision (NVFP4/FP8/INT4) 와 power-envelope adaptive DVFS 를 결합한 single-system VLM serving 이 single Jetson Orin NX 16GB 환경 (10-25W) 에서 production-grade latency 보장 + thermal envelope 위반 0 으로 동작 가능한가?
 
-### 1.2 각 idea 별 RQ (Tier-1 Top 3 + Tier-2 독립 Top 3)
+### 1.2 각 idea 별 RQ (Tier-1 Top 4 + Tier-2 독립 Top 3)
 
 #### 🥇 PRISM-FOG-FX
 - **RQ-1.1**: Blackwell native NVFP4 (E2M1 16-block) 의 transformer layer 별 sensitivity 분포가 어떻게 visual attention ratio 와 상관되는가? DeepStack inject layer (L8/L16/L24) 에 NVFP4 anchor 보존 + 비-inject layer INT4-AWQ 압축 시 MMMU drop 이 uniform NVFP4 대비 **≤ 0.5pt** 안에서 prefill throughput **+18% 이상** 달성되는가?
@@ -32,6 +32,12 @@
 - **RQ-3.2**: SGLang RadixAttention 의 token-level radix tree 를 root second-level branch 가 visual-semantic-hash 로 split 되도록 확장했을 때, dashboard agent workload (동일 image base + 다른 prompt 50-70%) 에서 cross-request KV reuse 가 **+40%pt 이상** 향상되는가?
 - **RQ-3.3**: Green Context 8-SM partition 에 LSH compute 격리 실행 시 decode latency 영향 **≤ 1%**, LSH overhead prefill latency **≤ 2%** 안에 유지되는가?
 - **RQ-3.4 (Tier-1 차별 검증)**: 본 idea 의 (Phase-aware + RadixAttention second-level + Green Context) 조합이 VLCache (encoder + KV cache exact-match) 대비 TTFT 추가 **-10% 이상** 개선? **-5% 미만이면 Tier-2 강등**.
+
+#### 4️⃣ ATRIUM (2026-04-28 retain, v2-r55 origin)
+- **RQ-A.1**: Qwen3-VL 의 layer-wise visual_attn_ratio 비대칭 (L17-21 = 24.5% / L0-7 = 2.6% / L22-35 = 9.8%) 을 system-level (Green Context CUDA 12.4 SM 분할) 로 활용 시, COLD layer 의 LPDDR5x 273 GB/s 대역폭 86% waste 가 HOT layer 로 재배치되어 decode TPS **+14% 이상** 달성되는가?
+- **RQ-A.2**: GPU L2 SLC carveout (cudaCacheConfigure persistent) 을 HOT layer KV access pattern 에 맞춰 적용 시, L2 hit rate 가 vanilla vLLM 대비 **+25%pt 이상** 향상되고 LPDDR5x bandwidth pressure 가 **-30% 이상** 줄어드는가?
+- **RQ-A.3**: DeepStack 미주입 layer (LLM L0-3) 의 visual KV alloc skip 시, KV memory footprint 가 baseline 대비 **-9% 이상** 절감되며 MMMU accuracy drop 이 **0pt** 유지되는가?
+- **RQ-A.4 (cross-share)**: ATRIUM 의 LayerClassifier (visual_attn_ratio HOT/COLD/MEDIUM 분류) 를 PRISM-FOG-FX M4 의 prerequisite 신호로 cross-share 시, sequential development path (ATRIUM W1-12 prototype → PRISM-FOG-FX 추가 W13-24) 가 학생 1명 12-16주 budget 안에 fit 가능한가?
 
 #### T1 STRATA-K-R
 - **RQ-4.1**: VLM long-context workload (4K-32K visual tokens) 에서 layer score 기반 3-tier (L2 carveout / GDDR7|LPDDR5x / page-color cold) mapping 이 vanilla vLLM allocator 대비 effective KV capacity **+40% 이상** 증가? OOM batch size **+50% 이상** 증가?
@@ -100,10 +106,11 @@
 
 | GAP | Tier-1 idea 대응 | Tier-2 idea 대응 |
 |-----|----------------|----------------|
-| GAP-1 (Layer-uniform precision) | 🥇 PRISM-FOG-FX (M1 DALMP / M2 4:8 sparsity / M3 KSF-VCD / M4 LayerClassifier) | T3 OBELISK-5090-R (per-stage power cap + NVFP4 + MoE expert placement) |
-| GAP-2 (KV cache layer-uniform) | 🥈 BIVOUAC-SLATE-R (M1 HSCV HOT-only cluster / M2 CFCR cosine cross-frame / M3 LACB layer-adaptive k) | T1 STRATA-K-R (M1 LSS / M2 3TMM-AVT) |
+| GAP-1 (Layer-uniform precision) | 🥇 PRISM-FOG-FX (M1 DALMP / M2 4:8 sparsity / M3 KSF-VCD / M4 LayerClassifier) + 4️⃣ ATRIUM (M1 LayerClassifier — visual_attn_ratio HOT/COLD/MEDIUM cross-share) | T3 OBELISK-5090-R (per-stage power cap + NVFP4 + MoE expert placement) |
+| GAP-2 (KV cache layer-uniform) | 🥈 BIVOUAC-SLATE-R (M1 HSCV HOT-only cluster / M2 CFCR cosine cross-frame / M3 LACB layer-adaptive k) + 4️⃣ ATRIUM (M3 DeepStack L0-3 alloc skip — visual KV memory eff.) | T1 STRATA-K-R (M1 LSS / M2 3TMM-AVT) |
 | GAP-3 (Power-envelope blind) | 🥇 PRISM-FOG-FX (M3 visual-context DVFS slip) | T2 HARBINGER-CLOVER-R (M3 PEAFL power-envelope locking) |
 | GAP-4 (Phase-uniform caching) | 🥉 PRISM-VL-R (M1 phase-aware LSH 16/8/0) | — |
+| GAP-7 (Layer-uniform SM/L2 partition) | 4️⃣ ATRIUM (M2 Green Context SM 1500/1060 split + L2 SLC carveout — system-level layer asymmetry 활용) | — |
 | GAP-5 (Static KV layout) | — | T1 STRATA-K-R (M1-M3 stratified + page-color UMA bank micro-tier) |
 | GAP-6 (Single-GPU large MoE) | — | T3 OBELISK-5090-R (M1 SPVL Green Context / M2 MERL expert placement / M3 DPCS) |
 
@@ -146,6 +153,14 @@
         │      │       └─ vs VLCache -5% 미만 ──→ Tier-2 강등 (EuroSys/FAST)
         │      ├─ Below (TTFT -10-20%) ──→ Tier-2 강등 (M2 RA branch drop)
         │      └─ Outperform (TTFT -35%↑) ──→ Tier-1 retain + workshop spinoff
+        │
+        ├─ 4️⃣ Tier-1 #4 ATRIUM (Jetson Thor 128GB, 2026-04-28 retain)
+        │      ├─ Pass (decode +14% / Energy -12% / DeepStack L0-3 alloc skip 0pt drop) ──→ HPCA 2027 retain
+        │      ├─ Below (Green Context SM partition overhead > +5% prefill) ──→ libsmctrl secondary path
+        │      ├─ Critical (visual_attn_ratio measurement noise > σ=10%pp drift) ──→ M1 LayerClassifier 만 retain,
+        │      │                                                                       PRISM-FOG-FX M4 enabler 로만 활용
+        │      └─ Outperform (decode +18%↑ + L2 hit +30%pp) ──→ HPCA 2027 retain +
+        │                                                       PRISM-FOG-FX 와 sequential development path 권장
         │
         ├─ T1 STRATA-K-R (RTX 5090 + Jetson Thor)
         │      ├─ Pass (effective KV +40-55%) ──→ W8-12 full eval
@@ -201,13 +216,14 @@
 | T2 HARBINGER-CLOVER-R | Orin NX 25W envelope decode +32% / Energy -28% / peak -18% 달성 → DATE/ISLPED submission | visually ambiguous task accuracy drop > 3pt → M2 LCEH drop, M1+M3 (speculative + DVFS) 만 retain → IEEE CAL | nvpmodel sub-ms switching failure rate > 5% → M3 PEAFL drop, M1+M2 만 EMNLP findings | Peak power -25%↑ → Tier-1 격상 시도 ISLPED 풀논문 |
 | T3 OBELISK-5090-R | RTX 5090 + Qwen3-VL-30B-A3B decode +24% / power -13% 달성 → MLSys/DAC submission | DynaExq 추가 차별 axis (Green Context vision/LLM 분할 + per-stage power cap) 입증 실패 → M2 MERL drop, M1+M3 만 retain | 575W TDP thermal runaway 발생 → M3 DPCS 보강 (vision/decode 만 cap, prefill 무관) | +30% throughput → Tier-1 격상 + MLSys 풀논문 진입, MoE-on-consumer-GPU 단독 axis |
 
-## 5. Tier-1 Top 3 (요약 + contribution bullet R15-β)
+## 5. Tier-1 Top 4 (요약 + contribution bullet R15-β) — 2026-04-28 ATRIUM retain 포함
 
 | Rank | Title | Score | 5-axis | 링크 |
 |------|-------|-------|--------|------|
 | 🥇 | PRISM-FOG-FX | nov 7.5 / diff 7.5 / impact 9.0 | Performance +18-25% / Energy -22% / Memory -32% / Power -9% | [tier1/01-prism-fog-fx.md](tier1/01-prism-fog-fx.md) |
 | 🥈 | BIVOUAC-SLATE-R | nov 6.5 / diff 8.0 / impact 8.0 | decode +35% / KV memory -65% / Energy -18% | [tier1/02-bivouac-slate-r.md](tier1/02-bivouac-slate-r.md) |
 | 🥉 | PRISM-VL-R | nov 6.0 / diff 8.5 / impact 9.0 | TTFT -22-30% / KV -30-45% / Energy -15-20% | [tier1/03-prism-vl-r.md](tier1/03-prism-vl-r.md) |
+| 4️⃣ | ATRIUM (retain) | nov 7.7 / diff 7.5 / impact 8.0 | Performance +14% decode / Energy -12% / Memory eff. (DeepStack L0-3 alloc skip) | [tier1/04-atrium.md](tier1/04-atrium.md) |
 
 ### 5.1 🥇 PRISM-FOG-FX — contribution bullet (R15-β, 5 항목)
 
@@ -232,6 +248,16 @@
 - **C3 (Workload-bounded gain)**: TTFT -22~30% / Memory -30~45% (visual prefix overlap 50%+ workload 한정 — multi-camera surveillance / dashboard agent / video VQA / repeated UI). cold start single-shot 효과 미미 명시
 - **C4 (System-level integration)**: Green Context 8-SM partition 에 LSH compute 격리 + decode latency 영향 ≤ 1% — PD-Multiplexing (LMSYS 2025-09) 의 prefill/decode 분리에 third role (LSH compute) 추가
 - **C5 (Tier-1 차별 검증 분기)**: §9 decision tree 에서 RQ-3.4 (W12) 결과에 따라 Tier-1 (vs VLCache 추가 -10%↑) / Tier-2 (vs VLCache -5% 미만 → EuroSys/FAST) 분기. R56.2 published 64% 경계 (EuroSys 2025 / SOSP 2025 multimodal serving 1편 추가 시 70%+)
+
+### 5.4 4️⃣ ATRIUM — contribution bullet (5 항목, 2026-04-28 retain)
+
+> **Retain note**: 본 idea 는 2026-04-27 v2-r55 세션의 Tier-1 lead idea 로 도출. 사용자 명시 요청에 따라 본 2026-04-28 세션의 Tier-1 4번째 idea 로 retain. mechanism 변경 없음 (v2-r55 그대로). 상세는 [tier1/04-atrium.md](tier1/04-atrium.md).
+
+- **C1 (Mechanism unique — system-level layer asymmetry)**: VLM 의 layer-wise visual_attn_ratio 비대칭 (L17-21 = 24.5% HOT / L0-7 = 2.6% COLD / L22-35 = 9.8% MEDIUM) 을 algorithm-level (Q Cache decode skip) 이 아닌 **system-level SM partition + L2 carveout** 으로 활용. KVTuner (per-layer KV quant only) / MIG (정적 partition) 와 axis 직교
+- **C2 (Multi-axis gain — Performance + Energy + Memory)**: Performance +14% decode (Green Context SM 1500/1060 split, HOT layer 우선 SM allocation) + Energy -12% (COLD layer SM down-sized) + Memory eff. (DeepStack L0-3 alloc skip — visual context 미주입 layer 의 visual KV 자체 alloc 안 함) 동시 달성
+- **C3 (Implementation feasibility — single AGX Thor)**: vLLM 0.7.x source modification + Green Context CUDA 12.4 공식 SM partition API + libsmctrl R45.2 secondary fallback (sweet-spot exploration). **Simulator 미사용** (실기 only). single AGX Thor 128GB dev kit 한 대로 12-16주 prototype
+- **C4 (Cross-share with PRISM-FOG-FX)**: ATRIUM 의 M1 LayerClassifier (HOT/COLD visual_attn_ratio 자동 분류) 가 본 세션 PRISM-FOG-FX M4 LayerClassifier 와 cross-share dependency — 동일 visual_attn_ratio measurement infrastructure 공유 (`tools/atrium_calibrate.py::measure_layer_attn`). 학생이 ATRIUM prototype 후 PRISM-FOG-FX 의 NVFP4 mixed precision routing 을 추가 적용 가능 — sequential development path
+- **C5 (Venue alignment)**: HPCA 2027 (primary) / MICRO 2027 / ASPLOS 2027. Green Context CUDA 12.4 공식 API 활용 + 비-PIM solution + AGX Thor edge platform (자동차/robotics 산업 정합)
 
 ## 6. Tier-2 독립 Top 3 (R15-β 동일 형식)
 
@@ -325,3 +351,4 @@
 - **STRATA-K-R** — KV layout 이 stratified (지층, L2 / GDDR7|UMA / page-color cold) layer 별 매핑
 - **HARBINGER-CLOVER-R** — visual confidence harbinger (전조) 가 speculative draft length + cluster heat (4-leaf clover lucky pattern) 가 early-exit
 - **OBELISK-5090-R** — RTX 5090 single-GPU 가 large MoE obelisk (단독 monument, 거대한 inference stack 의 monolith) 로 local serving
+- **ATRIUM** (2026-04-28 retain, v2-r55 origin) — 빛 (LPDDR5x bandwidth GB/s) 이 layer (transformer L_i) 별로 차등 들어오는 중정 (atrium, 천장 채광창에서 빛이 차등 입사). 중정의 **천장 채광창** = SM partition (Green Context CUDA 12.4 SM 1500/1060 split, HOT layer 우선), **벽면 단열재** = L2 carveout (cudaCacheConfigure persistent), **빈 채광창** = layer 0-3 alloc skip (DeepStack 미주입 layer)

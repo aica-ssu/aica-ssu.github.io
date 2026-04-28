@@ -18,6 +18,7 @@ export async function generateStaticParams() {
     { idea: "01-prism-fog-fx" },
     { idea: "02-bivouac-slate-r" },
     { idea: "03-prism-vl-r" },
+    { idea: "04-atrium" },
   ];
 }
 

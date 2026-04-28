@@ -4,7 +4,19 @@
 
 ---
 
-## Selected Ideas (2026-04-28 — VLM Edge Layer-Wise + Context-Semantic Optimization, R57 신규 적용 첫 세션)
+## Selected Ideas (2026-04-28 — VLM Edge Layer-Wise + Context-Semantic Optimization, R57 신규 적용 첫 세션 — ATRIUM Tier-1 4번째 retain 포함)
+
+### ATRIUM (2026-04-28 retain) — Layer-Asymmetry-aware UMA Bandwidth + L2 Partition for Dual-Track VLM Decode on AGX Thor
+- **Date**: 2026-04-28 (사용자 명시 요청 retain, v2-r55 origin) | **Session**: [세션](sessions/2026-04-28-mode1-vlm-edge-layerwise-context.md) / [Summary](summary/2026-04-28-mode1-vlm-edge-layerwise-context/tier1/04-atrium.md)
+- **Tier**: Tier-1 4️⃣ (본 세션 4번째) | **Target**: HPCA 2027 / MICRO 2027 / ASPLOS 2027
+- **Score**: novelty 7.7 / diff 7.5 / impact 8.0 (v2-r55 score retain)
+- **5-axis Gain (R55.2)**: **[Performance]** decode +14% / **[Energy]** -12% / **[Memory eff.]** DeepStack L0-3 alloc skip
+- **Single-system fit (R20-γ)**: single-{AGX Thor 128GB, 273 GB/s LPDDR5X, 2560-core Blackwell}
+- **Mechanism (3)**: ① LayerClassifier (HOT/COLD/MEDIUM visual_attn_ratio 자동 분류, 100-shot calibration), ② Green Context CUDA 12.4 SM partition (HOT layer SM 1500/총 2560 할당, COLD 1060), ③ L2 SLC carveout (cudaCacheConfigure persistent) + DeepStack L0-3 alloc skip (visual KV alloc 자체 skip)
+- **Cross-share dependency**: 본 세션 PRISM-FOG-FX M4 LayerClassifier 와 동일 visual_attn_ratio measurement infrastructure 공유 (`tools/atrium_calibrate.py::measure_layer_attn`). Sequential development path: ATRIUM W1-12 prototype → PRISM-FOG-FX 추가 W13-24 NVFP4 mixed precision 적용 가능
+- **Note**: 사용자 명시 요청에 따른 retain. mechanism / 5-axis / single-system / R47 path 모두 v2-r55 그대로
+
+
 
 ### PRISM-FOG-FX — Layer-wise NVFP4/FP8/INT4 Mixed Precision + 4:8 Sparsity + Decode DVFS Slip + LayerClassifier (Cluster A merge)
 - **Date**: 2026-04-28 | **Session**: [세션](sessions/2026-04-28-mode1-vlm-edge-layerwise-context.md) / [Summary](summary/2026-04-28-mode1-vlm-edge-layerwise-context/tier1/01-prism-fog-fx.md)

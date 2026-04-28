@@ -46,6 +46,7 @@ const SIDEBAR: SidebarSection[] = [
           { label: "🥇 PRISM-FOG-FX (MLSys 2027)", href: "/research-wiki/2026-04/vlm-edge-layerwise-context/tier1/01-prism-fog-fx" },
           { label: "🥈 BIVOUAC-SLATE-R (NeurIPS 2026)", href: "/research-wiki/2026-04/vlm-edge-layerwise-context/tier1/02-bivouac-slate-r" },
           { label: "🥉 PRISM-VL-R (OSDI 2026, W12 분기)", href: "/research-wiki/2026-04/vlm-edge-layerwise-context/tier1/03-prism-vl-r" },
+          { label: "4️⃣ ATRIUM (HPCA 2027, retain)", href: "/research-wiki/2026-04/vlm-edge-layerwise-context/tier1/04-atrium" },
           { label: "T1 STRATA-K-R (DAC 2027)", href: "/research-wiki/2026-04/vlm-edge-layerwise-context/tier2/01-strata-k-r" },
           { label: "T2 HARBINGER-CLOVER-R (ISLPED 2027)", href: "/research-wiki/2026-04/vlm-edge-layerwise-context/tier2/02-harbinger-clover-r" },
           { label: "T3 OBELISK-5090-R (MLSys 2027)", href: "/research-wiki/2026-04/vlm-edge-layerwise-context/tier2/03-obelisk-5090-r" },
