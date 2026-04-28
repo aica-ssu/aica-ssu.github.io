@@ -301,7 +301,7 @@
 
 ## 8. 참고 / 관련 자료
 
-- 상세 Phase 로그: [../../sessions/2026-04-28-mode1-vlm-edge-layerwise-context.md](../../sessions/2026-04-28-mode1-vlm-edge-layerwise-context.md)
+- 상세 Phase 로그: [../../sessions/2026-04-28-mode1-vlm-edge-layerwise-context.md](/research-wiki/2026-04/vlm-edge-layerwise-context)
 - ATRIUM/BREAKWATER-T (이전 세션 evolution base): [../2026-04-27-mode1-vlm-llm-asym-dual-jetson-v2-r55/](../2026-04-27-mode1-vlm-llm-asym-dual-jetson-v2-r55/)
 - Phase 1 staging: `/tmp/2026-04-28-vlm-edge/staging-{ai-optimization,hw-pim,legacy-system}.md`
 - Phase 2 review: `/tmp/2026-04-28-vlm-edge/review-{novelty,differentiation,impact,phase2prime}.md`

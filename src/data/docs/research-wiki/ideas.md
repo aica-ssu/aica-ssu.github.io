@@ -7,7 +7,7 @@
 ## Selected Ideas (2026-04-28 — VLM Edge Layer-Wise + Context-Semantic Optimization, R57 신규 적용 첫 세션 — ATRIUM Tier-1 4번째 retain 포함)
 
 ### ATRIUM (2026-04-28 retain) — Layer-Asymmetry-aware UMA Bandwidth + L2 Partition for Dual-Track VLM Decode on AGX Thor
-- **Date**: 2026-04-28 (사용자 명시 요청 retain, v2-r55 origin) | **Session**: [세션](sessions/2026-04-28-mode1-vlm-edge-layerwise-context.md) / [Summary](summary/2026-04-28-mode1-vlm-edge-layerwise-context/tier1/04-atrium.md)
+- **Date**: 2026-04-28 (사용자 명시 요청 retain, v2-r55 origin) | **Session**: [세션](/research-wiki/2026-04/vlm-edge-layerwise-context) / Summary
 - **Tier**: Tier-1 4️⃣ (본 세션 4번째) | **Target**: HPCA 2027 / MICRO 2027 / ASPLOS 2027
 - **Score**: novelty 7.7 / diff 7.5 / impact 8.0 (v2-r55 score retain)
 - **5-axis Gain (R55.2)**: **[Performance]** decode +14% / **[Energy]** -12% / **[Memory eff.]** DeepStack L0-3 alloc skip
@@ -19,7 +19,7 @@
 
 
 ### PRISM-FOG-FX — Layer-wise NVFP4/FP8/INT4 Mixed Precision + 4:8 Sparsity + Decode DVFS Slip + LayerClassifier (Cluster A merge)
-- **Date**: 2026-04-28 | **Session**: [세션](sessions/2026-04-28-mode1-vlm-edge-layerwise-context.md) / [Summary](summary/2026-04-28-mode1-vlm-edge-layerwise-context/tier1/01-prism-fog-fx.md)
+- **Date**: 2026-04-28 | **Session**: [세션](/research-wiki/2026-04/vlm-edge-layerwise-context) / Summary
 - **Tier**: Tier-1 🥇 | **Target**: MLSys 2027 / ASPLOS 2027 / NeurIPS 2026
 - **Score**: novelty 7.5 / diff 8.0 / impact 9.0
 - **5-axis Gain (R55.2)**: **[Performance]** decode +18-25% / **[Energy]** -22% energy/token / **[Memory eff.]** -32% (KV scale freeze) / **[Power]** -9% peak (DVFS slip)
@@ -28,7 +28,7 @@
 - **Phase 2 → Phase 1' delta**: FGMP ([arXiv:2504.14152](https://arxiv.org/abs/2504.14152)) + MicroMix ([arXiv:2508.02343](https://arxiv.org/abs/2508.02343)) baseline 명시 + DeepStack-aware NVFP4 anchor 차별 axis 강화 + R56.2 published 77%
 
 ### BIVOUAC-SLATE-R — Hierarchical Visual Semantic KV Clustering + Cross-Frame Cluster Reuse + Layer-Adaptive Cluster Budget
-- **Date**: 2026-04-28 | **Session**: [세션](sessions/2026-04-28-mode1-vlm-edge-layerwise-context.md) / [Summary](summary/2026-04-28-mode1-vlm-edge-layerwise-context/tier1/02-bivouac-slate-r.md)
+- **Date**: 2026-04-28 | **Session**: [세션](/research-wiki/2026-04/vlm-edge-layerwise-context) / Summary
 - **Tier**: Tier-1 🥈 | **Target**: NeurIPS 2026 / ICML 2026 / MICRO 2027
 - **Score**: novelty 7.5 / diff 8.5 / impact 8.0
 - **5-axis Gain (R55.2)**: **[Performance]** decode +35% / **[Memory eff.]** KV memory -65% / **[Energy]** secondary
@@ -38,7 +38,7 @@
 - **Phase 1' delta**: ClusterKV ([arXiv:2412.03213](https://arxiv.org/abs/2412.03213)) + Sali-Cache ([arXiv:2602.14236](https://arxiv.org/abs/2602.14236)) baseline + cross-frame cluster-level granularity + layer-adaptive k 차별
 
 ### PRISM-VL-R — Phase-aware Visual LSH Hash + RadixAttention Second-level Visual Prefix Branch + Green Context SM Partition with LSH Lookup
-- **Date**: 2026-04-28 | **Session**: [세션](sessions/2026-04-28-mode1-vlm-edge-layerwise-context.md) / [Summary](summary/2026-04-28-mode1-vlm-edge-layerwise-context/tier1/03-prism-vl-r.md)
+- **Date**: 2026-04-28 | **Session**: [세션](/research-wiki/2026-04/vlm-edge-layerwise-context) / Summary
 - **Tier**: Tier-1 🥉 (W12 Tier-1/Tier-2 동적 분기) | **Target**: OSDI 2026 / SOSP 2027
 - **Score**: novelty 5.5 / diff 7.5 / impact 8.5
 - **5-axis Gain (R55.2)**: **[Performance]** TTFT -22-30% / **[Memory eff.]** -30-45% (visual prefix sharing) / **[Energy]** -15-20%
@@ -47,7 +47,7 @@
 - **Phase 1' delta**: VLCache ([arXiv:2512.12977](https://arxiv.org/abs/2512.12977)) + SimCache (CVPR 2025W) scoop 대응 — Phase-aware policy + RadixAttention second-level branch + GC-LSH 가 unique axis. 시스템 분야 published 65%+
 
 ### STRATA-K-R — Stratified KV Layout (L2/GDDR7/LPDDR5x UMA) + Layer-Score Tier 매핑 + Page-Color Affinity Bank Partitioning (ATRIUM-R(Sys) page-color 흡수)
-- **Date**: 2026-04-28 | **Session**: [세션](sessions/2026-04-28-mode1-vlm-edge-layerwise-context.md) / [Summary](summary/2026-04-28-mode1-vlm-edge-layerwise-context/tier2/01-strata-k-r.md)
+- **Date**: 2026-04-28 | **Session**: [세션](/research-wiki/2026-04/vlm-edge-layerwise-context) / Summary
 - **Tier**: Tier-2 T1 | **Target**: DAC 2027 / DATE 2027
 - **Score**: novelty 6.5 / diff 8.0 / impact 7.5
 - **5-axis Gain (R55.2)**: **[Performance]** +15-22% / **[Memory eff.]** +40-55% / **[Energy]** -10-15%
@@ -56,7 +56,7 @@
 - **Phase 1' delta**: ATRIUM-R(Sys) page-color affinity 흡수, ASPLOS 2024 (memory tiering) / FAST 2025 (Mooncake) baseline 보강 + R56.2 published 86%
 
 ### HARBINGER-CLOVER-R — Visual-confidence-aware Speculative Draft + Visual-cluster-heat Early-Exit + Power-envelope Adaptive Frequency Locking
-- **Date**: 2026-04-28 | **Session**: [세션](sessions/2026-04-28-mode1-vlm-edge-layerwise-context.md) / [Summary](summary/2026-04-28-mode1-vlm-edge-layerwise-context/tier2/02-harbinger-clover-r.md)
+- **Date**: 2026-04-28 | **Session**: [세션](/research-wiki/2026-04/vlm-edge-layerwise-context) / Summary
 - **Tier**: Tier-2 T2 | **Target**: ISLPED 2027 / DATE 2027
 - **Score**: novelty 7.0 / diff 7.5 / impact 6.5
 - **5-axis Gain (R55.2)**: **[Performance]** decode +32% / **[Energy]** -28% / **[Power]** Peak power -18%
@@ -65,7 +65,7 @@
 - **Phase 1' delta**: Spec-LLaVA ([arXiv:2509.11961](https://arxiv.org/abs/2509.11961)) + Fast Speculative Edge-Cloud ([arXiv:2505.21594](https://arxiv.org/abs/2505.21594)) baseline — visual-cluster-heat + power-envelope locking 이 unique axis
 
 ### OBELISK-5090-R — Qwen3-VL-30B-A3B MoE Local Serving on RTX 5090 32GB GDDR7 + Expert Routing Layer-Aware + Per-stage Power Cap
-- **Date**: 2026-04-28 | **Session**: [세션](sessions/2026-04-28-mode1-vlm-edge-layerwise-context.md) / [Summary](summary/2026-04-28-mode1-vlm-edge-layerwise-context/tier2/03-obelisk-5090-r.md)
+- **Date**: 2026-04-28 | **Session**: [세션](/research-wiki/2026-04/vlm-edge-layerwise-context) / Summary
 - **Tier**: Tier-2 T3 | **Target**: MLSys 2027 / DAC 2027
 - **Score**: novelty 6.0 / diff 6.5 / impact 7.5
 - **5-axis Gain (R55.2)**: **[Performance]** Throughput / **[Memory eff.]** GDDR7 32GB local fit / **[Power]** PCIe 600W envelope
@@ -86,7 +86,7 @@
 ## Selected Ideas (2026-04-27 v2-r55 종합 — VLM↔LLM Asymmetry, R55 No-Simulator + 5-Axis Gain 적용)
 
 ### VEILSEAL-KV — Adversarial-Secure Multi-Tenant Edge VLM KV Cache (GMAC + Visual Prefix Defense + PII Redaction) ⭐ NEW v2 Tier-1 lead
-- **Date**: 2026-04-27 (v2-r55) | **Session**: [세션](sessions/2026-04-27-mode1-vlm-llm-asym-dual-jetson-v2-r55.md) / [Summary](summary/2026-04-27-mode1-vlm-llm-asym-dual-jetson-v2-r55/tier1/03-veilseal-kv.md)
+- **Date**: 2026-04-27 (v2-r55) | **Session**: 세션 / Summary
 - **Tier**: Tier-1 lead | **Target**: USENIX Security 2026 / S&P 2027 / OSDI 2027 / ASPLOS 2027
 - **Score**: Novelty 8.5 / Diff 8.0 / Impact 8.5 → mean **8.3**
 - **5-axis Gain (R55.2)**: **[Security]** cross-tenant integrity 100% (forgery 2⁻¹²⁸) + visual prompt injection TPR ≥92% + PII recall ≥95% + Reconstruction attack -79pp at ε=4 / **[Memory eff.]** -28% (BIMODAL-MASK-T2 흡수) / **[Performance]** overhead < 6% (ARMv8 PMULL HW accel)
@@ -97,7 +97,7 @@
 - **흡수**: WARDEN-KV (legacy v2 staging multi-tenant GMAC), EPSILON-VEIL (algo v2 ε-DP), PIIVEIL-Q (algo v2 PII redaction), BIMODAL-MASK-T2 (v1 modality outlier mask)
 
 ### STORMGLASS — Skin-Temp Leading-Indicator nvpmodel Hysteresis + UMA Power Split + Thermal-Aware Admission ⭐ NEW v2 Tier-2
-- **Date**: 2026-04-27 (v2-r55) | **Session**: [세션](sessions/2026-04-27-mode1-vlm-llm-asym-dual-jetson-v2-r55.md) / [Summary](summary/2026-04-27-mode1-vlm-llm-asym-dual-jetson-v2-r55/tier2/02-stormglass.md)
+- **Date**: 2026-04-27 (v2-r55) | **Session**: 세션 / Summary
 - **Tier**: Tier-2 독립 | **Target**: ISLPED 2027 6p / DAC 2027 6p / IEEE ESL
 - **Score**: Novelty 7.0 / Diff 7.5 / Impact 7.5 → mean **7.3**
 - **5-axis Gain (R55.2)**: **[Power]** 30분 sustained throughput +18%, thermal envelope 안 안정화 / **[Energy]** -14%
@@ -108,7 +108,7 @@
 - **흡수**: THERMOGUARD-V (ai-opt v2 staging) FP16 NaN fallback sub-mechanism
 
 ### ROBUSTOKEN — VLM Adversarial-Robust Token Saliency + Numerical Tolerance + OOD Rejection (5-Cluster Merge) ⭐ NEW v2 Tier-2
-- **Date**: 2026-04-27 (v2-r55) | **Session**: [세션](sessions/2026-04-27-mode1-vlm-llm-asym-dual-jetson-v2-r55.md) / [Summary](summary/2026-04-27-mode1-vlm-llm-asym-dual-jetson-v2-r55/tier2/03-robustoken.md)
+- **Date**: 2026-04-27 (v2-r55) | **Session**: 세션 / Summary
 - **Tier**: Tier-2 독립 | **Target**: NeurIPS 2026 main / ICLR 2027 / EMNLP 2026 findings / TMLR
 - **Score**: Novelty 8.0 / Diff 7.5 / Impact 7.5 → mean **7.7**
 - **5-axis Gain (R55.2)**: **[Robustness]** PGD-8/255 attack +14-22pp / silent corruption detection 99.7% / OOD F1 ≥0.88 / hallucination 18-22% → ≤4% / **[Performance]** overhead -3~-8% / **[Cost eff.]** smaller-model fallback latency -40%
@@ -120,9 +120,9 @@
 
 ### v1 retain (R55 5-axis tag 적용 후 retain 3)
 
-- **ATRIUM** (Tier-1, retained from v1) — [Performance] decode +14% / [Energy] -12% / [Memory eff.] DeepStack L0-3 alloc skip. AGX Thor SM partition + L2 carveout + DeepStack alloc skip. 상세: [Summary](summary/2026-04-27-mode1-vlm-llm-asym-dual-jetson-v2-r55/tier1/01-atrium.md)
-- **BREAKWATER-T** (Tier-1, retained from v1) — [Performance] prefill -28% / throughput +45% / [Energy] -18%. dual-Jetson ViT layer-N/2 split + 4-bit channel-wise tap + USB-C 3.2 gen2x2. [Summary](summary/2026-04-27-mode1-vlm-llm-asym-dual-jetson-v2-r55/tier1/02-breakwater-t.md)
-- **CASCADE-PREFILL** (Tier-2, repositioned from v1 Tier-1) — [Performance] prefill -12-17% / [Energy] -8-13% / [Cost eff.] $249 Orin Nano fit. NEON BF16 fused chunked prefill GPU↔CPU. [Summary](summary/2026-04-27-mode1-vlm-llm-asym-dual-jetson-v2-r55/tier2/01-cascade-prefill.md)
+- **ATRIUM** (Tier-1, retained from v1) — [Performance] decode +14% / [Energy] -12% / [Memory eff.] DeepStack L0-3 alloc skip. AGX Thor SM partition + L2 carveout + DeepStack alloc skip. 상세: Summary
+- **BREAKWATER-T** (Tier-1, retained from v1) — [Performance] prefill -28% / throughput +45% / [Energy] -18%. dual-Jetson ViT layer-N/2 split + 4-bit channel-wise tap + USB-C 3.2 gen2x2. Summary
+- **CASCADE-PREFILL** (Tier-2, repositioned from v1 Tier-1) — [Performance] prefill -12-17% / [Energy] -8-13% / [Cost eff.] $249 Orin Nano fit. NEON BF16 fused chunked prefill GPU↔CPU. Summary
 
 ### v1 → v2 미선정 (3)
 
@@ -135,7 +135,7 @@
 ## Selected Ideas (2026-04-27 v1 — VLM↔LLM Asymmetry on Single/Dual-Jetson Edge)
 
 ### ATRIUM — AGX Thor Layer-Asymmetric SM Partition + L2 Carveout + DeepStack L0-3 Alloc Skip (Tier-1 Top 1)
-- **Date**: 2026-04-27 | **Session**: [세션](sessions/2026-04-27-mode1-vlm-llm-asym-dual-jetson.md) / [Summary](summary/2026-04-27-mode1-vlm-llm-asym-dual-jetson/tier1/01-atrium.md)
+- **Date**: 2026-04-27 | **Session**: 세션 / Summary
 - **Tier**: Tier-1 lead | **Target**: HPCA / MICRO / ASPLOS 2027
 - **Score**: Novelty 8.0 / Diff 8.0 / Impact 7.0 → mean **7.7**
 - **Hypothesis**: Qwen3-VL-4B 의 layer-wise visual attention 이 L17-21=24.5% / L0-7=2.6% 로 5-10× 비대칭, AGX Thor 273 GB/s LPDDR5X UMA 를 시간-분할이 아닌 **공간-분할** (Green Context SM 1500/1060 split + L2 4MB carveout + DeepStack L0-3 alloc skip) 시 BW 공유 충돌 회피.
@@ -146,7 +146,7 @@
 - **예상 효과** (보수치, VLM-only): decode +14% (BS≥4) / BW waste 86%→32% / energy/token -12% / LLM-only 0% / single AGX Thor 128GB.
 
 ### BREAKWATER-T — Dual-Jetson ViT-Internal Layer Split + DeepStack Tap Compression (Tier-1 Top 2)
-- **Date**: 2026-04-27 | **Session**: [세션](sessions/2026-04-27-mode1-vlm-llm-asym-dual-jetson.md) / [Summary](summary/2026-04-27-mode1-vlm-llm-asym-dual-jetson/tier1/02-breakwater-t.md)
+- **Date**: 2026-04-27 | **Session**: 세션 / Summary
 - **Tier**: Tier-1 | **Target**: MICRO / ISCA / MLSys 2027
 - **Score**: Novelty 7.5 / Diff 8.0 / Impact 7.4 → mean **7.6**
 - **Hypothesis**: ViT 를 layer N/2 지점에서 split — device A (Orin Nano 8GB, sensor-proximity, MIPI-CSI 직결) = ViT 전반부 (low-level edge/depth) + device B (AGX Orin 64GB) = ViT 후반부 + LLM 전체. **DeepStack tap point = split point 일치**로 자연 layer 동기화 + 4-bit channel-wise tap stream 으로 USB-C 부담 ¼ 축소.
@@ -157,7 +157,7 @@
 - **예상 효과**: prefill -28% / throughput +45% (streaming VLM ≥30 FPS) / energy -18% (sensor-proximity).
 
 ### CASCADE-PREFILL — Arithmetic-Intensity-Driven GPU↔CPU NEON Chunked Prefill (Tier-1 Top 3)
-- **Date**: 2026-04-27 | **Session**: [세션](sessions/2026-04-27-mode1-vlm-llm-asym-dual-jetson.md) / [Summary](summary/2026-04-27-mode1-vlm-llm-asym-dual-jetson/tier1/03-cascade-prefill.md)
+- **Date**: 2026-04-27 | **Session**: 세션 / Summary
 - **Tier**: Tier-1 | **Target**: MLSys / IISWC / ASPLOS 2027
 - **Score**: Novelty 7.5 / Diff 7.5 / Impact 8.2 → mean **7.7**
 - **Hypothesis**: VLM chunked prefill 의 small-chunk tail (C ≤ 32 → AI < 60 강한 memory-bound region, GPU 8 분의 1 만 활용) 을 **ARM A78AE NEON BF16 fused VLM kernel** (200 GFLOPS, hidden=2560 head_dim=128 fused GEMM+RMSNorm+SiLU) 로 offload + UMA pinned KV barrier coherence (1-2us vs cudaMemcpy 70us).
@@ -168,7 +168,7 @@
 - **예상 효과**: prefill -12~17% / throughput +17~25% / energy -8~13% / GPU idle 18%→9% / Orin Nano $249 reproducibility.
 
 ### HARMONY-LANE-MERGED — Semantic-Class Multi-Axis Routing (Cluster Merge of HARMONY-LANE + HALYARD + SEMACLASS-PRUNE) (Tier-2 Top 1)
-- **Date**: 2026-04-27 | **Session**: [세션](sessions/2026-04-27-mode1-vlm-llm-asym-dual-jetson.md) / [Summary](summary/2026-04-27-mode1-vlm-llm-asym-dual-jetson/tier2/01-harmony-lane-merged.md)
+- **Date**: 2026-04-27 | **Session**: 세션 / Summary
 - **Tier**: Tier-2 독립 | **Target**: DAC 2027 6p / EMNLP 2026 findings / IISWC
 - **Score**: Novelty 6.5 / Diff 7.0 / Impact 8.4 → mean **7.3**
 - **Hypothesis**: 3 expert (ai-opt HARMONY-LANE + legacy HALYARD + algorithm SEMACLASS-PRUNE) 가 동일 axis (semantic class router) 도출 → 1 idea 통합 + multi-axis (resolution / class-conditional pruning ratio / Bayesian retention / chunk size) 모두 흡수.
@@ -179,7 +179,7 @@
 - **예상 효과**: TTFT P99 -22~34% (mixed workload) / ViT compute -40~60% / accuracy ≤0.5pp drop.
 
 ### JETTYSIM — LLMServingSim Dual-Jetson Topology Extension (Tier-2 Top 2, Infrastructure)
-- **Date**: 2026-04-27 | **Session**: [세션](sessions/2026-04-27-mode1-vlm-llm-asym-dual-jetson.md) / [Summary](summary/2026-04-27-mode1-vlm-llm-asym-dual-jetson/tier2/02-jettysim.md)
+- **Date**: 2026-04-27 | **Session**: 세션 / Summary
 - **Tier**: Tier-2 독립 (infrastructure) | **Target**: ISPASS 2026 / IISWC tool track
 - **Score**: Novelty 8.5 / Diff 6.5 / Impact 6.0 → mean **7.0**
 - **Hypothesis**: 본 세션 Tier-1 3 idea (ATRIUM/BREAKWATER-T/CASCADE-PREFILL) 모두 dual-Jetson + UMA + USB-C 토폴로지 가정, 기존 LLMServingSim 은 NVLink/PCIe cluster 가정. dual-Jetson edge topology 의 simulator 부재 → 자체 contribution + Tier-1 3 의 R47.4 backbone.
@@ -190,7 +190,7 @@
 - **예상 효과**: infrastructure (정량 효과 X). Tier-1 3 + 후속 연구의 simulation backbone.
 
 ### BIMODAL-MASK-T2 — KV Modality Outlier Topology + Per-Block Dtype Dispatch (Tier-2 Top 3)
-- **Date**: 2026-04-27 | **Session**: [세션](sessions/2026-04-27-mode1-vlm-llm-asym-dual-jetson.md) / [Summary](summary/2026-04-27-mode1-vlm-llm-asym-dual-jetson/tier2/03-bimodal-mask-t2.md)
+- **Date**: 2026-04-27 | **Session**: 세션 / Summary
 - **Tier**: Tier-2 독립 | **Target**: EMNLP 2026 findings / NeurIPS 2026 ENLSP / ACL short
 - **Score**: Novelty 5.0 / Diff 7.5 / Impact 7.6 → mean **6.7**
 - **Hypothesis**: VLM KV cache 의 outlier 가 modality 마다 다른 topology — vision Moran's I = 0.34 (spatial cluster), text Moran's I = 0.02 (channel-uniform). modality-conditioned outlier mask 로 per-block dtype dispatch (NVFP4 / INT8 / BF16) + STACK-BAND weight band 흡수.
@@ -205,7 +205,7 @@
 ## Selected Ideas (2026-04-26 PM — Rowhammer + Memory ECC + RAS)
 
 ### RFM-COP — Phoenix-Aware Memory Controller RFM Scheduler with RogueRFM Fuzzing and TPRAC Defense (Tier-1 Top 1)
-- **Date**: 2026-04-26 (PM) | **Session**: [세션](sessions/2026-04-26-mode1-rowhammer-ecc-ras.md) / [Summary](summary/2026-04-26-mode1-rowhammer-ecc-ras/tier1/01-rfm-cop.md)
+- **Date**: 2026-04-26 (PM) | **Session**: 세션 / Summary
 - **Tier**: Tier-1 lead | **Target**: USENIX Security 2026 / S&P'26 / MICRO'26
 - **Score**: Novelty 7.5 / Diff 8.5 / Impact 8.5 → mean **8.2**
 - **Hypothesis**: McSee (USENIX Sec'25) 가 측정한 "Intel/AMD MC 어느 것도 rowhammer 시 RFM 명령을 보내지 않음" 을 host-MC scheduler 에서 직접 해결. Phoenix CVE-2025-6202 (S&P'26, 2025-09) 가 SK Hynix DDR5 in-DRAM mitigation 109초 우회 → host-MC fallback 의 결정적 가치.
@@ -216,7 +216,7 @@
 - **예상 효과**: Phoenix bypass < 1% (vs vanilla 99%, in-DRAM 4-8%, ARFM 0.5%), slowdown 1.0-2.5%, RogueRFM covert ≤8 bps (vs 1-10 kbps), TPRAC mutual info < 0.1 bit/access.
 
 ### KEYSTONE — Cryptographic GMAC for KV Cache Integrity in LLM Serving (Tier-1 Top 2)
-- **Date**: 2026-04-26 (PM) | **Session**: [세션](sessions/2026-04-26-mode1-rowhammer-ecc-ras.md) / [Summary](summary/2026-04-26-mode1-rowhammer-ecc-ras/tier1/02-keystone.md)
+- **Date**: 2026-04-26 (PM) | **Session**: 세션 / Summary
 - **Tier**: Tier-1 | **Target**: USENIX Security 2026 / S&P'26 / ASPLOS'26
 - **Score**: Novelty 7.0 / Diff 8.0 / Impact 8.0 → mean **7.7**
 - **Hypothesis**: GPUHammer ([arXiv:2507.08166](https://arxiv.org/abs/2507.08166)) + KV-Cache Bit-Flip ([arXiv:2604.17249](https://arxiv.org/abs/2604.17249)) 의 attack 면에서 vLLM PagedAttention 64KB block 단위 AES-128 GMAC 으로 multi-bit + targeted attack 의 adversarial-secure unforgeable detection (collision 2⁻⁶⁴).
@@ -227,7 +227,7 @@
 - **예상 효과**: Multi-bit + targeted attack 100% detection, FAR < 2⁻⁶⁴, throughput overhead 1.5-3%, MMLU accuracy preservation < 0.5% drop (vs -30~40% under attack).
 
 ### HARBOR — App-Hint-Driven CXL Controller Integrated RAS Engine with Workload-Phase-Adaptive Scrubbing (H2+L4 merge, Tier-1 Top 3)
-- **Date**: 2026-04-26 (PM) | **Session**: [세션](sessions/2026-04-26-mode1-rowhammer-ecc-ras.md) / [Summary](summary/2026-04-26-mode1-rowhammer-ecc-ras/tier1/03-harbor.md)
+- **Date**: 2026-04-26 (PM) | **Session**: 세션 / Summary
 - **Tier**: Tier-1 | **Target**: ASPLOS'26 / HPCA'26 / DSN'26
 - **Score**: Novelty 7.0 / Diff 7.5 / Impact 8.0 → mean **7.5**
 - **Hypothesis**: CXL 3.x RAS register set (Patrol Scrub Control + ECS mailbox + DPA poison list + MER + AER + IDE) 이 표준화되었지만 host CPU mailbox polling 의존 → workload-aware 부재. Microchip SMC2100 commercial 도 phase-adaptive + app-hint 부재.
@@ -238,7 +238,7 @@
 - **예상 효과**: Hot region scrub rate 8-16×, MER polling overhead 95% reduction, M5 page migration latency -40%, end-to-end LLM serving overhead < 1.5%.
 
 ### LIGHTHOUSE — Workload-Stress-Aware Lifetime Reliability Methodology (Tier-2 Top 1)
-- **Date**: 2026-04-26 (PM) | **Session**: [세션](sessions/2026-04-26-mode1-rowhammer-ecc-ras.md) / [Summary](summary/2026-04-26-mode1-rowhammer-ecc-ras/tier2/01-lighthouse.md)
+- **Date**: 2026-04-26 (PM) | **Session**: 세션 / Summary
 - **Tier**: Tier-2 독립 | **Target**: DSN'26 / IISWC'26
 - **Score**: Novelty 7.0 / Diff 7.0 / Impact 8.0 → mean **7.3**
 - **Hypothesis**: FaultSim (TACO'16) 의 fault model 은 G2 field statistics 와 일치 정확하지만 simulator core 가 workload thermal stress + activation pattern 미반영. SCREME ([arXiv:2509.06101](https://arxiv.org/abs/2509.06101)) 도 spare-chip pool only.
@@ -247,7 +247,7 @@
 - **예상 효과**: 7-year UER prediction accuracy ±50% → ±15% (1.5-3× more accurate), 1M trial × 5 scheme 1200 sec parallelizable.
 
 ### MOSAIC-TRACE — Open-Source Standardized Rowhammer/ECC Workload-Trace Suite (Tier-2 Top 2)
-- **Date**: 2026-04-26 (PM) | **Session**: [세션](sessions/2026-04-26-mode1-rowhammer-ecc-ras.md) / [Summary](summary/2026-04-26-mode1-rowhammer-ecc-ras/tier2/02-mosaic-trace.md)
+- **Date**: 2026-04-26 (PM) | **Session**: 세션 / Summary
 - **Tier**: Tier-2 독립 | **Target**: IISWC'26 / ISPASS'26 / OSDI'26 artifact
 - **Score**: Novelty 6.0 / Diff 6.0 / Impact 8.5 → mean **6.8**
 - **Hypothesis**: 본 세션 6 idea 의 reproducibility + community benchmark 부재. Mess ([arXiv:2405.10170](https://arxiv.org/abs/2405.10170)) / Antmicro / Google rowhammer-test 는 fault injection only, ECC scheme cross-product 부재.
@@ -255,7 +255,7 @@
 - **Deploy**: Docker / Nix flake / Zenodo DOI artifact.
 
 ### RAMPART — Hot-Row Infrastructure with Dual PRAC + ECC Tier Promotion (S2+H1 merge, Tier-2 Top 3)
-- **Date**: 2026-04-26 (PM) | **Session**: [세션](sessions/2026-04-26-mode1-rowhammer-ecc-ras.md) / [Summary](summary/2026-04-26-mode1-rowhammer-ecc-ras/tier2/03-rampart.md)
+- **Date**: 2026-04-26 (PM) | **Session**: 세션 / Summary
 - **Tier**: Tier-2 독립 | **Target**: HPCA'26 short / DAC'26 / DATE'26 / DSN'26
 - **Score**: Novelty 7.0 / Diff 7.5 / Impact 7.0 → mean **7.2**
 - **Hypothesis**: PRAC counter (rowhammer) 와 ECC tier (multi-bit) 가 별도 infrastructure → area + power 중복. Hydra (HPCA'22) / Mithril (DSN'22) 2-tier 가 있지만 ECC coupling 부재.
@@ -282,7 +282,7 @@
 ## Selected Ideas (2026-04-26 AM — KV cache ECC + Memory RAS v2)
 
 ### PrefixGuard ★ — Reliability-Aware Prefix Cache Eviction & Scrub Scheduling for CXL-Attached KV Storage in Multi-Tenant LLM Serving (Tier-1 Top 1)
-- **Date**: 2026-04-26 | **Session**: [링크](sessions/2026-04-26-mode1-kv-ecc-ras-v2.md) / [Summary](summary/2026-04-26-mode1-kv-ecc-ras-v2/tier1/01-prefixguard.md)
+- **Date**: 2026-04-26 | **Session**: [링크](/research-wiki/2026-04/kv-ecc-ras-v2) / Summary
 - **Tier**: Top-tier lead | **Target**: OSDI 2027 (13p, primary) / ASPLOS 2027 / DSN 2027
 - **Experts**: system-robustness-expert (메인). Phase 1'' scores: Nov **9.0** / Diff **9.5** / Imp **8.0** / Feas **9.0** → avg **8.9**
 - **Hypothesis**: CXL-attached prefix block 의 hour-scale lifetime (KVCache-in-Wild USENIX ATC'25) 에 맞춰 Patrol Scrub Control hour-단위 interval 차등 (long-lived 1hr / short-lived disabled) → silent corruption 90% 감소 + scrub overhead <30%.
@@ -294,7 +294,7 @@
 - **예상 효과**: silent corruption rate 90% 감소, scrub overhead <30%, prefix hit ratio drop <2%.
 
 ### Quarantine — Per-Agent DPA-Level KV Cache Poison Isolation for Agentic Multi-Turn LLM Serving on CXL Pools (Tier-1 #2)
-- **Date**: 2026-04-26 | **Session**: [링크](sessions/2026-04-26-mode1-kv-ecc-ras-v2.md) / [Summary](summary/2026-04-26-mode1-kv-ecc-ras-v2/tier1/02-quarantine.md)
+- **Date**: 2026-04-26 | **Session**: [링크](/research-wiki/2026-04/kv-ecc-ras-v2) / Summary
 - **Tier**: Top-tier | **Target**: USENIX Security 2027 (13p, primary) / OSDI 2027 / DSN 2027
 - **Experts**: system-robustness-expert (메인). Phase 1'' scores: Nov **9.0** / Diff **8.5** / Imp **8.5** / Feas **8.0** → avg **8.5**
 - **Hypothesis**: KVFlow multi-agent prefix cache 환경에서 한 agent 의 KV CE 가 다른 agent 로 silent propagate. Targeted BFA on Agents ([arXiv:2603.10042](https://arxiv.org/abs/2603.10042)) 직접 threat. CXL 3.x DPA tracking + poison + ECS mailbox + Memory Event Record 4 feature 결합 → cross-agent corruption 100% 차단 + throughput drop <5%.
@@ -306,7 +306,7 @@
 - **예상 효과**: cross-agent corruption rate 100% 차단, multi-agent throughput drop <5%, recompute < TPOT 5× (200ms).
 
 ### PATroller — HBM3 Pseudo-channel Activation Timing Counter as a Hot-Block Identifier for Reliability-Aware KV Migration (Tier-1 #3)
-- **Date**: 2026-04-26 | **Session**: [링크](sessions/2026-04-26-mode1-kv-ecc-ras-v2.md) / [Summary](summary/2026-04-26-mode1-kv-ecc-ras-v2/tier1/03-patroller.md)
+- **Date**: 2026-04-26 | **Session**: [링크](/research-wiki/2026-04/kv-ecc-ras-v2) / Summary
 - **Tier**: Top-tier | **Target**: HPCA 2027 (12p, primary) / DSN 2027 / MICRO 2027
 - **Experts**: system-robustness-expert (메인). Phase 1'' scores: Nov **8.0** / Diff **8.0** / Imp **8.0** / Feas **8.5** → avg **8.1**
 - **Hypothesis**: HBM3 PAT counter top-k row (1s polling, top-32) 를 software-level KV migration trigger 로 활용 (8K activations/sec threshold) → Rowhammer-induced silent corruption 95% 감소 + migration overhead <3%.
@@ -318,7 +318,7 @@
 - **예상 효과**: silent corruption 95% 감소, migration overhead <3%, throughput drop <2%.
 
 ### ECS-Trace — HBM3 Error-Check-Scrub Mailbox History as Reliability Trace for KV Cache Block Lifetime Management (Tier-2 독립 #1)
-- **Date**: 2026-04-26 | **Session**: [링크](sessions/2026-04-26-mode1-kv-ecc-ras-v2.md) / [Summary](summary/2026-04-26-mode1-kv-ecc-ras-v2/tier2/01-ecs-trace.md)
+- **Date**: 2026-04-26 | **Session**: [링크](/research-wiki/2026-04/kv-ecc-ras-v2) / Summary
 - **Tier**: Tier-2 독립 | **Target**: ITC 2027 6p (primary) / IEEE TCAD short / DSN short
 - **Experts**: system-robustness-expert. Phase 1'' scores: Nov **8.0** / Diff **8.0** / Imp **7.5** / Feas **8.0** → avg **7.9**
 - **Hypothesis**: HBM3 ECS mailbox (IEEE 1500 TAP, 10s query interval, self-refresh cycle 32ms 와 align) history 를 KV block lifetime reliability trace 로 활용 → 누적 CE 가 collapse 직전인 block prefetch eviction → long-context (>128k) silent corruption 90% 차단.
@@ -330,7 +330,7 @@
 - **예상 효과**: silent corruption 90% 차단, hit ratio drop <3%, ECS query overhead <0.1%.
 
 ### Quarantine-Mini — Single-Agent CXL DPA Poison Detection-to-Recompute Latency Profile for vLLM Token-Range Recovery (Tier-2 독립 #2, paper pair V3 ↔ P3)
-- **Date**: 2026-04-26 | **Session**: [링크](sessions/2026-04-26-mode1-kv-ecc-ras-v2.md) / [Summary](summary/2026-04-26-mode1-kv-ecc-ras-v2/tier2/02-quarantine-mini.md)
+- **Date**: 2026-04-26 | **Session**: [링크](/research-wiki/2026-04/kv-ecc-ras-v2) / Summary
 - **Tier**: Tier-2 독립 (Paper pair P3 ↔ V3 1 쌍) | **Target**: DAC 2027 6p / IEEE TCAD short / IEEE CAL 4p
 - **Phase 1'' scores**: Nov **7.0** / Diff **7.0** / Imp **7.0** / Feas **9.0** → avg **7.5**
 - **Hypothesis**: CXL ECS mailbox poison event detect 후 vLLM RFC #19329 affected token-range recompute latency 가 token range × layer linear → 8K token + 32 layer 에서 detect-to-recompute < 200ms (TPOT 40ms × 5 budget 내).
@@ -339,7 +339,7 @@
 - **예상 효과**: detect-to-recompute < 200ms, throughput drop <3%, ECS poll overhead <0.05%.
 
 ### PrefixGuard-Lite — Empirical Calibration of Linux 6.16 EDAC Scrub Interval for CXL-Attached LLM Prefix Cache (Tier-2 독립 #3)
-- **Date**: 2026-04-26 | **Session**: [링크](sessions/2026-04-26-mode1-kv-ecc-ras-v2.md) / [Summary](summary/2026-04-26-mode1-kv-ecc-ras-v2/tier2/03-prefixguard-lite.md)
+- **Date**: 2026-04-26 | **Session**: [링크](/research-wiki/2026-04/kv-ecc-ras-v2) / Summary
 - **Tier**: Tier-2 독립 (P1 의 M2 분리, sister paper) | **Target**: DATE 2027 6p / IEEE CAL 4p
 - **Phase 1'' scores**: Nov **7.0** / Diff **7.0** / Imp **6.0** / Feas **9.0** → avg **7.25**
 - **Hypothesis**: Linux 6.16 EDAC scrub_subsystem hour-단위 interval knob 을 vLLM prefix lifetime histogram 에 fit → optimal scrub interval = p75 lifetime → silent corruption 70% 감소 + scrub overhead <5%.
@@ -362,7 +362,7 @@
 ## Selected Ideas (2026-04-24 MoE Fingerprint Security+Serving)
 
 ### DISCRETE-VEIL' ★ — MoE Discrete Routing Adaptive-Adversarial Robustness (Tier-1 S&P lead)
-- **Date**: 2026-04-24 | **Session**: [링크](sessions/2026-04-24-mode1-moe-fingerprint-security-serving.md) / [Summary](summary/2026-04-24-moe-fingerprint-security-serving.md)
+- **Date**: 2026-04-24 | **Session**: [링크](/research-wiki/2026-04/moe-fingerprint-security-serving) / [Summary](/research-wiki/2026-04/moe-fingerprint-security-serving)
 - **Tier**: Top-tier lead | **Target**: IEEE S&P 2027 (13p) / (Tier-2 DISCRETE-VEIL-Lite IEEE CAL 4p or DSN practical 6p)
 - **Experts**: system-robustness-expert (메인). 3 reviewers Phase 2' scores: Nov **7.0** / Diff **8.0** / Imp **9.0** / Feas **8.0** → avg **8.00**
 - **Metaphor**: "Veil" — 얇은 가림막이지만 combinatorial 구조가 공격을 차단하는지 검증
@@ -374,7 +374,7 @@
 - **Phase 3 entry**: W1 baseline reproduction + Venn diagram, W2 PAIR/GCG 400 prompts, W3 DRO-Attack 구현, W4 fingerprint 재추출.
 
 ### LOOM' — MoE Fingerprint Shared-Substrate with Token×Layer 2D Early-Exit + Compressed Index (Tier-1 #2, merged)
-- **Date**: 2026-04-24 | **Session**: [링크](sessions/2026-04-24-mode1-moe-fingerprint-security-serving.md)
+- **Date**: 2026-04-24 | **Session**: [링크](/research-wiki/2026-04/moe-fingerprint-security-serving)
 - **Tier**: Top-tier | **Target**: MLSys 2027 또는 ASPLOS 2027 (18p) / (Tier-2 LOOM-Core-Lite 별도 분리 안 함 — LOOM' 내 subset)
 - **Experts**: ai-optimization-expert (메인). Phase 2' scores: Nov **6.0** / Diff **7.5** / Imp **8.5** / Feas **7.5** → avg **7.38**
 - **Metaphor**: "Loom" — 실(fingerprint) 하나를 베틀에서 여러 가닥(consumer)으로 엮음
@@ -389,7 +389,7 @@
 - **사용자 lab 이전 세션 차별화**: 2026-04-21 FARD-C (외부 side-channel 85-90% 가정) 과 전제·가정 독립.
 
 ### BEACON-GUARD-Lite — Training-free Multi-task Unified Guard (Tier-1 #3 / Tier-2 primary, paper pair with LOOM')
-- **Date**: 2026-04-24 | **Session**: [링크](sessions/2026-04-24-mode1-moe-fingerprint-security-serving.md)
+- **Date**: 2026-04-24 | **Session**: [링크](/research-wiki/2026-04/moe-fingerprint-security-serving)
 - **Tier**: Top-tier Tier-2 (paper pair with LOOM' Tier-1) | **Target**: USENIX ATC 2027 (12p) 또는 DATE 2027 (6p)
 - **Experts**: system-robustness-expert (원안) → ai-optimization pivot (systems/deployment). Phase 2' scores (Tier-2 rubric): Nov **5.5** / Diff **6.5** / Imp **8.0** / Feas **9.0** → avg **7.25**
 - **Metaphor**: "Beacon" — 하나의 등대가 여러 방향 (domain + safety) 을 비춤
@@ -404,13 +404,13 @@
 ### DISCRETE-VEIL-Lite — Qwen3 + PAIR Only Precedence (Tier-2 독립 #1)
 - Scope: Qwen3 + PAIR 200 prompts, Mech M1 only (DRO-Attack), 2 baselines (FJD + OmniGuard)
 - **Target**: IEEE CAL 4p 또는 DSN practical 6p
-- **Date**: 2026-04-24 | **Session**: [링크](sessions/2026-04-24-mode1-moe-fingerprint-security-serving.md)
+- **Date**: 2026-04-24 | **Session**: [링크](/research-wiki/2026-04/moe-fingerprint-security-serving)
 - 8주 완결. Tier-1 S&P 투고 전 "first-to-report MoE embedding-PGD" precedence claim.
 
 ### TALLY-Spinoff — LEAP MoE-specific Interpretability 축 (Tier-2 독립 #2)
 - Scope: LEAP + SAFEx-style expert-j-at-layer-i (safety-critical / domain-critical / general) label attachment
 - **Target**: DATE 2027 4p WIP
-- **Date**: 2026-04-24 | **Session**: [링크](sessions/2026-04-24-mode1-moe-fingerprint-security-serving.md)
+- **Date**: 2026-04-24 | **Session**: [링크](/research-wiki/2026-04/moe-fingerprint-security-serving)
 - 4주 완결 가능. LOOM' Section 7 과 중복 회피하여 단독 venue.
 
 ### BEACON-GUARD-Lite DATE fallback — Multi-signal Fusion 단독 (Tier-2 독립 #3)
@@ -431,7 +431,7 @@
 ## Selected Ideas (2026-04-24 Qwen3-VL DeepStack Edge)
 
 ### Loom ★ — Interleaved MRoPE Unified LUT + FA3 Fused Rotation + Texture Unit (Tier-1 Top 1, lead)
-- **Date**: 2026-04-24 | **Session**: [링크](sessions/2026-04-24-mode1-qwen3vl-deepstack-edge.md) / [Summary](summary/2026-04-24-qwen3vl-deepstack-edge.md)
+- **Date**: 2026-04-24 | **Session**: [링크](/research-wiki/2026-04/qwen3vl-deepstack-edge) / [Summary](/research-wiki/2026-04/qwen3vl-deepstack-edge)
 - **Tier**: Top-tier lead | **Target**: MLSys 2026 / ISCA 2027
 - **Experts**: ai-opt + legacy-sys + hw-pim 3:0 unanimous (lead)
 - **Review scores** (Phase 2'): Nov **7.4** / Diff **8.0** / Imp **7.7** / Feas **8.5** → **avg 7.90**
@@ -443,7 +443,7 @@
 - **Phase 3 entry**: Nsight SFU busy % 실측 + CUTLASS FA3 fused rotation prototype.
 
 ### Mangrove — DeepStack Layer-Aware 4-Stage Pipeline + LPDDR Bank + DLA Offload (Tier-1 Top 2)
-- **Date**: 2026-04-24 | **Session**: [링크](sessions/2026-04-24-mode1-qwen3vl-deepstack-edge.md)
+- **Date**: 2026-04-24 | **Session**: [링크](/research-wiki/2026-04/qwen3vl-deepstack-edge)
 - **Tier**: Top-tier | **Target**: ASPLOS 2027 / MLSys 2026
 - **Review scores**: Nov **6.6→7.0** (CLI cite) / Diff **7.5** / Imp **8.06** / Feas **7.8** → **avg 7.60**
 - **Metaphor**: "Mangrove" = 맹그로브 나무, 여러 깊이 뿌리 (layer 8/16/24) 가 하나의 나무 지지.
@@ -453,7 +453,7 @@
 - **예상 효과**: TTFT 1.3-1.6× (multi-image batch), energy -18~28%.
 
 ### Vault' — DeepStack × MoE L2 Contention with LPDDR Bank Placement + Activation-Aware L2 Pin (Tier-1 Top 3, post-Major Revision)
-- **Date**: 2026-04-24 | **Session**: [링크](sessions/2026-04-24-mode1-qwen3vl-deepstack-edge.md)
+- **Date**: 2026-04-24 | **Session**: [링크](/research-wiki/2026-04/qwen3vl-deepstack-edge)
 - **Tier**: Top-tier (Major Revision) | **Target**: ASPLOS 2027 / HPCA 2027
 - **Review scores**: Nov **5.4→6.8** (post-replacement) / Diff **8.5** / Imp **8.28 flagship** / Feas **5.6** (Thor gate) → **avg 7.30**
 - **Metaphor**: "Vault" = 금고, 128 expert 를 Thor LPDDR5X 에 보관 + top-2 gating 으로 꺼내 사용.
@@ -464,7 +464,7 @@
 - **예상 효과**: MoE decode 1.2-1.4×, energy -20~30%, Thor DevKit 확보 전제.
 
 ### Gale — GDN:Attn 3:1 Hybrid Constant-Memory + 256K KV 3-Tier DeepStack-Aware Eviction (Tier-2 독립 Top 1)
-- **Date**: 2026-04-24 | **Session**: [링크](sessions/2026-04-24-mode1-qwen3vl-deepstack-edge.md)
+- **Date**: 2026-04-24 | **Session**: [링크](/research-wiki/2026-04/qwen3vl-deepstack-edge)
 - **Tier**: Tier-2 독립 | **Target**: IEEE ESL 4p / ISLPED 6p
 - **Review scores**: Nov **6.2** / Diff **6.5** / Imp **7.02** / Feas **7.0** → **avg 6.70**
 - **Metaphor**: "Gale" = 강풍, 256K long context 지속 흐름 + dual wind direction (GDN + Attention).
@@ -475,7 +475,7 @@
 - **Tier-1 scale-up 불가 이유**: GDN 은 Qwen3-Next/3.5 한정, Qwen3-VL 공식 config 미확인 → narrow scope.
 
 ### Forge — Thinker/Talker Heterogeneous with Tensor Core + DLA + GDN L2 (Tier-2 독립 Top 2)
-- **Date**: 2026-04-24 | **Session**: [링크](sessions/2026-04-24-mode1-qwen3vl-deepstack-edge.md)
+- **Date**: 2026-04-24 | **Session**: [링크](/research-wiki/2026-04/qwen3vl-deepstack-edge)
 - **Tier**: Tier-2 독립 | **Target**: IEEE CAL 4p / DAC 6p
 - **Review scores**: Nov **5.9** / Diff **7.0** / Imp **6.68** / Feas **6.8** → **avg 6.50**
 - **Metaphor**: "Forge" = 대장간, Tensor Core + DLA + L2 이기종 재료 단조.
@@ -488,7 +488,7 @@
 ## 미선정 (2026-04-24)
 
 ### Echo — Video Timestamp Hash for DeepStack Feature Dedup (DROP)
-- **Date**: 2026-04-24 | **Session**: [링크](sessions/2026-04-24-mode1-qwen3vl-deepstack-edge.md)
+- **Date**: 2026-04-24 | **Session**: [링크](/research-wiki/2026-04/qwen3vl-deepstack-edge)
 - **연구 GAP (의도)**: Qwen3-VL text-based video timestamp token 을 hash key 로 DeepStack 3-level visual feature dedup.
 - **미선정 사유**:
   1. [VLCache arXiv:2512.12977](https://arxiv.org/abs/2512.12977) (2025-12-15) — 2% vision + 98% reuse + pixel hash, **72-78% direct scoop**.
@@ -502,7 +502,7 @@
 ## 미선정 로그 (최근)
 
 ### Tidal — Video VLM Temporal Token Dedup (2026-04-23 DROP by CodecSight scoop)
-- **Date**: 2026-04-23 | **Session**: [링크](sessions/2026-04-23-mode1-energy-efficient-edge-vlm.md)
+- **Date**: 2026-04-23 | **Session**: [링크](/research-wiki/2026-04/energy-efficient-edge-vlm)
 - **연구 GAP (원래 의도)**: Video VLM (Qwen2.5-VL video / LLaVA-Video) 2-frame visual token cosine sim > 0.9 비율 42-65% 에서 NVDEC motion vector + MRoPE temporal KV dedup + LPDDR bank-aligned block layout.
 - **Metaphor**: "Tidal" = 조수 (cyclical pattern).
 - **Phase 1 기여자 (통합 원본)**: ai-opt Ripple + legacy-sys EchoVault + hw-pim Echo Chamber 3-way 통합.
@@ -514,7 +514,7 @@
 ## Selected Ideas
 
 ### Parquet ★ — AnyRes Tile-Aware Adaptive Batching with Coupled GPU+DRAM DVFS and Per-Tile Precision for Edge VLM (2026-04-23 Tier-1 Top 1)
-- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-23-mode1-energy-efficient-edge-vlm.md) / [Summary](summary/2026-04-23-energy-efficient-edge-vlm.md)
+- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: [링크](/research-wiki/2026-04/energy-efficient-edge-vlm) / [Summary](/research-wiki/2026-04/energy-efficient-edge-vlm)
 - **Tier**: Top-tier | **Target venue**: ASPLOS 2027 / MLSys 2027
 - **Experts**: ai-optimization + legacy-system + hw-pim (3:0 unanimous post-integration)
 - **Review Scores** (Phase 2'): Nov **7.4** / Diff **7.5** / Imp **7.76** / Feas **7.5** → 평균 **7.54** (Accept strong).
@@ -529,7 +529,7 @@
 - **Phase 3 entry actions**: (a) vLLM v1 EncoderDisagg merge 상태 2026-04 snapshot 실측, (b) Qwen2.5-VL-7B on RTX 4060/4090 + Jetson Orin AGX tile-count histogram + bucket fill rate, (c) MBQ per-layer → per-tile ablation 선행 1주 PoC.
 
 ### Triptych — Edge-Specific Three-Stage Modality Pipeline with DLA-Aware Heterogeneous Compute and UMA Zero-Copy (2026-04-23 Tier-1 Top 2)
-- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-23-mode1-energy-efficient-edge-vlm.md)
+- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: [링크](/research-wiki/2026-04/energy-efficient-edge-vlm)
 - **Tier**: Top-tier | **Target venue**: ASPLOS 2027 / EuroSys 2027
 - **Experts**: 3:0 unanimous post-replacement
 - **Review Scores** (Phase 2' post Major Revision): Nov **6.5** / Diff **8.0** / Imp **8.0** / Feas **7.0** → 평균 **7.38** (Accept).
@@ -544,7 +544,7 @@
 - **Phase 3 entry actions**: (a) Jetson Orin AGX DLA INT8 vision encoder (SigLIP/InternViT) profiling, (b) vLLM-Jetson fork `ZeroCopyActivationRouter` 4주 구현, (c) Jetson Thor DevKit 2026-06 gate or Orin fallback, (d) Nova + Nanomind + HeteroInfer 를 ablation baseline 에 포함 confirm.
 
 ### Cartographer — MRoPE Tri-Axial LUT + LPDDR Row-Aligned Layout (2026-04-23 Tier-2 독립 Top 1)
-- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-23-mode1-energy-efficient-edge-vlm.md)
+- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: [링크](/research-wiki/2026-04/energy-efficient-edge-vlm)
 - **Tier**: Tier-2 독립 (Track B) | **Target venue**: IEEE CAL 4p / DATE 6p
 - **Experts**: legacy-system + hw-pim (primary)
 - **Review Scores** (Phase 2'): Nov **6.8** / Diff **6.6** / Imp **7.03** / Feas **7.8** → 평균 **7.06** (Accept CAL).
@@ -556,7 +556,7 @@
 - **Tier-1 scale-up 불가 이유**: single-kernel characterization letter, MRoPE 한정.
 
 ### Sift — Entropy-Adaptive Pixel Shuffle for Tiny Edge VLM (2026-04-23 Tier-2 독립 Top 2)
-- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-23-mode1-energy-efficient-edge-vlm.md)
+- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: [링크](/research-wiki/2026-04/energy-efficient-edge-vlm)
 - **Tier**: Tier-2 독립 (Track B) | **Target venue**: ISLPED 2026 6p / IEEE ESL 4p
 - **Review Scores**: Nov **6.5** / Diff **6.5** / Imp **6.90** / Feas **7.5** → 평균 **6.85** (Accept ISLPED).
 - **Metaphor 근거**: "Sift" = 체로 거른다. Patch entropy 기준으로 visual token 체질.
@@ -568,7 +568,7 @@
 - **Tier-1 scale-up 불가 이유**: tiny VLM + projector-이전 pixel shuffle narrow scope.
 
 ### Verge — Jetson Thor vs Orin AGX Cross-Arch VLM Energy Characterization (2026-04-23 Tier-2 독립 Top 3, Conditional)
-- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-23-mode1-energy-efficient-edge-vlm.md)
+- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: [링크](/research-wiki/2026-04/energy-efficient-edge-vlm)
 - **Tier**: Tier-2 독립 (Track B, Conditional) | **Target venue**: IEEE ESL 4p letter
 - **Review Scores**: Nov **5.8** / Diff **6.2** / Imp **6.35** / Feas **6.8** → 평균 **6.29** (Conditional).
 - **Metaphor 근거**: "Verge" = 경계/가장자리. Thor (최신 Blackwell NVFP4) 와 Orin AGX (이전 Ampere INT8) 의 경계 측정.
@@ -578,7 +578,7 @@
 - **Tier-1 scale-up 불가 이유**: characterization-only letter.
 
 ### HRTS+ ★ — HBM Row-Tile Streaming for Long-Context Video VLM (v3 Tier-1 Top 1)
-- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: [링크](sessions/2026-04-23-mode1-vlm-vla-context-serving-v3.md) / [Summary](summary/2026-04-23-vlm-vla-context-serving-v3.md)
+- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: 링크 / Summary
 - **Tier**: Top-tier | **Target venue**: ASPLOS 2026 / MICRO 2026
 - **Experts**: ai-optimization-expert + legacy-system-expert (2:0 unanimous)
 - **Review Scores** (v3 Phase 2'): Nov **8.0** / Diff **7.8** (Mosaic concurrent 반영 -0.3) / Imp **8.0** / Feas **7.3**. 평균 **7.85** (Accept).
@@ -593,7 +593,7 @@
 - **Tier-2 paper-pair (HRTS Tier-2)**: Row-aligned tile letter (M1 only), LLaVA-Video-7B + VideoMME long subset 단일, HBM row-hit +15-25%p. IEEE CAL 4p / DATE 6p. Precedence 확보.
 
 ### ContextMIG+ — Reuse Graph × MIG Dual-Issue × Phase Coalesce for Multi-tenant VLM (v3 Tier-1 Top 2)
-- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: [링크](sessions/2026-04-23-mode1-vlm-vla-context-serving-v3.md)
+- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: 링크
 - **Tier**: Top-tier | **Target venue**: ASPLOS 2026 / MLSys 2026
 - **Experts**: ai-optimization-expert + legacy-system-expert + algorithm-expert (3:0 unanimous)
 - **Review Scores** (v3 Phase 2'): Nov **8.3** / Diff **8.0** (Predictable LLM Serving baseline 추가) / Imp **7.8** / Feas **6.8**. 평균 **7.73** (Accept).
@@ -606,7 +606,7 @@
 - **Tier-2 paper-pair (ContextMIG Tier-2)**: CLIP-L LSH classifier standalone (M1 only), Pro 6000 2-tenant, F1 ≥ 0.82 + hash latency ≤ 1.5ms. IEEE ESL 4p / CAL 4p.
 
 ### PhaseGraph-VLA+ — Trajectory-Phase Conditioned CUDA Graph Dispatcher with SSE (v3 Tier-1 Top 3, v1 A1 revival)
-- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: [링크](sessions/2026-04-23-mode1-vlm-vla-context-serving-v3.md)
+- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: 링크
 - **Tier**: Top-tier | **Target venue**: MLSys 2026 / CoRL 2026
 - **Experts**: ai-optimization-expert + legacy-system-expert + algorithm-expert (Conditional PH FP rate)
 - **Review Scores** (v3 Phase 2'): Nov **6.9** (+0.1 FlashVLA 차별화) / Diff **7.5** / Imp **6.8** / Feas **7.5**. 평균 **7.18** (Conditional Accept).
@@ -617,7 +617,7 @@
 - **Tier-2 paper-pair (PhaseGraph-VLA Tier-2)**: SSE predictor standalone (M1 only), OpenVLA-7B + LIBERO-Spatial 단일, PH FP rate ≤ 5% + decision <100μs. IEEE CAL 4p / DATE 6p.
 
 ### B1 GCReconfProfile — Green Context μs-level Reconfig Characterization (v3 Tier-2 독립 Top 1)
-- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: [링크](sessions/2026-04-23-mode1-vlm-vla-context-serving-v3.md)
+- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: 링크
 - **Tier**: Tier-2 독립 (Track B) | **Target venue**: ISLPED 2026 6p / DATE 2026 6p
 - **Experts**: legacy-system-expert (primary, HW profiling 축)
 - **Review Scores** (v3 Phase 2'): Nov **7.2** / Diff **7.6** / Imp **7.5** / Feas **7.7**. 평균 **7.50** (Accept).
@@ -627,7 +627,7 @@
 - **Tier-1 scale-up 불가 이유**: 단일 vendor API characterization letter, mechanism 1 개, cross-vendor generality 부재.
 
 ### B2 TokenEvictEnergy — Visual-Token Eviction 의 HBM Refresh/DRAM Energy Negative Result (v3 Tier-2 독립 Top 2)
-- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: [링크](sessions/2026-04-23-mode1-vlm-vla-context-serving-v3.md)
+- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: 링크
 - **Tier**: Tier-2 독립 (Track B) | **Target venue**: IEEE ESL 2026 4p / ISLPED 2026 6p
 - **Experts**: legacy-system-expert (primary, energy 축)
 - **Review Scores** (v3 Phase 2'): Nov **7.3** / Diff **7.4** / Imp **7.3** / Feas **7.5**. 평균 **7.35** (Conditional Accept, error bar).
@@ -638,7 +638,7 @@
 - **Tier-1 scale-up 불가 이유**: Power-constrained narrow engineering, negative result 중심, confounder 통제 불가.
 
 ### B3 ActHeadFuse — OpenVLA-OFT Action-Head Fused Kernel for Sub-ms Decode Step (v3 Tier-2 독립 Top 3)
-- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: [링크](sessions/2026-04-23-mode1-vlm-vla-context-serving-v3.md)
+- **Date**: 2026-04-23 (v3) | **Mode**: 1 | **Session**: 링크
 - **Tier**: Tier-2 독립 (Track B) | **Target venue**: IEEE CAL 2026 4p / DAC 2026 6p
 - **Experts**: legacy-system-expert (primary, kernel 축)
 - **Review Scores** (v3 Phase 2'): Nov **7.0** / Diff **7.3** / Imp **7.2** / Feas **7.5**. 평균 **7.20** (Accept).
@@ -648,7 +648,7 @@
 - **Tier-1 scale-up 불가 이유**: Narrow kernel engineering letter, model family lock-in (OpenVLA Llama-2-7B), serving stack 전체 impact ~5-8%.
 
 ### I2' TernVLM-KV-LUT ★ — Xbar-aligned Ternary KV + Rank-4 SF + FA3-Dual LUT Attention (VLM/VLA)
-- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-23-mode1-prism-vlm-kv-extension.md) / [Summary](summary/2026-04-23-prism-vlm-kv-extension.md)
+- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: 링크 / Summary
 - **Tier**: Top-tier (**primary**) | **Target venue**: MLSys 2026 (2026-10) / NeurIPS 2026
 - **Experts**: algorithm-expert + ai-optimization-expert + hw-pim-accelerator-expert (3 공통 최고 novel)
 - **Review Scores** (Phase 2' 재평가): Nov **8.0**/10, Impact **8.6**/10, Algo peer **7.5**, AI-opt peer **6.5→7.5** (FA3-dual path 해소 후), HW peer **7.0**. 평균 **7.95** (Strong Accept, oral 후보).
@@ -663,7 +663,7 @@
 - **Tier-2 variant (I2-Tier2, paper-pair)**: sub-tile=4 LUT attention only (rank-r SF / OPTIC 제거), LLaVA-OV-7B + LongVideoBench only, LUT hit rate 70-85% measurement letter. MLSys workshop 또는 ISLPED 2026 short 6p. **Tier-2 독립 Top 3 에 선정** — I2' primary submission 과 precedence 확보.
 
 ### I4' PRISMKV-PIM-DequantLUT — DRAM-PIM Bank SF-LUT Dequant Replacing MAC
-- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-23-mode1-prism-vlm-kv-extension.md)
+- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: 링크
 - **Tier**: Top-tier (HW track) | **Target venue**: HPCA 2027 (2026-08) / ASPLOS 2027
 - **Experts**: hw-pim-accelerator-expert (primary)
 - **Review Scores** (Phase 2'): Nov **7.5** (+0.3 AQPIM 차별화), Impact **7.4**, HW peer **7.5**. 평균 **7.35** (Accept, HW secondary).
@@ -676,7 +676,7 @@
 - **Tier-2 variant (I4-Tier2)**: SRAM-PIM SF-LUT (DRAM 대신 SRAM), single device, BitVLA-2B subset, ICCAD/ISLPED 2027 8p.
 
 ### I1' TernVLM-RankSF — Hessian-aware Modality-Split Rank-r SF for Ternary VLM
-- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-23-mode1-prism-vlm-kv-extension.md)
+- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: 링크
 - **Tier**: Top-tier | **Target venue**: ICLR 2027 (2026-09) / NeurIPS 2026
 - **Experts**: algorithm-expert + ai-optimization-expert + hw-pim-accelerator-expert (3 공통)
 - **Review Scores** (Phase 2'): Nov **6.8** (+0.6 Hessian+Lipschitz), Impact **7.4**, Algo peer **7.0**. 평균 **7.05** (Conditional → Accept after 차별화 보강).
@@ -689,7 +689,7 @@
 - **Tier-2 variant (I1-Tier2)**: rank-r SF only (modality-split 제거), LLaVA-OV-7B + H100 + MMMU only, DATE/ISLPED short 6p.
 
 ### T2' PRISM-Tile (Tier-2 독립) — HBM Row × Page × Tile × Flat-SF 4-tuple Alignment Measurement
-- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-23-mode1-prism-vlm-kv-extension.md)
+- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: 링크
 - **Tier**: Tier-2 (독립) | **Target venue**: DATE 2027 / ISLPED 2026 late / IEEE ESL
 - **Experts**: ai-optimization-expert (primary)
 - **Review Scores** (Tier-2 rubric): Nov 4.7 / Impact 7.8 / AI-opt peer 5.5 / HW peer 5.5. 평균 **5.8 / 7.8 (Tier-2 rubric Accept)**.
@@ -698,7 +698,7 @@
 - **차별점**: first-to-report measurement letter. PRISM xbar-alignment 원리의 GPU-HBM stack 포팅.
 
 ### T1' OPTIC-SF-Lite (Tier-2 독립) — Mobile VLM SF Clustering + Jetson Edge Measurement
-- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-23-mode1-prism-vlm-kv-extension.md)
+- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: 링크
 - **Tier**: Tier-2 (독립) | **Target venue**: DATE / ICCAD short / ISLPED
 - **Experts**: algorithm-expert (primary)
 - **Review Scores** (Tier-2 rubric): Nov 4.2 / Impact 7.7 / peers 5.0-6.0. 평균 **5.3 / 7.7 (Tier-2 rubric Accept)**.
@@ -707,7 +707,7 @@
 - **차별점**: first-to-report mobile-VLM SF distribution characterization.
 
 ### I2-Tier2 (paper-pair with I2') — Ternary KV LUT Attention Hit Rate Measurement
-- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-23-mode1-prism-vlm-kv-extension.md)
+- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: 링크
 - **Tier**: Tier-2 (companion) | **Target venue**: MLSys workshop / ISLPED short 6p
 - **Core mechanism (1)**: Sub-tile=4 LUT attention (rank-r SF / OPTIC 제거), Q INT8 × K ternary 81×256 entry LUT.
 - **예상 개선**: LUT hit rate 70-85% on LongVideoBench, decode latency 1.2-1.5× speedup vs FA3.
@@ -716,7 +716,7 @@
 ---
 
 ### (v2) HRTS: HBM Row-Tile Streaming for Long-Context Video VLM
-- **Date**: 2026-04-22 (v2) | **Mode**: 1 | **Session**: [링크](sessions/2026-04-22-mode1-vlm-vla-context-serving-v2.md)
+- **Date**: 2026-04-22 (v2) | **Mode**: 1 | **Session**: 링크
 - **Tier**: Top-tier | **Target venue**: ASPLOS 2026 / MICRO 2026
 - **Experts**: legacy-system-expert (primary)
 - **Review Scores** (Phase 2' 최종): Nov **8.2**/10, Diff **8.1**/10, Imp **8.0**/10, Feas **7.3**/10, 평균 **7.90** (본 세션 1위, Accept)
@@ -731,7 +731,7 @@
 - **Tier-2 variant** (IEEE CAL / DATE): Row-aligned KV tile only (M1), 1-GPU 64K context, HBM row-hit +15~25%p, attention kernel -8~12%. Precedence 확보용 self-contained sub-contribution. Conditional Accept.
 
 ### (v2) ContextMIG: CLIP-L Reuse Graph × MIG Dual-Issue × Phase Coalesce (Multi-tenant VLM merged from TriadSM+RGSM)
-- **Date**: 2026-04-22 (v2) | **Mode**: 1 | **Session**: [링크](sessions/2026-04-22-mode1-vlm-vla-context-serving-v2.md)
+- **Date**: 2026-04-22 (v2) | **Mode**: 1 | **Session**: 링크
 - **Tier**: Top-tier | **Target venue**: ASPLOS 2026 / MLSys 2026
 - **Experts**: ai-optimization-expert + legacy-system-expert (merged, Axis A Phase 2 merger)
 - **Review Scores** (Phase 2' 최종): Nov **8.3**/10, Diff **8.2**/10, Imp **7.7**/10, Feas **6.8**/10, 평균 **7.75** (본 세션 2위, Accept)
@@ -748,7 +748,7 @@
 - **Tier-2 variant** (IEEE ESL / IEEE CAL): CLIP-L LSH reuse graph classifier only (M1), 2-tenant trace replay, F1 ≥ 0.82, hash collision ≤ 3%, hash latency ≤ 1.5ms/req. Accept but paper pair 사용 안 함 (Top 3 slot NACK-Gossip Tier-2 에 양보).
 
 ### (v2) NACK-Gossip Tier-2: Pull-based NVLink Peer-Fetch Latency Profiling for VLA Inference
-- **Date**: 2026-04-22 (v2) | **Mode**: 1 | **Session**: [링크](sessions/2026-04-22-mode1-vlm-vla-context-serving-v2.md)
+- **Date**: 2026-04-22 (v2) | **Mode**: 1 | **Session**: 링크
 - **Tier**: **Tier-2** | **Target venue**: IEEE ESL (4p) / ISLPED 2026 (6p)
 - **Experts**: legacy-system-expert (primary, tier-2 rubric 허용)
 - **Review Scores** (Phase 2' 최종): Nov **7.4**/10, Diff **7.7**/10, Imp **7.2**/10, Feas **8.8**/10, 평균 **7.80** (본 세션 Tier-2 1위, Conditional Accept)
@@ -764,7 +764,7 @@
 ---
 
 ### L1 v2 ContextSM-Tri: Content-Axis SM/BW/KV Tri-Partition with Reconfig-Latency-Bounded Green Context
-- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-22-mode1-vlm-vla-context-serving.md)
+- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: 링크
 - **Experts**: legacy-system-expert (primary) + algorithm-expert (P1 E²IC distilled classifier 흡수)
 - **Review Scores** (Phase 2' 최종, post-verification): Nov **6.8**/10 (↓ from 7.2 after [arXiv:2506.12204](https://arxiv.org/abs/2506.12204) concurrent discovery), Diff **7.3**/10, Imp **6.8**/10, Feas **7.5**/10, 평균 **7.00** (본 세션 1위 유지)
 - **Phase 2 → Phase 2' Score Delta**: +0.87 → +0.67 (verification 반영)
@@ -784,12 +784,12 @@
 - **차별점**: (1) **content-axis taxonomy → tri-knob mapping** 은 Nova/DuetServe/Bullet/LithOS 모두 미적용 (stage or size based). (2) **MIG + Green Context nested** 구조 (slow outer × fast inner) 는 published 보고 부재. (3) **10 baseline (최다)** 으로 positioning comprehensive. (4) A1 phase predictor cascade 로 VLA fleet serving 확장. Target venue: **MICRO 2026 / HPCA 2027**.
 - **Phase 3 entry actions**: (a) Azure LLM trace 에서 6-class exhaustiveness 검증, (b) Green Context ms-level reconfig NVIDIA benchmark 확인 또는 실측, (c) Pro 6000 MIG 지원 확인.
 - **남은 risk**: DuetServe v2 가 content-aware 추가 시 novelty 침식. Green Context reconfig 가 수십 ms 이면 claim 수정. MIG 는 H100/H200 only.
-- **상세**: [세션 Executive Summary Top 1 + Section 4.1 L1 refinement](sessions/2026-04-22-mode1-vlm-vla-context-serving.md)
+- **상세**: 세션 Executive Summary Top 1 + Section 4.1 L1 refinement
 
 ---
 
 ### A3 v2 SemCOW-Deadline: Copy-on-Write Reference-Counted Vision KV with Deadline-Aware Green Context SM Yielding for Multi-Tenant VLM Serving
-- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-22-mode1-vlm-vla-context-serving.md)
+- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: 링크
 - **Experts**: ai-optimization-expert (primary) + legacy-system-expert (SM yielding stream priority)
 - **Review Scores** (Phase 2' 최종, post-verification): Nov **6.5**/10, Diff **8.0**/10, Imp **8.0**/10, Feas **6.0**/10, 평균 **7.15** (본 세션 2위, verification 에서 +0.02)
 - **Phase 2 → Phase 2' Score Delta**: **+0.46 (최대)** → +0.48 — cluster detection 포기 repositioning 성공 + placeholder 부재 확인으로 sliver 재확인
@@ -809,12 +809,12 @@
 - **차별점**: (1) **page-granular refcount COW + top-k partial recompute** 는 Mosaic/KVShare/MPIC 모두 write-time 분기 없음. (2) **deadline miss risk 기반 SM yielding** 은 Adrenaline 의 idle yielding 과 orthogonal (throughput vs SLO). (3) Cluster detection 포기 로 scoop 축 정면 회피 + sliver 정면 집중. Target venue: **OSDI 2027 / SOSP 2026 / NSDI 2027**.
 - **Phase 3 entry actions**: (a) LMSys VisionArena / WildVision trace 확보, (b) Mosaic+KVShare detector 차용 path 확정, (c) CUDA 12.5 Green Context SM yielding 실측, (d) top-k sensitivity study 선행.
 - **남은 risk**: Mosaic/KVShare v2 가 COW 추가 시 sliver 축소. Single-workstation multi-tenant "simulation" 의 realism 을 reviewer 가 의심 가능 → real cloud trace replay 로 보강.
-- **상세**: [세션 Executive Summary Top 2 + Section 4.1 A3 repositioning](sessions/2026-04-22-mode1-vlm-vla-context-serving.md)
+- **상세**: 세션 Executive Summary Top 2 + Section 4.1 A3 repositioning
 
 ---
 
 ### A1 v2 PhaseGraph-VLA: Trajectory-Phase Conditioned CUDA Graph Dispatcher with SSE-Driven Boundary Detection
-- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-22-mode1-vlm-vla-context-serving.md)
+- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: 링크
 - **Experts**: ai-optimization-expert (primary) + algorithm-expert (P2 SSE Page-Hinkley 흡수)
 - **Review Scores** (Phase 2' 최종, post-verification): Nov **6.8**/10, Diff **7.5**/10, Imp **6.5**/10, Feas **7.5**/10, 평균 **7.08** (본 세션 3위, L2 와 tiebreak 승: impact×feasibility 48.75>43.40). Verification 후 변동 없음.
 - **Phase 2 → Phase 2' Score Delta**: +0.70 (SSE 흡수 + 5개 baseline + 4-way ablation + SimplerEnv/RoboCasa/Jetson 확장)
@@ -835,12 +835,12 @@
 - **차별점**: (1) **phase × batch 2D CUDA Graph dispatcher** 는 vLLM 1D batch-only variant 와 분리. (2) **SSE Page-Hinkley** 는 training-free quantile calibration. (3) **Phase-specific kernel fusion boundaries** (ViT-MQA / SiLU-Linear / KV static reuse) 는 VLA 문헌 unique. (4) **Orthogonal with Nova + VLA-Cache + AC²-VLA** — 4-way ablation 으로 stacked gain 증명. Target venue: **MLSys 2026 / CoRL 2026 / NeurIPS 2026 D&B**.
 - **Phase 3 entry actions**: (a) Page-Hinkley FP rate LIBERO 5 task empirical, (b) SimplerEnv + RoboCasa env 구축, (c) Jetson Orin 접근 (optional), (d) CUDA Graph capture overhead amortization.
 - **남은 risk**: Nova stacking gain < 3% 이면 merge 요구. Open-ended trajectory 에서 3-class phase structure 부정. Helix-VLA placeholder 실존 시 재평가.
-- **상세**: [세션 Executive Summary Top 3 + Section 4.1 A1 refinement](sessions/2026-04-22-mode1-vlm-vla-context-serving.md)
+- **상세**: 세션 Executive Summary Top 3 + Section 4.1 A1 refinement
 
 ---
 
 ### F2-VLM Quantization-Robust Layered Defense for VLM-PIM (HW KL-Collapse Detector + SW Per-Sample Fragility Gating)
-- **Date**: 2026-04-22 | **Mode**: 2 | **Session**: [링크](sessions/2026-04-22-mode2-vlm-pim-extension.md)
+- **Date**: 2026-04-22 | **Mode**: 2 | **Session**: [링크](/research-wiki/2026-04/vlm-pim-extension)
 - **Experts**: hw-pim-accelerator-expert + ai-optimization-expert (fused layered defense)
 - **Review Scores** (Post-Literature Survey 최종): Nov **8.5**/10, Diff 8.5/10, Imp **8.3**/10, 평균 **8.43** (본 세션 최고)
 - **Phase 2 → Phase 2' → Post-Survey Score Delta**: +0.5 (layered 구조) → +0.2 (W8A8 collapse 선행 보고 부재 검증으로 measurement contribution 추가)
@@ -855,12 +855,12 @@
 - **차별점**: (1) **HW macro detector (layer granularity) + SW fragility gating (sample granularity) 의 cross-granularity layered defense 는 VLM PIM 문헌에 없음**. P3-LLM/MBQ/AKVQ-VL 모두 single-granularity. (2) **W8A8 +66pp visual attention collapse 정량화 최초** — 기존 VLM quant 문헌은 task accuracy 만 보고 (measurement contribution). (3) **Mechanism triangulation** — LLM.int8 softmax outlier 왜곡 + Visual Attention Sink 증폭 + MBQ modality gradient gap 3 메커니즘이 VLM W8A8 에서 catastrophic regime 로 수렴함을 통합 설명하는 첫 연구. (4) VLM-specific numerical-safety (FP16 L27 overflow) 의 sub-microarchitecture-level 증명은 최초. Target venue: **HPCA 2026 / MICRO 2026** (HW macro + quant robustness 축).
 - **본 연구의 E5 추가 권장 실험 (novelty 공고화)**: (a) Bit-width sweep W6A6/W4A4/W4A8/W4A6 — collapse 가 activation precision 함수인지 연속 곡선 확인 (예상: A 축 감소 시 Δ 증가, W8A16 은 preserve). (b) Recipe sweep SmoothQuant vs QuaRot vs SpinQuant vs MBQ — rotation 기반이 collapse 완화하면 mechanism (c) rotation-invariance 검증. (c) Per-modality outlier analysis (vision-token activation max/99.9-percentile). (d) Sink dimension tracking (ϕ(x) metric FP16 vs W8A8). (e) Task-attention decoupling (MMMU acc 유지 but attention 붕괴 sample 을 Seeing but Not Believing 과 연결). (f) Cross-family 재현 (LLaVA-1.6, InternVL2.5, MiniCPM-V). (g) Layer-localization heatmap (collapse 발생 layer 정확한 범위).
 - **남은 risk**: KL threshold tuning model-specific (5-model calibration protocol) / Layered HW-SW 인터페이스 race condition (프로토콜 1절 추가 조건) / Fallback budget 초과 시 SLO 위반 (long-tail profiling 필요) / Recipe sweep 에서 QuaRot/SpinQuant 가 W8A8 collapse 를 SW-only 로 해결하면 HW detector 필요성 약화 위험 — 이 경우 F2 는 "rotation 적용 불가한 legacy 배포 환경" scope 로 축소.
-- **상세**: [세션 5절 F2 + 10.5절 post-literature survey](sessions/2026-04-22-mode2-vlm-pim-extension.md)
+- **상세**: [세션 5절 F2 + 10.5절 post-literature survey](/research-wiki/2026-04/vlm-pim-extension)
 
 ---
 
 ### F1-VLM DeepStack-Native Prefill-Decode Pipeline with 6-Tier KV Tiering (GPU+PIM)
-- **Date**: 2026-04-22 | **Mode**: 2 | **Session**: [링크](sessions/2026-04-22-mode2-vlm-pim-extension.md)
+- **Date**: 2026-04-22 | **Mode**: 2 | **Session**: [링크](/research-wiki/2026-04/vlm-pim-extension)
 - **Experts**: hw-pim-accelerator-expert + ai-optimization-expert (A3 architecture-aware adapter 흡수)
 - **Review Scores** (Phase 2' 최종): Nov 7/10, Diff 8/10, Imp 7.8/10, 평균 **7.60**
 - **Phase 2 → Phase 2' Score Delta**: +0.8 (DeepStack topology + AI inflection 교집합으로 tier 정당화, C-adaptive dispatcher 추가)
@@ -873,12 +873,12 @@
 - **실험**: 2×A6000 (48GB each) + AttAcc cycle-accurate simulator extension / Models Qwen3-VL-4B (primary), Qwen2-VL-7B, LLaVA-NeXT-7B, InternVL3-8B, MiniCPM-V-2.6 (5-model generalization) / Workloads LLaVA-Bench-Wilder, VideoMME, MMMU, TextVQA / Chunk size sweep C∈{8,16,32,64}, seq len {512, 2048, 4096, 8948} / Ablation: (a) DeepStack-aware tier vs naive 6-tier, (b) C-adaptive vs fixed C=16, (c) A3 adapter on/off, (d) tier count sweep {2,4,6,8,12} / Baselines AttAcc, NeuPIMs [arXiv:2403.00579](https://arxiv.org/abs/2403.00579), STARC, VLCache, Jenga, vLLM+PagedAttention [arXiv:2309.06180](https://arxiv.org/abs/2309.06180) / Expected runtime ~3-4개월.
 - **차별점**: **DeepStack inject topology × arithmetic intensity inflection 교집합 tier** 는 VLM PIM 문헌에 없음. STARC/VLCache/Jenga 는 각각 token clustering / attention sparsity / generic layer placement 로 축 다름. C-adaptive dispatcher 로 video regression 회복은 unique. 5-model A3 adapter 로 VLM family generalization. Target venue: **ASPLOS 2026 / MLSys 2026** (시스템 + 서빙 축).
 - **남은 risk**: DeepStack 외 family 일반화 (A3 adapter 로 mitigate, ablation 필수) / AI inflection 이동성 (HBM-PIM vs LPDDR-PIM sensitivity) / C=16 sweet spot production workload universal 여부 (dispatcher oscillation risk).
-- **상세**: [세션 5절 F1 + 7절](sessions/2026-04-22-mode2-vlm-pim-extension.md)
+- **상세**: [세션 5절 F1 + 7절](/research-wiki/2026-04/vlm-pim-extension)
 
 ---
 
 ### F1 TempoPRISM-CoDesign: Streaming KWS 용 Time-Axis Xbar-wise SF + VAD-Gated Warm-LUT 공동 설계
-- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-22-mode1-bnn-tnn-domain-extension.md)
+- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: 링크
 - **Experts**: algorithm-expert + hw-pim-accelerator-expert (fused co-design)
 - **Review Scores** (Phase 2' 최종): Nov 7.5/10, Diff 8/10, Imp 8/10, 평균 **8.0**
 - **Phase 2 → Phase 2' Score Delta**: +1.0 (fuse 효과로 SparkNet/LoRDS scoop 방어)
@@ -890,12 +890,12 @@
 - **적용 범위**: Streaming KWS (SC v2, MSWC, 35-class, BiFSMN/BC-ResNet 규모 1-5M params). **미적용**: Transformer-KWS, rich-vocabulary ASR/TTS. **불확실**: DEMAND 0-5dB SNR 하 VAD false-negative cold-start 복귀.
 - **실험**: 서버 #5 (RTX Pro 6000) algo training + NeuroSIM + XNOR-RRAM + FinCACTI / BiFSMN-small (2.5M) + BC-ResNet-8 (5M) scratch / Baselines: BiFSMNv2, PRISM-channel-wise, Static Xbar-wise, LoRDS-transferred-to-BNN, SparkNet+PRISM, PSCNN, CIMR-V / **~9일**.
 - **차별점**: SparkNet (rank=1 gate-only, CPU 타겟) 은 본 idea 의 strict special case — 실험에서 ablation 으로 명시 포함. LoRDS (LLM PTQ post-hoc) 는 scratch training + BNN + CIM 축에서 구조적으로 다름. BiFSMNv2 (CPU channel-wise) 는 CIM substrate 자체가 다름 — NeuroSIM 공통 mapping 으로 fair 비교. Target venue: ISLPED 2027 / DATE 2027.
-- **상세**: [세션 6.1절](sessions/2026-04-22-mode1-bnn-tnn-domain-extension.md)
+- **상세**: 세션 6.1절
 
 ---
 
 ### F2 PhysioPRISM-VitalXbar: Subject-Adaptive OPTIC + Heterogeneous-Precision 2-Region CIM for Wearable Biosignal
-- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-22-mode1-bnn-tnn-domain-extension.md)
+- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: 링크
 - **Experts**: algorithm-expert + hw-pim-accelerator-expert (fused co-design)
 - **Review Scores** (Phase 2' 최종): Nov 8.5/10, Diff 8.5/10, Imp 8.5/10, 평균 **8.5** (본 세션 최고점)
 - **Phase 2 → Phase 2' Score Delta**: +0.95 (2-region scope 축소로 training 안정성 확보, shadow SRAM 으로 RRAM endurance 해결)
@@ -907,12 +907,12 @@
 - **적용 범위**: Wearable/implantable BNN-CIM (IMU + ECG), subject adaptation 필요 시나리오. **미적용**: FP32 환경, 12-lead ICU-grade continuous diagnostic (INT4 부족). **불확실**: 고강도 motion 지속 시 HAR region duty 100% → 50µW 목표 초과.
 - **실험**: 서버 #5 (RTX Pro 6000) / NeuroSIM + FinCACTI + 28nm Synopsys synthesis / ResNet1D-18 (HAR) + ResNet1D-ECG stagewise / UCI-HAR LOSO (30 subjects) + MIT-BIH AAMI 5-class + PAMAP2 ablation / **~10일** / Baselines: Fixed-SF PRISM LOSO, TTAQ, Tent-on-BNN, AdaBN-on-BNN, Arrhythmia-BNN, RTF-Q / Metrics: LOSO acc, VT/VF sensitivity, 24h power, RRAM endurance.
 - **차별점**: **BNN + CIM + biosignal + subject-shift 4-way intersection 이 2024-2026 arxiv 에서 empty** (최대 강점). Delta-LUT on shadow SRAM 은 RRAM endurance 보존하는 HW-algo co-design novelty. Heterogeneous-precision 2-region (binary HAR + INT4 ECG 한 칩) 은 ISSCC 2025 RRAM/SRAM collab 의 per-modality partition 확장. Scalar-shift closed-form subject adaptation theorem 형식화 가능. Target venue: ISSCC 2027 / JSSC extended / TBioCAS / NeurIPS 2026 small-model track (algorithm 비중) 듀얼.
-- **상세**: [세션 6.2절](sessions/2026-04-22-mode1-bnn-tnn-domain-extension.md)
+- **상세**: 세션 6.2절
 
 ---
 
 ### FARD-C: Fingerprint-Aware Request Dispatcher & Coalescing for Many-Expert MoE Serving
-- **Date**: 2026-04-21 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-21-mode1-moe-fingerprinting.md)
+- **Date**: 2026-04-21 | **Mode**: 1 | **Session**: 링크
 - **Experts**: ai-optimization-expert (main)
 - **Review Scores** (refined): Nov 7/10, Diff 6/10, Imp 7/10, 평균 **6.67** (Top 1, I2와 공동)
 - **핵심 가설**: 85-90% fingerprint 정확도를 활용해 동일 expert 사용 패턴을 가진 request를 같은 batch/replica로 묶으면, per-token unique-expert-loads가 2-3배 감소하고 decode throughput이 1.4-1.8배 증가한다. 60-70% 정확도에서는 오분류로 재사용 이득이 절반 이하로 떨어져 실현 불가.
@@ -921,12 +921,12 @@
 - **적용 범위**: multi-replica MoE 서빙, Qwen3-Next-A3B / Qwen3-30B-A3B / DeepSeek-V2-Lite, batch 16+. **미적용**: single-request interactive, Mixtral-8 (signature-entropy 부족, 명시적 negative control). **불확실**: 워크로드 class heavy-tail로 인한 load imbalance.
 - **실험**: 서버 #5 RTX Pro 6000 96GB (MIG 분할) 또는 #4 (4090×2 FSDP) / vLLM 0.9 + FingerprintDispatcher scheduler / LMSYS-Chat-1M + BurstGPT + 혼합 synthetic trace / 4-6일.
 - **차별점**: Semantic Parallelism ([2503.04398](https://arxiv.org/abs/2503.04398), 2025-03, same-replica affinity)과 Gimbal ([2602.21626](https://arxiv.org/abs/2602.21626), 2026-02, load+affinity sticky) 대비 **cross-replica dispatch + 형식적 signature-entropy 정리 + EPLB 보완**. XShare(post-hoc)와 pre-batch 축 차이. METRO는 token-level, FARD-C는 request-level.
-- **상세**: [세션 4.2절](sessions/2026-04-21-mode1-moe-fingerprinting.md)
+- **상세**: 세션 4.2절
 
 ---
 
 ### PhantomRoute: Routing Obfuscation Defense via Calibrated Dummy-Expert Activations
-- **Date**: 2026-04-21 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-21-mode1-moe-fingerprinting.md)
+- **Date**: 2026-04-21 | **Mode**: 1 | **Session**: 링크
 - **Experts**: system-robustness-expert (main)
 - **Review Scores** (refined): Nov 7.5/10, Diff 6/10, Imp 6.5/10, 평균 **6.67** (Top 1, I4와 공동)
 - **핵심 가설**: MoE의 observable expert set과 functional expert set을 decouple하면 (ε-weighted k=2 decoy 추가, 실제 output shift ≤ ε·‖h‖), side-channel topic classifier의 MI(trace; topic)가 5배 이상 감소한다. 이때 정확도 하락 ≤1.5pp, 지연 overhead ≤1.5배. expert 128개 모델에서는 decoy 하나당 mass 0.8%로 저렴하지만, expert 8개 Mixtral은 decoy당 12.5%로 동일 privacy 목표 달성 시 정확도 10pp 이상 손실 (명시적 negative control).
@@ -935,12 +935,12 @@
 - **적용 범위**: Qwen3-Next-MoE / DeepSeek-V2-Lite / DeepSeek-V3-Lite (expert ≥64). **미적용**: expert-choice routing (별도 분석), Mixtral-class expert ≤16 (명시적 negative result, MoE architecture 설계 지침으로 활용). **불확실**: 방어 trace를 수집한 adaptive attacker.
 - **실험**: 서버 #5 RTX Pro 6000 / vLLM + custom fused-MoE fork + MoEcho 공격 harness 재현 / 8-10일 (adaptive 재학습 2일 포함).
 - **차별점**: 최초의 **inference-time, practical overhead** MoE routing-obfuscation defense (CryptoMoE/SecMoE는 100배 느림, NoEsis는 training 전용). 최초의 형식적 MI bound. expert granularity에 대한 (privacy/utility/compute) Pareto 최초 측정. MoEcho의 mitigations 섹션 및 저비용 baseline(logit noise, random permutation) 대비 우위.
-- **상세**: [세션 4.4절](sessions/2026-04-21-mode1-moe-fingerprinting.md)
+- **상세**: 세션 4.4절
 
 ---
 
 ### ZMSP: Two-Tier Zero-Miss Speculative Expert Prefetch with WCRT Schedulability
-- **Date**: 2026-04-21 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-21-mode1-moe-fingerprinting.md)
+- **Date**: 2026-04-21 | **Mode**: 1 | **Session**: 링크
 - **Experts**: ai-optimization-expert (main)
 - **Review Scores** (refined): Nov 6.5/10, Diff 5.5/10, Imp 7.5/10, 평균 **6.50** (Top 3)
 - **핵심 가설**: 85-90% fingerprint 정확도에서 남은 10-15% miss를 **bounded-concurrency JIT path**로 처리하면 per-layer wait ≤ max(T_compute, T_PCIe) + 2·T_INT4 + aging_buffer가 성립해 p99 TPOT에 대한 형식적 WCRT 정리를 증명할 수 있다. 60-70% 정확도에서는 JIT 경로가 과부하로 p99이 오히려 악화 → 본 설계는 premise에 의존.
@@ -949,12 +949,12 @@
 - **적용 범위**: Qwen3-Next-A3B / Qwen3-30B-A3B / DeepSeek-V2-Lite. **미적용**: Mixtral-8 (fingerprint SNR 부족, signature-entropy 이론과 일관), prefill-heavy 워크로드 (ACE-MoE가 지배). **불확실**: OOD prompt class drift.
 - **실험**: 서버 #5 RTX Pro 6000 (또는 #4 4090×2) / vLLM 0.9 + custom prefetcher / LMSYS + ShareGPT + MMLU + GSM8K / 5-7일.
 - **차별점**: **BuddyMoE ([2511.10054](https://arxiv.org/abs/2511.10054), substitution)와의 차이는 INT4 fallback이 identity를 유지하면서 WCRT bound를 추가한 점**. PreScope ([2509.23638](https://arxiv.org/abs/2509.23638), async prefetch)는 bound 없음. HOBBIT은 miss를 정밀도 강등으로 처리, ZMSP는 bound가 있는 스케줄링 이벤트로 처리. 80μs MLP를 써서 SP-MoE/MoE-SpeQ의 draft 모델(50-300ms) 대비 predictor overhead가 현저히 작음. ACE-MoE와 composable (backward score + forward fingerprint).
-- **상세**: [세션 4.3절](sessions/2026-04-21-mode1-moe-fingerprinting.md)
+- **상세**: 세션 4.3절
 
 ---
 
 ### ACE-VLA: Real-Time Action Decoding under Latency Budget for Vision-Language-Action Models
-- **Date**: 2026-04-21 | **Mode**: 2 | **Session**: [링크](sessions/2026-04-21-mode2-ace-moe-vlm-vla-extension.md)
+- **Date**: 2026-04-21 | **Mode**: 2 | **Session**: 링크
 - **Experts**: ai-optimization-expert (main), algorithm-expert (sub)
 - **Review Scores** (refined): Nov 9/10, Diff 9/10, Imp 9/10, 평균 **9.0** (Top 1)
 - **Review Scores** (post-2026-04-21 related work augmentation): Nov 8/10, Diff 9/10, Imp 9/10, 평균 **8.5** — ActionFlow(2025-12, 2.55× FPS)/A1(2026-04, 72% latency)/HEX(2026-04, MoE VLA 선례) 등장으로 novelty 소폭 하락. Expert-level + hard real-time + visual freshness의 조합은 여전히 unique
@@ -965,12 +965,12 @@
 - **적용 범위**: VLA 모델 (OpenVLA, RT-2-X, Octo, Pi-0), MoE 변형 가용 시. manipulation/navigation. **미적용**: pure simulation only, language-only robots. **불확실**: real robot eval은 협력 lab 필요
 - **실험**: #1 또는 #3 server / OpenVLA-7B + custom inference / SimplerEnv (Bridge/RoboCasa), LIBERO
 - **차별점**: VLA + expert offloading + ACE은 거의 미연구 영역. Quar-VLA(양자화만)와 명확히 차별. Robotics + LLM serving 두 community에 영향 가능.
-- **상세**: [세션 Phase 2/4의 I5 섹션](sessions/2026-04-21-mode2-ace-moe-vlm-vla-extension.md)
+- **상세**: 세션 Phase 2/4의 I5 섹션
 
 ---
 
 ### Joint Token-Expert Budget Allocator: Cross-Modal Resource Scheduling for VLM Inference
-- **Date**: 2026-04-21 | **Mode**: 2 | **Session**: [링크](sessions/2026-04-21-mode2-ace-moe-vlm-vla-extension.md)
+- **Date**: 2026-04-21 | **Mode**: 2 | **Session**: 링크
 - **Experts**: ai-optimization-expert (main), algorithm-expert (sub)
 - **Review Scores** (refined): Nov 9/10, Diff 8/10, Imp 9/10, 평균 **8.7** (Top 2)
 - **Review Scores** (post-2026-04-21 related work augmentation): Nov 7.5/10, Diff 8/10, Imp 8.5/10, 평균 **8.0** — DyMoE(2026-03, depth-adaptive + importance + mixed-precision + prefetch)와 Dynamic Expert Quantization(2025-11, budget-constrained optimization formulation)이 가까운 선례. I3의 차별 포인트는 **token axis + visual KV asymmetry 활용**으로 축소 재정의 필요
@@ -980,12 +980,12 @@
 - **적용 범위**: VLM-MoE + dense VLM 모두에서 ACE-MoE-style 동시 적용 시나리오. **미적용**: 단일 modality (LLM only - 불필요), VLA closed-loop (별도 budget, I5와 통합 가능). **불확실**: optimizer가 architecture별 generalize 여부
 - **실험**: #5 / vLLM + custom budget scheduler / Qwen3-VL-4B/8B, LLaVA-Mixtral / MMMU, ChartQA, MS-COCO
 - **차별점**: Hobbit (mixed precision expert axis만), FlexGen (coarse-grained), HybriMoE (compute placement만) — cross-axis budget formulation이 unique. SARATHI chunked prefill과 orthogonal하게 결합 가능. vLLM PR 수준의 system contribution 가능.
-- **상세**: [세션 Phase 2/4의 I3 섹션](sessions/2026-04-21-mode2-ace-moe-vlm-vla-extension.md)
+- **상세**: 세션 Phase 2/4의 I3 섹션
 
 ---
 
 ### Modality-Aware ACE for VLM-MoE (with Hierarchical Injection Layer Boundary)
-- **Date**: 2026-04-21 | **Mode**: 2 | **Session**: [링크](sessions/2026-04-21-mode2-ace-moe-vlm-vla-extension.md)
+- **Date**: 2026-04-21 | **Mode**: 2 | **Session**: 링크
 - **Experts**: ai-optimization-expert (main), algorithm-expert (sub)
 - **Review Scores** (refined): Nov 8/10, Diff 8/10, Imp 8/10, 평균 **8.0** (Top 3)
 - **Review Scores** (post-2026-04-21 related work augmentation): Nov 7/10, Diff 7.5/10, Imp 8/10, 평균 **7.5** — AlignMamba-2(2026-03, modality-specific + modality-shared experts)가 I1의 철학을 이미 제시, ERNIE 5.0(2026-02, modality-agnostic routing)은 counter-design. I1은 ACE caching 측면의 새로움 + HIL boundary handling으로 positioning 필요
@@ -995,14 +995,14 @@
 - **적용 범위**: VLM-MoE 모델 (Qwen3-VL-MoE 출시 시 / MoE-LLaVA / Uni-MoE / DeepSeek-VL2 / LLaVA-Mixtral), batch ≥ 4. **미적용**: 단일 modality LLM, dense VLM (I2 적용). **불확실**: VLM-MoE 공개 모델 부족 → MoE-LLaVA 같은 기존 모델로 우선 검증 후 future-ready로 positioning
 - **실험**: #5 / vLLM + ACE-MoE patch + modality tag / MoE-LLaVA-7B, Uni-MoE-8B, LLaVA-Mixtral / MMMU, ScienceQA, VQAv2, ChartQA
 - **차별점**: Edge-MoE(task-level sparsity), Cache-Conditional MoE(modality 미구분), MoE-LLaVA(serving 최적화 미제시) — 본 idea는 token-modality level expert importance + 2D variance-aware. 직계 ACE-MoE 후속이며 modality-aware MoE serving은 미답.
-- **상세**: [세션 Phase 2/4의 I1+I4 섹션](sessions/2026-04-21-mode2-ace-moe-vlm-vla-extension.md)
+- **상세**: 세션 Phase 2/4의 I1+I4 섹션
 
 ---
 
 ## 미선정 로그
 
 ### I3' PRISM-VLA-Temporal — 미선정 (Major Revision → Deferred, DyQ-VLA/SD-VLA 65%+ scoop)
-- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-23-mode1-prism-vlm-kv-extension.md) / [Summary](summary/2026-04-23-prism-vlm-kv-extension.md)
+- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: 링크 / Summary
 - **Score avg**: Phase 2 6.0 → Phase 2' (refined) 6.45. Novelty 5.3→6.0, Impact 7.4, Algo peer 7.0, AI-opt 5.0, HW 5.5.
 - **Phase 2' 판정**: Major Revision → **Deferred** (Phase 1'' A/B empirical test 결과 조건부 재진입).
 - **연구 GAP**: VLA action sequence 의 temporal KV SF delta decomposition — VLA-Cache ([arXiv:2502.02175](https://arxiv.org/abs/2502.02175)) 는 caching only + FP16 KV 유지, quantization 축 공란.
@@ -1010,19 +1010,19 @@
 - **유사 연구 대응**: [DyQ-VLA arXiv:2603.07904](https://arxiv.org/abs/2603.07904) (2026-03) **65%+ 일치** — temporal-dynamic-aware VLA quantization + kinematic proxy bit-switch. [SD-VLA arXiv:2602.03983](https://arxiv.org/abs/2602.03983) (2026-02) **55% 일치** — static/dynamic binary disentanglement + recache gate + LIBERO-Memory benchmark. [QVLA arXiv:2602.03782](https://arxiv.org/abs/2602.03782) (ICLR'26) **60%** — action-space sensitivity channel bit allocation. [VLA-Cache [NeurIPS'25]](https://arxiv.org/abs/2502.02175) (45%, caching only), [KV-Efficient VLA arXiv:2509.21354](https://arxiv.org/abs/2509.21354) (40%), [EaqVLA arXiv:2505.21567](https://arxiv.org/abs/2505.21567) (module mixed-precision).
 - **미선정 사유**: (1) DyQ-VLA/SD-VLA 가 "temporal dynamic + VLA quantization" 축을 binary 방식으로 선점. (2) I3' 의 **continuous rank-r delta 이득 분리 증명**이 Phase 1'' A/B empirical test 전에는 확정 불가. (3) 전문가 평균 6.45 는 Tier-1 선정 기준 이하.
 - **재방문 조건**: (a) LIBERO-Long 에서 continuous rank-r vs binary-{SD-VLA style} A/B test → success rate gap >0.5% 확인 시 Tier-1 재진입 (CoRL 2026 workshop / ICRA 2027). (b) 또는 Tier-2 downgrade 경로: I3-Tier2 continuous rank-r delta measurement letter, BitVLA-2B + LIBERO-Spatial only, ICCAD/DATE 8p. (c) DyQ-VLA/SD-VLA follow-up 6개월 모니터링 후 novelty gap 재확인.
-- **상세**: [세션 Section 4.4.1 (미선정 처리)](sessions/2026-04-23-mode1-prism-vlm-kv-extension.md) / [Summary § 4.1](summary/2026-04-23-prism-vlm-kv-extension.md)
+- **상세**: 세션 Section 4.4.1 (미선정 처리) / Summary § 4.1
 
 ### T3 LightTri-LUT — 미선정 (I4 Self-scoop, 6개월 gap 필요)
-- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-23-mode1-prism-vlm-kv-extension.md) / [Summary](summary/2026-04-23-prism-vlm-kv-extension.md)
+- **Date**: 2026-04-23 | **Mode**: 1 | **Session**: 링크 / Summary
 - **Score avg (Tier-2 rubric)**: Nov 4.3 / Impact 6.7 / peers 5.5. 평균 5.5 / **6.7 (Tier-2 rubric Conditional Accept)**.
 - **Phase 2' 판정**: Tier-2 Conditional Accept. **미선정 사유**: I4' PRISMKV-PIM-DequantLUT 와 핵심 mechanism "SF-LUT precomputation" 중복 (device RRAM vs DRAM 차이만). 연속 publication 시 reviewer 가 "same author, incremental" 로 판정 가능성. Tier-2 rubric 6.7 은 borderline.
 - **연구 GAP**: Single RRAM tile (128×256, 28nm PTM) 에서 BitVLA-2B attention+action-head 의 PRISM LUT 효율 measurement letter 부재.
 - **제안 overview**: RRAM tile 단위 SF-LUT + BitVLA-2B subset profiling. TOPS/W + LUT hit rate measurement.
 - **재방문 조건**: (a) I4' (HPCA 2027) submission 후 6개월 이후. (b) RRAM-specific novel contribution 추가 (endurance 측정, retention drift, read disturb). (c) RRAM-exclusive workload (edge VLA inference on resistive memory) 로 포지셔닝.
-- **상세**: [Summary § 4.2](summary/2026-04-23-prism-vlm-kv-extension.md)
+- **상세**: Summary § 4.2
 
 ### L2 v2 TemporalTier-3: Action-Imminence-Driven Hierarchical KV (VLA + Streaming VLM) — 미선정 (Tiebreak 패배)
-- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-22-mode1-vlm-vla-context-serving.md)
+- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: 링크
 - **Score avg** (post-verification): Phase 2 6.5 → Phase 2' **7.08** (+0.58). Nov 7.5 / Diff 7.6 / Imp 6.2 / Feas 7.0. 전문가 합의 2.5:0.5. Verification 후 변동 없음.
 - **Phase 2' 판정**: Conditional Accept. **미선정 사유**: A1 v2 PhaseGraph-VLA 와 평균 **동점 7.08**, **impact × feasibility product tiebreak 에서 패배 (L2: 43.40 < A1: 48.75)**.
 - **연구 GAP**: VLA action stream / VLM video streaming 에서 "다음 수백 ms 내 어떤 KV 페이지가 hot 인지" 를 task-specific signal 로 예측. 기존 VLA-Cache / KV-Efficient VLA / HERMES ([arXiv:2601.14724](https://arxiv.org/abs/2601.14724)) 은 single-tier 또는 generic hierarchical.
@@ -1031,7 +1031,7 @@
 - **개선 가능성 / 재방문 조건**: (a) Hawkes vs Poisson ablation 이 bursty workload (tool-use dialogue) 에서 유의미하면 reposition. (b) Gripper predictor empirical AUC +0.08 이상 증명. (c) 70B+ VLA 등장 (scope 확장) 시. (d) Grace Hopper NVLink-C2C 실기 접근 시. 다음 세션에서 single-PoC (gripper signal AUC study 1주) 후 재평가 가능.
 
 ### A2 v2 TierKernel-Dispatch: Three-Tier Patch Routing with Warp-Specialized Kernel — 미선정 (Top 3 컷오프)
-- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-22-mode1-vlm-vla-context-serving.md)
+- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: 링크
 - **Score avg** (post-verification): Phase 2 5.67 → Phase 2' **6.88** (+1.18). Nov 7.0 / Diff 7.5 / Imp 6.5 / Feas 6.5. 전문가 합의 **2:1** (algorithm-expert **No** — intent classifier cross-task generalization 증명 약함). Verification 후 변동 없음.
 - **Phase 2' 판정**: Conditional Accept. **미선정 사유**: (1) 평균 6.88 은 Top 3 컷오프 하회 (L1 7.00 > A3 7.15 > A1 7.08, post-verification). (2) algorithm-expert 반대표. (3) OmniSparse [arXiv:2511.12201](https://arxiv.org/abs/2511.12201) 의 binary hot-cold 대비 3-tier incremental contribution 이 challenge. (4) Blackwell L2 spec 변경 risk.
 - **연구 GAP**: Task intent × kernel variant × memory tier 3축 통합 공백.
@@ -1040,7 +1040,7 @@
 - **개선 가능성 / 재방문 조건**: (a) Intent classifier cross-task generalization eval (최소 3 VLM benchmark) 결과 확보 시. (b) BlindSight / Tawa 와의 명확한 차별화 formal. (c) B200 이후 L2 spec 확정 후 재검증.
 
 ### L3 v2 MTV-Pool: Multi-Turn-Aware Visual KV Pool — 미선정 (Major Revision)
-- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: [링크](sessions/2026-04-22-mode1-vlm-vla-context-serving.md)
+- **Date**: 2026-04-22 | **Mode**: 1 | **Session**: 링크
 - **Score avg** (post-verification): Phase 2 6.00 → Phase 2' **6.68** → **6.50 (verified, 강화)**. Nov 5.9 (↓ from 6.3 after GUI-KV scoop 실존 확인) / Diff 7.2 / Imp 6.0 / Feas 7.2. 전문가 합의 **1.5:1.5 분열** (legacy-sys **No** — pool 단일 도입 MICRO scope 엔 얕음, ai-opt Conditional — γ_v weight overfitting 우려).
 - **Phase 2' 판정**: **Major Revision (근거 강화)**. **미선정 사유 (검증 반영)**: placeholder "GUIAgent-KV 65%" 의 실제 논문 = [arXiv:2510.00536](https://arxiv.org/abs/2510.00536) **GUI-KV: Efficient GUI Agents via KV Cache with Spatio-Temporal Awareness** (2025-10-01, Kung-Hsiang Huang, Haoyi Qiu, Yutong Dai) 실존 확인. GUI-KV 메커니즘 = (a) residual stream L2 norm spatial saliency + (b) previous frames' keys → current frame key subspace projection 으로 redundant history 제거. AgentNetBench 5-screenshot: FLOPs -38.9%, accuracy +4.1%. 메커니즘 1:1 일치는 아니나 target scenario (multi-turn GUI agent screenshot history KV 압축) + positioning 완전 중첩 → contribution novelty claim 잠식. 전문가 합의 분열 유지.
 - **연구 GAP**: Screenshot-history 기반 GUI agent (Claude Computer Use, VisualWebArena, OSWorld) 의 turn 별 inter-turn visual coldness — MMInference static permutation / OmniSparse intra-turn 미커버.
@@ -1053,50 +1053,50 @@
 - **미선정 사유**: VLCache ([arXiv:2512.12977](https://arxiv.org/abs/2512.12977), 2025.12) 가 image-hash 기반 encoder/KV cache 재사용을 이미 SGLang 에 구현 + 1.2-16× TTFT speedup 실증. F3 의 핵심 claim (shared-image TTFT 1.8-2.5×) 을 ~70-75% 선점. Phase 1' 에서는 F3 가 단독 Novelty 8 로 유지됐으나 Phase 2' 의 6-month fresh similarity search 에서 발견된 VLCache 는 2주 전 공개 논문으로 prior session 에서도 반영되지 않은 신정보. Image-hash KV reuse axis 는 더 이상 safe harbor 아님.
 - **개선 가능성 / repositioning 옵션**: (a) Narrative 를 "KV 재사용" 대신 **"GPU+PIM 이종 메모리 MOESI coherence 프로토콜"** 로 전면 피벗. 수치 claim 을 TTFT speedup 이 아닌 **coherence traffic 감소율 / invalidation cost / write-back bandwidth saving** 으로 재정의. VLCache 가 다루지 않는 **Modified/Owned state transition** (PIM bank pinned KV 의 invalidation 비용, cross-tenant image update 시 coherence message) 을 주 기여로 제시. TraCT ([arXiv:2512.18194](https://arxiv.org/abs/2512.18194)) 의 "cache-line coherence impractical at multi-TB CXL" 반박에 image-identity granularity 응답. (b) 또는 F1 의 cross-request visual KV sharing sub-module 로 흡수 (독립 논문 포기). 예상 추가 2-4주 ideation 필요.
 - **재방문 트리거**: (1) VLCache 논문 정독 후 MOESI 축 narrative draft 완성, (2) LLaVA-Bench-Wilder real batch trace duplication rate ≥20% 확인, (3) AttAcc simulator 에 coherence protocol extension 가능성 검토.
-- **Session**: [링크](sessions/2026-04-22-mode2-vlm-pim-extension.md) — F3 (Phase 2' Major Revision)
+- **Session**: [링크](/research-wiki/2026-04/vlm-pim-extension) — F3 (Phase 2' Major Revision)
 
 ### H2-VLM Hierarchical 3-Tier KV (GPU HBM / PIM bank / CXL-SSD) — DROP (SCOOP)
 - **Score avg**: Phase 2 Novelty 4/10, Differentiation 4/10 (단독 통과 불가)
 - **미선정 사유**: **PAM ([arXiv:2602.11521](https://arxiv.org/abs/2602.11521), 2026.02)** 이 HBM-PIM + DRAM-PIM + SSD-PIM 3-tier + context locality migration + PAMattention 알고리즘 모두 선점 (~75-80% 메커니즘 일치). FlexGen ([arXiv:2303.06865](https://arxiv.org/abs/2303.06865)) 이 이미 3-tier, InfiniGen ([arXiv:2406.19707](https://arxiv.org/abs/2406.19707)) 이 length-adaptive KV, LoL-PIM ([arXiv:2412.20166](https://arxiv.org/abs/2412.20166)) 이 long-context PIM hierarchy — 전체적으로 2024-2025 유행 주제. VLM-specific 특성만으로는 얇음.
 - **개선 가능성 / repositioning**: "video long-context (L>8K) 구간에서 VLM-specific prefetch scheduler" 로 narrow 하거나, DeepStack-aware tier policy (visual token hot tier 우선, injection 시점 기반 promotion) 을 결합해 **F1-VLM 의 sub-module 로 흡수**. 독립 논문은 PAM 이후 불가.
-- **Session**: [링크](sessions/2026-04-22-mode2-vlm-pim-extension.md) — H2 (Phase 2 DROP)
+- **Session**: [링크](/research-wiki/2026-04/vlm-pim-extension) — H2 (Phase 2 DROP)
 
 ### L1-VLM SLO Admission Control & Dual-Pool Batching — DROP (SCOOP)
 - **Score avg**: Phase 2 Novelty 7/10, Differentiation 6/10, Impact 7/10 → Similarity SCOOP 로 통과 불가
 - **미선정 사유**: 3편이 80%+ 선점 — **ModServe ([arXiv:2502.00937](https://arxiv.org/abs/2502.00937), 2025.02)** modality-aware disaggregation + image-text vs text-only routing, **RPS-Serve ([arXiv:2603.26498](https://arxiv.org/abs/2603.26498), 2026.03)** "Rocks/Pebbles/Sand" video/image/text 3-tier scheduling + MMMU TTFT tail 해결, **Dual-Pool Token-Budget Routing ([arXiv:2604.08075](https://arxiv.org/abs/2604.08075), 2026.04)** 용어 · 구조 직접 충돌. ElasticMM ([arXiv:2507.10069](https://arxiv.org/abs/2507.10069)), PolyServe ([arXiv:2507.17769](https://arxiv.org/abs/2507.17769)), SLOs-Serve ([arXiv:2504.08784](https://arxiv.org/abs/2504.08784)) 추가. 2025-2026 상반기 VLM serving scheduling 은 레드오션.
 - **개선 가능성 / repositioning**: "PIM bank contention-aware admission" 으로 narrow 하여 **F1-VLM dispatcher 의 component** 로 흡수. 단독 system 논문은 생존 불가.
-- **Session**: [링크](sessions/2026-04-22-mode2-vlm-pim-extension.md) — L1 (Phase 2 DROP)
+- **Session**: [링크](/research-wiki/2026-04/vlm-pim-extension) — L1 (Phase 2 DROP)
 
 ### Visual Token ACT — Sequence-Level Pruning via Cumulative Attention Score
 - **Score avg**: 7.0 (refined, original 6.0)
 - **미선정 사유**: KV compression 분야(VL-Cache, PyramidKV, SnapKV, H2O, Quest, Look-M 등)가 매우 crowded. ACE 원칙의 KV transfer는 직관적이지만 단독 paper로는 differentiation 약함.
 - **개선 가능성**: I3(Joint Budget) 또는 I1(Modality-Aware ACE)의 sub-component로 흡수 시 가치 있음. 또는 sequence-level pruning을 prefill phase의 attention compute 자체에서 skip하는 방향으로 강화하면 standalone 부활 가능.
-- **Session**: [링크](sessions/2026-04-21-mode2-ace-moe-vlm-vla-extension.md) — Phase 2 I2
+- **Session**: 링크 — Phase 2 I2
 
 ### Hierarchical Injection-Aware Routing (DeepStack as Instance) — 흡수
 - **Score avg**: 7.0 (standalone)
 - **미선정 사유**: DeepStack-specific 한정 시 적용 범위 좁음. Hierarchical Injection Layer (HIL) framework로 일반화한 후 I1에 흡수.
 - **개선 가능성**: I1의 boundary handling sub-component로 통합 완료 (HIL handling).
-- **Session**: [링크](sessions/2026-04-21-mode2-ace-moe-vlm-vla-extension.md) — Phase 2 I4
+- **Session**: 링크 — Phase 2 I4
 
 ### Image-Level Cross-Request Cache (KV + Expert Profile)
 - **Score avg**: 7.0
 - **미선정 사유**: Novelty incremental (vLLM prefix caching의 visual extension). System contribution은 가치 있으나 standalone academic paper로는 약함.
 - **개선 가능성**: vLLM/SGLang에 PR 형태로 직접 contribute. Production workload reuse rate 통계가 강력하면 standalone 가능 (e-commerce/document QA 시나리오 강화).
-- **Session**: [링크](sessions/2026-04-21-mode2-ace-moe-vlm-vla-extension.md) — Phase 2 I6
+- **Session**: 링크 — Phase 2 I6
 
 ### FF-ACE-VLA: Fingerprint-Forward ACE Eviction for VLA Real-Time Serving — 미선정 (deferred)
 - **Score avg**: 5.83 (post-refinement 6.2)
 - **미선정 사유**: (1) VLA-MoE 시장 성숙도 의존 — AdaMoE-VLA(2025-10), HiMoE-VLA(2025-12) 모두 최근; 실제 robot deployment은 2027+ bet. (2) 직계 ACE-MoE 연장선 → reviewer들이 "incremental over team's own prior work"로 볼 위험. (3) Cross-idea overlap 문제 — I3 ZMSP + I4 FARD-C + I5 FF-ACE-VLA 3편이 같은 fingerprint predictor를 공유해 3-paper split 시 artificial-split rejection 위험. I4+I3 2편 먼저 검증 후 진행이 합리적.
 - **개선 가능성**: Phase-conditional schedulability analyzer만 분리 → RTAS/CoRL 워크숍 페이퍼로 publishable. AdaMoE-VLA/HiMoE-VLA production 신호 관찰 시 재방문. 실제 robot evaluation partner 확보 시 priority 상승.
 - **재방문 트리거**: (1) VLA-MoE production deployment 신호, (2) ICCAD/MICRO ACE-MoE 결과 발표 후, (3) robot lab partner 확보.
-- **Session**: [링크](sessions/2026-04-21-mode1-moe-fingerprinting.md) — 미선정 I5
+- **Session**: 링크 — 미선정 I5
 
 ### ExpertEcho: Cross-Tenant Topic Recovery via Hardware Side-Channel — DROP
 - **Score avg**: 4.0
 - **미선정 사유**: **MoEcho ([arXiv:2508.15036](https://arxiv.org/abs/2508.15036), CCS 2025)에 의해 scooped**. 99.8% Prompt Inference + 92.8% response reconstruction, GPU cache occupancy + TLB + perf counter 공격 모두 DeepSeek-V2 / Qwen1.5-MoE / TinyMixtral에서 이미 달성. 공영호 lab에 hardware side-channel 실적 부재로 S&P/USENIX Security 수용 위험도 높음 (2-3개월 infra 선행).
 - **흡수**: 유일한 novel angle인 **scaling-leakage law (privacy ↓ as N_experts ↑)**를 **I2 PhantomRoute의 motivation section (1-2 pages)으로 흡수**. 별도 paper 불필요. Security 외부 랩과 coauthor 시에만 standalone 부활 고려.
-- **Session**: [링크](sessions/2026-04-21-mode1-moe-fingerprinting.md) — DROP I1
+- **Session**: 링크 — DROP I1
 
 ### SpikeXbar + SpikeRoute-Xbar: Event-Driven BNN-SNN on Crossbar (SNN track) — 미선정 (deferred)
 - **Score avg**: I-A3 5.3 + I-H2 6.7 (fused ~6.5)
@@ -1106,4 +1106,4 @@
   - **B. CADC 저자와 composition**: CADC output sparsity + 우리 input sparsity dual-sparsity synergy 분석 — 저자 조율 필요.
   - **C. Lab SNN infrastructure 구축 후 2027 H1 재방문**: surrogate gradient + BPTT 파이프라인 정비 + 실제 robot lab partner 확보 시 재시도.
 - **재방문 트리거**: (1) N_active-binned SF 의 standalone workshop 성사, (2) CADC 혹은 SOT-MRAM 저자와의 joint work 가능성, (3) lab 의 SNN 훈련 infra 정비 완료, (4) 2027 ISSCC 제출 deadline (2026-09) 가 뜨거운 시점이면 급행 처리 고려.
-- **Session**: [링크](sessions/2026-04-22-mode1-bnn-tnn-domain-extension.md) — 미선정 SNN track (I-A3 + I-H2)
+- **Session**: 링크 — 미선정 SNN track (I-A3 + I-H2)

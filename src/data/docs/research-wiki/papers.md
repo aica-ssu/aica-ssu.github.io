@@ -1214,14 +1214,14 @@ Phase 2' similarity-critique agent 가 제시한 11편 placeholder 중 2편만 �
 
 ### VLM_exploration_PIM_260407.pdf (연구자, 2026-04-07, internal)
 - **Date analyzed**: 2026-04-22
-- **Session**: [링크](sessions/2026-04-22-mode2-vlm-pim-extension.md)
+- **Session**: [링크](/research-wiki/2026-04/vlm-pim-extension)
 - **Contribution**: VLM-aware Heterogeneous KV Management for GPU+PIM Systems 제안 (motivation paper). AttAcc ASPLOS'24 baseline + Qwen3-VL-4B. 3 Challenges (C1 TTFT explosion 6-22×, C2 Layer Asymmetry L17-21 dense 24.5% vs L0-7 sparse 2.6% → BW 7.6× waste, C3 Capacity FHD KV 305MB/req + mixed batch imbalance 13.6×) + 3 Solutions (4-A ViT-Decode overlap, 4-B Layer-Adaptive KV Placement dense→PIM/sparse→HBM, 4-C Bank Balancing + Cross-Req Image Sharing).
 - **Hidden insights**: (1) DeepStack Qwen3-VL 의 ViT intermediate output → LLM [L4, L8, L12] inject 가 L17-21 peak 의 구조적 원인 가설. (2) Visual KV size 가 seq 86.2% 차지하면서도 attention 기여도 11.4% — **token 수와 contribution 의 비대칭**은 ACE-MoE style cumulative score 에 직접 유사. (3) Bank imbalance 는 **mixed LLM+VLM batch 에서 최악** (13.62× @ 25% VLM); modality-aware spreading 으로 22% 개선 가능. (4) Same-image cross-request sharing 이 BS=128, 50% sharing 에서 38% memory + 1.62× capacity 회복 — multi-turn conversation 에서 빈번.
 - **Our session relation**: 2026-04-21 Mode 2 ACE-MoE 세션에서 SW-only 측면 활용. **본 세션 (2026-04-22 Mode 2) 은 HW/PIM 측면 orthogonal 분석** — 같은 PDF 를 다른 축으로 재해석하여 본 연구의 4-A/4-B/4-C 를 직접 확장·보완.
 
 ### PIM_260422_미팅자료.pdf (연구자, 2026-04-22, internal)
 - **Date analyzed**: 2026-04-22
-- **Session**: [링크](sessions/2026-04-22-mode2-vlm-pim-extension.md)
+- **Session**: [링크](/research-wiki/2026-04/vlm-pim-extension)
 - **Contribution**: E1-E5 실험 + AttAcc simulator 수정 계획 미팅자료. (a) FP16 → BF16 migration 강제 발견 (L27 self-attn Q·Kᵀ > 65504 overflow → NaN; BF16 에서 L27 abs_max=860 finite). (b) E1 chunked prefill GPU profile (C≤32 AI<60 강 memory-bound, C=4 SDPA 870ms = full prefill 33ms 의 26×). (c) E2 PIM analytical (AttAcc HBM3 18.1 TB/s effective, C=16 chunked 대비 PIM attn 50×, E2E prefill 1.53×, video L=8948 PIM 0.81× regression). (d) E3 pattern robustness (MMMU n=125, subset-mean corr 0.9964 / sample-to-full min 0.357). (e) E4 5-model comparison (Qwen3-VL/Qwen2.5-VL/InternVL3 dense band 공통, Mllama cross-attn self-attn 0.85% 만, Qwen3.5 hybrid linear 48/64 layer linear KV 무관). (f) E5 quantization impact (W8A8 pattern collapse +66.85pp, weight-only INT4/INT8 Δ<0.1pp, FP8-Dynamic opposite -4.17pp).
 - **Hidden insights**: (1) **E3 sample-to-full corr 0.357 minimum** — aggregate 0.996 stable 하지만 individual 은 catastrophic — per-sample policy fragility 가 VLM KV 문헌의 open gap. (2) W8A8 collapse (+66pp) vs weight-only 보존 (Δ<0.1pp) 의 대비 — activation quantization 이 visual attention distribution 을 붕괴시키는 핵심. FP8-Dynamic 은 반대 방향 collapse 로 같은 원리. (3) **Prefill 은 simulator 지원 미비** — AttAcc 원본은 decode-only (src/system.py L223-237 sum stage GPU route), 4-file extension (config/system/model/ramulator_wrapper) 1주 작업. (4) FP16 L27 overflow 는 **VLM-specific numerical safety** 이슈 (LM head 직전 sharpened representation, Q·Kᵀ abs_max > 65504). (5) E4 Qwen3.5 hybrid linear 는 48/64 layer 에 KV 없음 — **architecture fingerprint dispatcher** 가 필요.
 - **Next steps (연구)**: P1 AttAcc simulator 4-file mod (1주), P2 Cross-dataset E3 (COCO/DocVQA/ChartQA), P3 E4 full 200 samples + InternVL3 late-peak 검증, P3 Video hierarchical KV 대안.
@@ -1471,7 +1471,7 @@ Phase 2' similarity-critique agent 가 제시한 11편 placeholder 중 2편만 �
 ### PRISM: Decompose-then-Merge Scaling Factors for Accurate and Energy-Efficient CIM-friendly BNNs (ISLPED 2026 투고)
 - **Paper-id**: islped-2026-prism (공영호 lab 자체 논문)
 - **Date analyzed**: 2026-04-22
-- **Session**: [링크](sessions/2026-04-22-mode1-bnn-tnn-domain-extension.md)
+- **Session**: 링크
 - **Expert**: algorithm-expert, hw-pim-accelerator-expert
 - **Contribution**: CIM crossbar 기반 BNN 추론의 SF 구조적 부정합 해결. (1) Xbar-wise SF: channel-wise (N buffer reads per crossbar) → Xbar-wise (1 read). (2) Decompose-then-merge: 훈련 시 rank r 로 S1×S2 분해 학습, 추론 시 merge (zero overhead). (3) OPTIC: 작은 crossbar 에서 inlier 대표값 μ_in 교체 + outlier 보존. (4) LUT-bypass: 확보 buffer 에 pre-computed SF × integer_output 저장, hit rate >82%. ResNet-20/18 CIFAR + Tiny-ImageNet 에서 정확도 +0.19-2.69%, SF 26-95.9% 감소, TOPS/W 1.8-3.4× 개선. 전부 scratch training, device-agnostic (RRAM/FeRAM/SRAM).
 - **Hidden insights**:
@@ -1484,7 +1484,7 @@ Phase 2' similarity-critique agent 가 제시한 11편 placeholder 중 2편만 �
 
 ### LoRDS: Low-Rank Decomposed Scaling for LLM PTQ
 - **arXiv**: [2601.22716](https://arxiv.org/abs/2601.22716) | **Date**: 2026-01
-- **Session**: [링크](sessions/2026-04-22-mode1-bnn-tnn-domain-extension.md)
+- **Session**: 링크
 - **Relevance**: PRISM 의 rank decomposition 원리가 LLM PTQ 에서도 독립 발견 — F1 의 ~45% mechanism overlap, baseline "LoRDS-transferred-to-BNN-KWS" 필수 포함.
 - **Differentiation vs F1**: LoRDS 는 post-hoc PTQ, LLM, FP activation, CPU/GPU. F1 은 scratch training, BNN, integer activation on analog crossbar + time-axis 추가. LoRDS 가 BNN-CIM-streaming 에서 저조함 증명이 F1 의 scoop 대응.
 
@@ -1594,7 +1594,7 @@ Phase 2' similarity-critique agent 가 제시한 11편 placeholder 중 2편만 �
 
 ### MoEcho: Exploiting Side-Channel Attacks to Compromise User Privacy in Mixture-of-Experts LLMs
 - **arXiv**: [2508.15036](https://arxiv.org/abs/2508.15036) | **Date**: 2025-08 | **Venue**: CCS 2025
-- **Session**: [링크](sessions/2026-04-21-mode1-moe-fingerprinting.md)
+- **Session**: 링크
 - **Relevance**: 이번 세션의 primary threat model. I1 ExpertEcho의 공격 pipeline을 이미 달성 — **선점**. I2 PhantomRoute가 방어해야 할 대상.
 - **Contribution**: GPU/CPU 4개 아키텍처 side channel (Cache Occupancy, Pageout+Reload, Performance Counter, TLB Evict+Reload)로 multi-tenant MoE LLM 서버에서 **Prompt Inference Attack 99.8%** (healthcare), VLM 대상 **Visual Inference Attack**, **Response Reconstruction 92.8%** 달성. 대상 모델: DeepSeek-V2, Qwen1.5-MoE, TinyMixtral.
 - **Hidden insight**: expert 128개 대 8개의 leakage scaling은 측정하지 않음 → 본 세션이 보완 가능한 gap.
@@ -1603,7 +1603,7 @@ Phase 2' similarity-critique agent 가 제시한 11편 placeholder 중 2편만 �
 
 ### Expert Selections In MoE Models Reveal (Almost) As Much As Text
 - **arXiv**: [2602.04105](https://arxiv.org/abs/2602.04105) | **Date**: 2026-02 | **Venue**: arXiv preprint
-- **Session**: [링크](sessions/2026-04-21-mode1-moe-fingerprinting.md)
+- **Session**: 링크
 - **Relevance**: expert ID → text 복원의 upper bound (clean oracle 기준).
 - **Contribution**: clean expert ID sequence로부터 91.2% token-level text 복원. defense 섹션에서 "dummy compute / constant-work padding" 제안 (= PhantomRoute 메커니즘 스케치).
 - **Differentiation vs PhantomRoute**: PhantomRoute는 이들의 defense 제안을 operationalize하고 형식적 MI bound와 실증적 Pareto까지 추가한다.
@@ -1697,7 +1697,7 @@ Phase 2' similarity-critique agent 가 제시한 11편 placeholder 중 2편만 �
 
 ### ACE-MoE: Skip Waiting, Not Accuracy — Time-Budgeted Skipping and Accuracy-Critical Expert Caching for Efficient MoE Inference (ICCAD'26 submission)
 - **Date analyzed**: 2026-04-21
-- **Session**: [링크](sessions/2026-04-21-mode2-ace-moe-vlm-vla-extension.md)
+- **Session**: 링크
 - **Expert**: ai-optimization-expert, algorithm-expert
 - **Paper-id**: iccad-2026-ace-moe (own work)
 - **Contribution**: MoE 추론에서 expert offloading의 GPU waiting time 제거. 3가지 핵심 — (1) ACE caching: hit-rate 대신 accuracy-critical expert preservation 목표, variance-aware global selection으로 layer sensitivity 반영. (2) Time-budgeted skipping & prefetching: prefill에서 sequence-level aggregate score, decoding에서 top-(K+α) gate logit prefetch, 4-bit quantized transfer. (3) Fused kernel: cached(BF16)/prefetched(4-bit)/skipped 3종을 단일 kernel로. RTX Pro 6000 96GB + PCIe 5.0x16 환경에서 fine-grained MoE 3종 (DeepSeek-V2-Lite, Qwen1.5-MoE, Qwen3-30B-A3B)에 평가, prefill 11.0×, decoding 1.3× speedup vs HybriMoE [DAC'25], 50% cache ratio에서 99.3-99.9% relative accuracy.
@@ -1722,7 +1722,7 @@ Phase 2' similarity-critique agent 가 제시한 11편 placeholder 중 2편만 �
 
 ### VLM-aware Heterogeneous KV Management for GPU+PIM Systems (Internal report by 연구자, 2026-04-07)
 - **Date analyzed**: 2026-04-21
-- **Session**: [링크](sessions/2026-04-21-mode2-ace-moe-vlm-vla-extension.md)
+- **Session**: 링크
 - **Expert**: ai-optimization-expert (PIM contribution은 제외, software-side measurement만)
 - **Paper-id**: internal-2026-vlm-pim-exploration
 - **Contribution (software-side만)**: Qwen3-VL-4B vs Qwen3-4B를 비교한 measurement-driven 분석. AttAcc(ASPLOS'24)를 baseline으로 하는 PIM 확장 motivation으로 작성되었으나 본 세션에서는 software-side observation만 활용. (1) VLM TTFT explosion 측정 (672x672 6.13×, FHD 22.4×, MMMU real 12.4×). (2) Layer-wise visual attention asymmetry (L17-21 dense 24.5%, L0-7 sparse 2.6%, peak L18=30.7%). (3) Visual KV size dominance (sequence의 86.2%, attention 11.4%, BW waste 7.6×). (4) DeepStack architecture (Qwen3-VL이 ViT 중간 출력을 LLM L4/L8/L12 등에 inject) 분석. (5) Same-image cross-request sharing 가능성 (BS=128에서 38% memory saving).
