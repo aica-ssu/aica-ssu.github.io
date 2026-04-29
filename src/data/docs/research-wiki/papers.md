@@ -8,37 +8,37 @@
 
 3 expert (ai-optimization / hw-pim / legacy-system) 가 각각 15-25 paper × 3 = ~60 paper 수집. peer-reviewed 비율: AI 59% / HW 42-77% (Phase 1' 보강 후) / System 63%.
 
-### A. PRISM-FOG-FX (NVFP4 mixed precision + sparsity + DVFS)
+### A. Prism (NVFP4 mixed precision + sparsity + DVFS)
 - [NVFP4 NVIDIA Tech Blog](https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/) — Blackwell native E2M1 4-bit
 - **FGMP** ([arXiv:2504.14152](https://arxiv.org/abs/2504.14152), 2025-04) — Fine-Grained Mixed Precision (closest competitor)
 - **MicroMix** ([arXiv:2508.02343](https://arxiv.org/abs/2508.02343), 2025-08) — NVFP4+FP8 layer-wise mixed
 - **CLONE** ([arXiv:2506.02847](https://arxiv.org/abs/2506.02847), USENIX ATC 2025) — LLM Inference Energy DVFS
 
-### B. BIVOUAC-SLATE-R (visual KV semantic cluster + cross-frame)
+### B. Bivouac (visual KV semantic cluster + cross-frame)
 - **VL-Cache** ([arXiv:2410.23317](https://arxiv.org/abs/2410.23317), ICLR 2025) — VLM KV cache eviction
 - **ClusterKV** ([arXiv:2412.03213](https://arxiv.org/abs/2412.03213), 2024-12) — KV cluster centroid (LLM only)
 - **Sali-Cache** ([arXiv:2602.14236](https://arxiv.org/abs/2602.14236), 2026-02) — saliency + cross-frame
 - **Mosaic** ([arXiv:2604.10060](https://arxiv.org/abs/2604.10060), 2026-04-11) — concurrent 55-65% (Phase 2' 검출)
 - **DyCoke** (CVPR 2025) — VLM dynamic token compression
 
-### C. PRISM-VL-R (Phase-aware LSH + RadixAttention)
+### C. RadixVL (Phase-aware LSH + RadixAttention)
 - **SGLang RadixAttention** ([arXiv:2312.07104](https://arxiv.org/abs/2312.07104), NeurIPS 2024)
 - **VLCache** ([arXiv:2512.12977](https://arxiv.org/abs/2512.12977), 2025-12) — encoder cache + content hash (closest competitor)
 - **Mooncake** ([USENIX FAST 2025](https://www.usenix.org/conference/fast25/presentation/qin)) — Best Paper, KVCache disagg
 - **HiCache** ([SGLang HiCache 2025](https://www.lmsys.org/blog/2025-09-10-sglang-hicache/))
 
-### D. STRATA-K-R (Stratified KV layout + page-color)
+### D. Strata (Stratified KV layout + page-color)
 - **Sarathi-Serve** ([USENIX OSDI 2024](https://www.usenix.org/conference/osdi24/presentation/agrawal))
 - **InfiniGen** ([USENIX OSDI 2024](https://www.usenix.org/system/files/osdi24-lee.pdf))
 - **AttAcc** ([arXiv:2403.15388](https://arxiv.org/abs/2403.15388), ASPLOS 2024)
 - [NVIDIA Bluefield-4 ICMS](https://developer.nvidia.com/blog/introducing-nvidia-bluefield-4-powered-inference-context-memory-storage-platform-for-the-next-frontier-of-ai/)
 
-### E. HARBINGER-CLOVER-R (visual-confidence speculative + power-envelope)
+### E. Harbinger (visual-confidence speculative + power-envelope)
 - **Spec-LLaVA** ([arXiv:2509.11961](https://arxiv.org/abs/2509.11961), 2025-09) — VLM speculative (closest competitor)
 - **Fast Speculative Edge-Cloud** ([arXiv:2505.21594](https://arxiv.org/abs/2505.21594))
 - **ViSpec** ([arXiv:2509.15235](https://arxiv.org/abs/2509.15235))
 
-### F. OBELISK-5090-R (RTX 5090 large MoE local)
+### F. Obelisk (RTX 5090 large MoE local)
 - **Qwen3-VL Tech Report** ([arXiv:2511.21631](https://arxiv.org/abs/2511.21631)) — DeepStack
 - **InternVL3.5** ([arXiv:2508.18265](https://arxiv.org/abs/2508.18265))
 - **DynaExq** ([arXiv:2511.15015](https://arxiv.org/abs/2511.15015), 2025-11-19) — adjacent 35-45%

@@ -5,24 +5,24 @@
 ---
 
 ## DeepStack-aware NVFP4 Anchor — 2026-04-28 vlm-edge-layerwise-context 세션
-**정의**: Blackwell native NVFP4 (E2M1, 16-element block scaling) 의 transformer layer 별 sensitivity 분포를 Qwen3-VL DeepStack architecture (visual_indexes=[8,16,24] inject point) 와 정합시켜 layer 별 NVFP4/FP8/INT4 mixed precision 결정. ATRIUM-R(AI) M1 LayerClassifier 의 evolution 으로 본 세션 PRISM-FOG-FX 의 unique axis. FGMP / MicroMix 의 LLM-only mixed precision 과 차별 (DeepStack 인지).
+**정의**: Blackwell native NVFP4 (E2M1, 16-element block scaling) 의 transformer layer 별 sensitivity 분포를 Qwen3-VL DeepStack architecture (visual_indexes=[8,16,24] inject point) 와 정합시켜 layer 별 NVFP4/FP8/INT4 mixed precision 결정. ATRIUM-R(AI) M1 LayerClassifier 의 evolution 으로 본 세션 Prism 의 unique axis. FGMP / MicroMix 의 LLM-only mixed precision 과 차별 (DeepStack 인지).
 **관련 자료**: [NVFP4 NVIDIA Tech Blog](https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/), [FGMP arXiv:2504.14152](https://arxiv.org/abs/2504.14152), [MicroMix arXiv:2508.02343](https://arxiv.org/abs/2508.02343), [Qwen3-VL arXiv:2511.21631](https://arxiv.org/abs/2511.21631)
-**관련 아이디어**: PRISM-FOG-FX (Tier-1, 2026-04-28), OBELISK-5090-R (Tier-2 per-stage cap)
+**관련 아이디어**: Prism (Tier-1, 2026-04-28), Obelisk (Tier-2 per-stage cap)
 
 ## Phase-aware Visual LSH Hash — 2026-04-28 vlm-edge-layerwise-context 세션
-**정의**: VLM serving 의 encode / prefill / decode 3 phase 마다 다른 LSH (Locality-Sensitive Hashing) granularity policy 적용 — encode 단계 fine-grain (visual token 단위), prefill 단계 coarse-grain (image-level), decode 단계 cache-only (lookup). VLCache (encoder cache + content hash) 와 차별 — single-policy → phase-policy 분리. PRISM-VL-R 의 unique axis. Green Context CUDA 12.4 SM partition 과 통합되어 LSH lookup overhead 분산.
+**정의**: VLM serving 의 encode / prefill / decode 3 phase 마다 다른 LSH (Locality-Sensitive Hashing) granularity policy 적용 — encode 단계 fine-grain (visual token 단위), prefill 단계 coarse-grain (image-level), decode 단계 cache-only (lookup). VLCache (encoder cache + content hash) 와 차별 — single-policy → phase-policy 분리. RadixVL 의 unique axis. Green Context CUDA 12.4 SM partition 과 통합되어 LSH lookup overhead 분산.
 **관련 자료**: [VLCache arXiv:2512.12977](https://arxiv.org/abs/2512.12977), [SimCache (CVPR 2025W)](https://www.lmsys.org/blog/2024-01-17-sglang/), [SGLang RadixAttention arXiv:2312.07104](https://arxiv.org/abs/2312.07104)
-**관련 아이디어**: PRISM-VL-R (Tier-1 W12 동적 분기, 2026-04-28)
+**관련 아이디어**: RadixVL (Tier-1 W12 동적 분기, 2026-04-28)
 
 ## Cross-Frame Visual KV Cluster Reuse (CFCR) — 2026-04-28 vlm-edge-layerwise-context 세션
 **정의**: 연속 프레임 간 visual token 의 semantic embedding similarity (cosine ≥ 0.85) 을 활용해 K-means cluster centroid level 에서 KV reuse. Layer-Adaptive Cluster Budget (LACB, HOT layer 더 많은 cluster) 와 결합. ClusterKV (LLM only, single-frame) + Sali-Cache (saliency single-axis) 와 차별 — VLM-specific + cross-frame + layer-adaptive. Mosaic ([arXiv:2604.10060](https://arxiv.org/abs/2604.10060)) 와 55-65% concurrent (Phase 2' 검출).
 **관련 자료**: [ClusterKV arXiv:2412.03213](https://arxiv.org/abs/2412.03213), [Sali-Cache arXiv:2602.14236](https://arxiv.org/abs/2602.14236), [VL-Cache ICLR 2025 arXiv:2410.23317](https://arxiv.org/abs/2410.23317)
-**관련 아이디어**: BIVOUAC-SLATE-R (Tier-1 🥈, 2026-04-28)
+**관련 아이디어**: Bivouac (Tier-1 🥈, 2026-04-28)
 
 ## Stratified KV Layout (L2 / GDDR7 / LPDDR5x UMA) — 2026-04-28 vlm-edge-layerwise-context 세션
 **정의**: VLM KV cache 를 layer score (visual_attn_ratio) 기반으로 4-tier 가 아닌 3-tier physical layout 에 매핑 — HOT layer → GPU L2 carveout (cudaCacheConfigure persistent) / MEDIUM → GDDR7 또는 LPDDR5x UMA (RTX 5090 / Jetson Thor 다름) / COLD → LPDDR5x bottom rank. Page-color affinity 로 UMA bank-level partitioning 추가 (ATRIUM-R(Sys) 흡수). PagedAttention single-tier 와 차별. Bluefield-4 ICMS 4-tier 와 다른 axis (single-system + page-color).
 **관련 자료**: [NVIDIA Bluefield-4 ICMS](https://developer.nvidia.com/blog/introducing-nvidia-bluefield-4-powered-inference-context-memory-storage-platform-for-the-next-frontier-of-ai/), [Sarathi-Serve OSDI 2024](https://www.usenix.org/conference/osdi24/presentation/agrawal)
-**관련 아이디어**: STRATA-K-R (Tier-2 T1, 2026-04-28)
+**관련 아이디어**: Strata (Tier-2 T1, 2026-04-28)
 
 ---
 

@@ -35,7 +35,7 @@
   - reframing to Green Context 만 사용 시 differentiation 이 Nexus / DuetServe 와 collapse
   - Nova + InternVL3.5 DvD 와 65-70% overlap (novelty review 5.0/10)
   - differentiation review 3.5/10 (M1 infeasible, 4-bit DeepStack tap activation 만 retain 시 incremental over LightVLM/SparseVILA)
-- **재방문 조건**: NVIDIA 가 Jetson Thor MIG 의 multi-partition support 를 2026-Q3+ 에 release 하면 reconsider. 그 전까지는 단순 Green Context SM partition 으로 BREAKWATER-T 의 dual-Jetson 기여를 single-Thor 로 reframe 시 PRISM-FOG-FX 의 M1 LayerClassifier + M2 4:8 sparsity 와 mechanism overlap 발생 → 흡수 권고
+- **재방문 조건**: NVIDIA 가 Jetson Thor MIG 의 multi-partition support 를 2026-Q3+ 에 release 하면 reconsider. 그 전까지는 단순 Green Context SM partition 으로 BREAKWATER-T 의 dual-Jetson 기여를 single-Thor 로 reframe 시 Prism 의 M1 LayerClassifier + M2 4:8 sparsity 와 mechanism overlap 발생 → 흡수 권고
 
 ### A.3 TIDEGATE — UMA bandwidth gating + L2 carveout duty cycle + nvpmodel hopper
 
@@ -50,8 +50,8 @@
   - M3 nvpmodel switching 50ms overhead 가 short request (<1s) 에 비효율 — gain ceiling 작음
   - R56.2 published-ratio 30% 미달 (DistServe OSDI 2024 1편 외 모두 arXiv 또는 industry blog)
   - novelty review 4.0/10, differentiation 4.5/10
-  - **R56.2 30% 미달 + Idea 1 (PRISM-FOG-FX) 의 M3 KSF-VCD 에 nvpmodel 일부 흡수 가능** — standalone idea 로는 약함
-- **흡수 trace**: M3 nvpmodel hopper 의 일부 (decode-phase frequency slip) 는 PRISM-FOG-FX 의 M3 KSF-VCD (KV-Scale-Freeze + Visual-Context DVFS) 로 흡수
+  - **R56.2 30% 미달 + Idea 1 (Prism) 의 M3 KSF-VCD 에 nvpmodel 일부 흡수 가능** — standalone idea 로는 약함
+- **흡수 trace**: M3 nvpmodel hopper 의 일부 (decode-phase frequency slip) 는 Prism 의 M3 KSF-VCD (KV-Scale-Freeze + Visual-Context DVFS) 로 흡수
 - **재방문 조건**: Jetson Thor 의 nvpmodel sub-ms switching support (Blackwell GB10 의 fast DVFS) 가 production-grade 로 검증되고, BTCS 가 Sarathi-Serve chunked prefill 의 bandwidth 버전으로 차별 강화되면 ISLPED 6p 으로 reconsider
 
 ### A.4 HARBOR-DLA — Jetson Orin AGX DLA offload of ViT patch-embed + KV value-projection
@@ -82,10 +82,10 @@
   - M2: Green Context SM partition + L2 carveout + DeepStack alloc skip (ATRIUM v2 그대로)
   - M3: Semantic Cluster Centroid KV Eviction (SC-CKV)
 - **흡수 trace**:
-  - **M1** → PRISM-FOG-FX 의 M1 DALMP + M4 LayerClassifier 로 흡수 (visual_attn_ratio HOT/COLD 자동 분류 + DeepStack-anchor NVFP4)
-  - **M3 (SC-CKV)** → BIVOUAC-SLATE-R 의 M1 HSCV 로 흡수 (HOT layer K-means cluster centroid + 1-bit membership mask)
-  - **M2 Green Context SM partition** → PRISM-VL-R 의 M3 GC-LSH 와 OBELISK-5090-R 의 M1 SPVL 로 흡수
-- **사유**: 단일 idea 로 retain 시 PRISM-FOG-FX + BIVOUAC-SLATE-R 와 mechanism 80%+ overlap → 분할 흡수가 cleaner. R56.1 in-session evolution 명시.
+  - **M1** → Prism 의 M1 DALMP + M4 LayerClassifier 로 흡수 (visual_attn_ratio HOT/COLD 자동 분류 + DeepStack-anchor NVFP4)
+  - **M3 (SC-CKV)** → Bivouac 의 M1 HSCV 로 흡수 (HOT layer K-means cluster centroid + 1-bit membership mask)
+  - **M2 Green Context SM partition** → RadixVL 의 M3 GC-LSH 와 Obelisk 의 M1 SPVL 로 흡수
+- **사유**: 단일 idea 로 retain 시 Prism + Bivouac 와 mechanism 80%+ overlap → 분할 흡수가 cleaner. R56.1 in-session evolution 명시.
 
 ### B.2 ATRIUM-R(System variant) — ATRIUM v3 with KV layer-aware page color allocation
 
@@ -94,8 +94,8 @@
   - M1: LayerClassifier + KVTuner-style sensitivity 통합
   - M2: Green Context SM partition (ATRIUM 유지)
   - M3: Layer-aware KV page color allocation (HOT layer KV → fast page color, COLD → slow)
-- **흡수 trace**: **M3 page-color affinity** → STRATA-K-R 의 M3 PCA-UBP (Page-Color Affinity UMA Bank Partitioning) 로 흡수. M1 + M2 는 ATRIUM-R(AI) 의 흡수 결과와 동일하므로 중복.
-- **사유**: differentiation review 5.0/10 (LOW), STRATA-K-R 와 axis 중복. drop or merge into STRATA-K-R 권고 (review consensus).
+- **흡수 trace**: **M3 page-color affinity** → Strata 의 M3 PCA-UBP (Page-Color Affinity UMA Bank Partitioning) 로 흡수. M1 + M2 는 ATRIUM-R(AI) 의 흡수 결과와 동일하므로 중복.
+- **사유**: differentiation review 5.0/10 (LOW), Strata 와 axis 중복. drop or merge into Strata 권고 (review consensus).
 
 ### B.3 PRISM-FX (HW variant) — Layer-wise NVFP4/FP8/INT4 + 4:8 sparsity + Green Context partition
 
@@ -104,8 +104,8 @@
   - M1 (LSP): LayerSensitivityProbe (SQNR-based per-layer precision plan)
   - M2 (TCIR): TensorCoreItineraryRouter (4:8 NVFP4 sparsity + 2:4 FP8 dispatch)
   - M3 (DSFR): DynamicScalingFactorReuse (NVFP4 scale freeze across prefill→decode)
-- **흡수 trace**: 본 idea 는 PRISMATIC-FOG (AI variant Idea 1) 와 axis 70%+ overlap → 단일 PRISM-FOG-FX 로 merge. M1 LSP + M2 TCIR (4:8 sparsity) + M3 DSFR (KV scale freeze) 모두 PRISM-FOG-FX 의 4 mechanism 안에 통합.
-- **사유**: review-novelty Cluster A merge 권고 (PRISMATIC-FOG + PRISM-FX + 부분 ATRIUM-R(AI) M1) → 단일 idea PRISM-FOG-FX 로 통합 후 score +1~+1.5 격상.
+- **흡수 trace**: 본 idea 는 PRISMATIC-FOG (AI variant Idea 1) 와 axis 70%+ overlap → 단일 Prism 로 merge. M1 LSP + M2 TCIR (4:8 sparsity) + M3 DSFR (KV scale freeze) 모두 Prism 의 4 mechanism 안에 통합.
+- **사유**: review-novelty Cluster A merge 권고 (PRISMATIC-FOG + PRISM-FX + 부분 ATRIUM-R(AI) M1) → 단일 idea Prism 로 통합 후 score +1~+1.5 격상.
 
 ---
 
@@ -117,7 +117,7 @@
 | Drop 4 평균 R56.2 published 비율 | 32.5% (모두 65% 미달) |
 | Drop 4 평균 R45 risk 점수 | 6.5/10 (BREAKWATER-T-R 8/10 critical, HARBOR-DLA 7/10 platform mismatch) |
 | 흡수 3 의 R56.1 in-session evolution 명시 | ✅ 모두 명시 |
-| 흡수 후 mechanism overlap 검증 | ✅ ATRIUM-R(AI) M3 SC-CKV → BIVOUAC-SLATE-R M1 HSCV 로 흡수, ATRIUM-R(Sys) M3 page-color → STRATA-K-R M3 PCA-UBP 로 흡수, PRISM-FX 전체 → PRISM-FOG-FX 로 merge |
+| 흡수 후 mechanism overlap 검증 | ✅ ATRIUM-R(AI) M3 SC-CKV → Bivouac M1 HSCV 로 흡수, ATRIUM-R(Sys) M3 page-color → Strata M3 PCA-UBP 로 흡수, PRISM-FX 전체 → Prism 로 merge |
 
 ## D. 향후 재방문 조건 정리
 
@@ -129,7 +129,7 @@
 | HARBOR-DLA | Jetson Thor DLA-NextGen spec 공개 + ViT LayerNorm 지원 | IEEE CAL | 2026-Q4+ |
 | ATRIUM-R(AI) | (흡수 완료, 단독 재방문 없음) | — | — |
 | ATRIUM-R(Sys) | (흡수 완료, 단독 재방문 없음) | — | — |
-| PRISM-FX (HW) | (흡수 완료 — PRISM-FOG-FX 로 merge) | — | — |
+| PRISM-FX (HW) | (흡수 완료 — Prism 로 merge) | — | — |
 
 ---
 

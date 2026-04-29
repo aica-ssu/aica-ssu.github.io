@@ -13,12 +13,12 @@
 - **5-axis Gain (R55.2)**: **[Performance]** decode +14% / **[Energy]** -12% / **[Memory eff.]** DeepStack L0-3 alloc skip
 - **Single-system fit (R20-γ)**: single-{AGX Thor 128GB, 273 GB/s LPDDR5X, 2560-core Blackwell}
 - **Mechanism (3)**: ① LayerClassifier (HOT/COLD/MEDIUM visual_attn_ratio 자동 분류, 100-shot calibration), ② Green Context CUDA 12.4 SM partition (HOT layer SM 1500/총 2560 할당, COLD 1060), ③ L2 SLC carveout (cudaCacheConfigure persistent) + DeepStack L0-3 alloc skip (visual KV alloc 자체 skip)
-- **Cross-share dependency**: 본 세션 PRISM-FOG-FX M4 LayerClassifier 와 동일 visual_attn_ratio measurement infrastructure 공유 (`tools/atrium_calibrate.py::measure_layer_attn`). Sequential development path: ATRIUM W1-12 prototype → PRISM-FOG-FX 추가 W13-24 NVFP4 mixed precision 적용 가능
+- **Cross-share dependency**: 본 세션 Prism M4 LayerClassifier 와 동일 visual_attn_ratio measurement infrastructure 공유 (`tools/atrium_calibrate.py::measure_layer_attn`). Sequential development path: ATRIUM W1-12 prototype → Prism 추가 W13-24 NVFP4 mixed precision 적용 가능
 - **Note**: 사용자 명시 요청에 따른 retain. mechanism / 5-axis / single-system / R47 path 모두 v2-r55 그대로
 
 
 
-### PRISM-FOG-FX — Layer-wise NVFP4/FP8/INT4 Mixed Precision + 4:8 Sparsity + Decode DVFS Slip + LayerClassifier (Cluster A merge)
+### Prism — Layer-wise NVFP4/FP8/INT4 Mixed Precision + 4:8 Sparsity + Decode DVFS Slip + LayerClassifier (Cluster A merge)
 - **Date**: 2026-04-28 | **Session**: [세션](/research-wiki/2026-04/vlm-edge-layerwise-context) / Summary
 - **Tier**: Tier-1 🥇 | **Target**: MLSys 2027 / ASPLOS 2027 / NeurIPS 2026
 - **Score**: novelty 7.5 / diff 8.0 / impact 9.0
@@ -27,7 +27,7 @@
 - **Mechanism (4)**: ① DeepStack-aware NVFP4/FP8/INT4 layer-wise mixed precision (Blackwell native E2M1), ② 4:8 structured sparsity tensor core dispatch (HOT layer L17-21 only), ③ KV cache scale freeze + decode-phase visual-context DVFS slip, ④ LayerClassifier (HOT/COLD visual_attn_ratio 자동 분류, ATRIUM-R(AI) M1 흡수)
 - **Phase 2 → Phase 1' delta**: FGMP ([arXiv:2504.14152](https://arxiv.org/abs/2504.14152)) + MicroMix ([arXiv:2508.02343](https://arxiv.org/abs/2508.02343)) baseline 명시 + DeepStack-aware NVFP4 anchor 차별 axis 강화 + R56.2 published 77%
 
-### BIVOUAC-SLATE-R — Hierarchical Visual Semantic KV Clustering + Cross-Frame Cluster Reuse + Layer-Adaptive Cluster Budget
+### Bivouac — Hierarchical Visual Semantic KV Clustering + Cross-Frame Cluster Reuse + Layer-Adaptive Cluster Budget
 - **Date**: 2026-04-28 | **Session**: [세션](/research-wiki/2026-04/vlm-edge-layerwise-context) / Summary
 - **Tier**: Tier-1 🥈 | **Target**: NeurIPS 2026 / ICML 2026 / MICRO 2027
 - **Score**: novelty 7.5 / diff 8.5 / impact 8.0
@@ -37,7 +37,7 @@
 - **Critical scoop 잔존**: Mosaic ([arXiv:2604.10060](https://arxiv.org/abs/2604.10060), 2026-04-11) 55-65% concurrent — Phase 1'' baseline 추가 의무
 - **Phase 1' delta**: ClusterKV ([arXiv:2412.03213](https://arxiv.org/abs/2412.03213)) + Sali-Cache ([arXiv:2602.14236](https://arxiv.org/abs/2602.14236)) baseline + cross-frame cluster-level granularity + layer-adaptive k 차별
 
-### PRISM-VL-R — Phase-aware Visual LSH Hash + RadixAttention Second-level Visual Prefix Branch + Green Context SM Partition with LSH Lookup
+### RadixVL — Phase-aware Visual LSH Hash + RadixAttention Second-level Visual Prefix Branch + Green Context SM Partition with LSH Lookup
 - **Date**: 2026-04-28 | **Session**: [세션](/research-wiki/2026-04/vlm-edge-layerwise-context) / Summary
 - **Tier**: Tier-1 🥉 (W12 Tier-1/Tier-2 동적 분기) | **Target**: OSDI 2026 / SOSP 2027
 - **Score**: novelty 5.5 / diff 7.5 / impact 8.5
@@ -46,7 +46,7 @@
 - **Mechanism (3)**: ① Phase-aware Visual LSH Hash (encode 단계 fine-grain, prefill 단계 coarse, decode 단계 cache-only), ② RadixAttention Second-level Visual Prefix Branch (text 와 다른 tree), ③ Green Context SM Partition with LSH Lookup
 - **Phase 1' delta**: VLCache ([arXiv:2512.12977](https://arxiv.org/abs/2512.12977)) + SimCache (CVPR 2025W) scoop 대응 — Phase-aware policy + RadixAttention second-level branch + GC-LSH 가 unique axis. 시스템 분야 published 65%+
 
-### STRATA-K-R — Stratified KV Layout (L2/GDDR7/LPDDR5x UMA) + Layer-Score Tier 매핑 + Page-Color Affinity Bank Partitioning (ATRIUM-R(Sys) page-color 흡수)
+### Strata — Stratified KV Layout (L2/GDDR7/LPDDR5x UMA) + Layer-Score Tier 매핑 + Page-Color Affinity Bank Partitioning (ATRIUM-R(Sys) page-color 흡수)
 - **Date**: 2026-04-28 | **Session**: [세션](/research-wiki/2026-04/vlm-edge-layerwise-context) / Summary
 - **Tier**: Tier-2 T1 | **Target**: DAC 2027 / DATE 2027
 - **Score**: novelty 6.5 / diff 8.0 / impact 7.5
@@ -55,7 +55,7 @@
 - **Mechanism (3)**: ① Stratified KV layout (L2 carveout / GDDR7 / LPDDR5x UMA), ② Layer score 기반 tier 매핑 (HOT → L2, COLD → LPDDR5x), ③ Page-color affinity (UMA bank-level partitioning)
 - **Phase 1' delta**: ATRIUM-R(Sys) page-color affinity 흡수, ASPLOS 2024 (memory tiering) / FAST 2025 (Mooncake) baseline 보강 + R56.2 published 86%
 
-### HARBINGER-CLOVER-R — Visual-confidence-aware Speculative Draft + Visual-cluster-heat Early-Exit + Power-envelope Adaptive Frequency Locking
+### Harbinger — Visual-confidence-aware Speculative Draft + Visual-cluster-heat Early-Exit + Power-envelope Adaptive Frequency Locking
 - **Date**: 2026-04-28 | **Session**: [세션](/research-wiki/2026-04/vlm-edge-layerwise-context) / Summary
 - **Tier**: Tier-2 T2 | **Target**: ISLPED 2027 / DATE 2027
 - **Score**: novelty 7.0 / diff 7.5 / impact 6.5
@@ -64,7 +64,7 @@
 - **Mechanism (3)**: ① Visual-confidence-aware Speculative Draft Length (visual context confidence > 0.8 → draft 8-token, < 0.5 → draft 2-token), ② Visual-cluster-heat Early-Exit (cluster heat 기반), ③ Power-envelope Adaptive Frequency Locking (Jetson Orin NX 25W envelope)
 - **Phase 1' delta**: Spec-LLaVA ([arXiv:2509.11961](https://arxiv.org/abs/2509.11961)) + Fast Speculative Edge-Cloud ([arXiv:2505.21594](https://arxiv.org/abs/2505.21594)) baseline — visual-cluster-heat + power-envelope locking 이 unique axis
 
-### OBELISK-5090-R — Qwen3-VL-30B-A3B MoE Local Serving on RTX 5090 32GB GDDR7 + Expert Routing Layer-Aware + Per-stage Power Cap
+### Obelisk — Qwen3-VL-30B-A3B MoE Local Serving on RTX 5090 32GB GDDR7 + Expert Routing Layer-Aware + Per-stage Power Cap
 - **Date**: 2026-04-28 | **Session**: [세션](/research-wiki/2026-04/vlm-edge-layerwise-context) / Summary
 - **Tier**: Tier-2 T3 | **Target**: MLSys 2027 / DAC 2027
 - **Score**: novelty 6.0 / diff 6.5 / impact 7.5
@@ -78,7 +78,7 @@
 
 - **CARILLON** (3-phase scheduling) — Nova ([arXiv:2509.21301](https://arxiv.org/abs/2509.21301), 2025) 80%+ scoop
 - **BREAKWATER-T-R** (dual-Jetson MIG reframe) — Jetson Thor T5000 MIG single-partition only (2026-04 시점) infeasible
-- **TIDEGATE** (DVFS slip) — R56.2 30% 미달 + PRISM-FOG-FX M3 흡수
+- **TIDEGATE** (DVFS slip) — R56.2 30% 미달 + Prism M3 흡수
 - **HARBOR-DLA** (DLA-aware ViT) — DLA 2.0 LayerNorm 미지원, R20-γ platform mismatch (Orin Ampere only)
 
 ---

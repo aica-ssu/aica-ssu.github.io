@@ -26,7 +26,7 @@
 
 - **트렌드 한 줄**: RTX 5090 32GB GDDR7 (Blackwell consumer) 가 Qwen3-VL-30B-A3B (3B activated) MoE 의 local serving 을 가능하게 하는 turning point — cluster GPU 가정 없이 single-GPU 에서 large VLM serving.
 - **근거**: RTX 5090 32GB + Qwen3-VL-30B-A3B (3B activated, expert routing 후 ~12 GB working set) + DynaExq ([arXiv:2511.15015](https://arxiv.org/abs/2511.15015)) MoE expert routing
-- **세션 idea**: OBELISK-5090-R (Tier-2 T3)
+- **세션 idea**: Obelisk (Tier-2 T3)
 
 ---
 

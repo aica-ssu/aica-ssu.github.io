@@ -15,9 +15,9 @@ const ROUTE_BASE_DIR = "/research-wiki/2026-04/vlm-edge-layerwise-context/tier2"
 
 export async function generateStaticParams() {
   return [
-    { idea: "01-strata-k-r" },
-    { idea: "02-harbinger-clover-r" },
-    { idea: "03-obelisk-5090-r" },
+    { idea: "01-strata" },
+    { idea: "02-harbinger" },
+    { idea: "03-obelisk" },
   ];
 }
 
