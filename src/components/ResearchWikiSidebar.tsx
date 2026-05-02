@@ -38,9 +38,23 @@ const SIDEBAR: SidebarSection[] = [
     title: "📚 모든 Summary (역시간순)",
     items: [
       {
-        label: "⭐ 2026-04-28 VLM Edge Layer-Wise + Context",
-        href: "/research-wiki/2026-04/vlm-edge-layerwise-context",
+        label: "⭐ 2026-05-02 VLM Scenario-Aware Optimization",
+        href: "/research-wiki/2026-05/vlm-scenario-aware",
         emphasis: true,
+        children: [
+          { label: "Landing — VLM Scenario-Aware Optimization", href: "/research-wiki/2026-05/vlm-scenario-aware" },
+          { label: "🥇 Mosaic (OSDI 2027 / ASPLOS 2027)", href: "/research-wiki/2026-05/vlm-scenario-aware/tier1/01-mosaic" },
+          { label: "🥈 Lattice (MLSys 2027 / NeurIPS 2026)", href: "/research-wiki/2026-05/vlm-scenario-aware/tier1/02-lattice" },
+          { label: "🥉 Bramble (MLSys 2027 / OSDI 2027)", href: "/research-wiki/2026-05/vlm-scenario-aware/tier1/03-bramble" },
+          { label: "T1 Lantern (IEEE CAL letter + vLLM PR)", href: "/research-wiki/2026-05/vlm-scenario-aware/tier2/01-lantern" },
+          { label: "T2 Compass (DATE 2027 / ISLPED 2027)", href: "/research-wiki/2026-05/vlm-scenario-aware/tier2/02-compass" },
+          { label: "T3 Hearth (DATE 2027 / IEEE ESL letter)", href: "/research-wiki/2026-05/vlm-scenario-aware/tier2/03-hearth" },
+          { label: "미선정 로그", href: "/research-wiki/2026-05/vlm-scenario-aware/unselected" },
+        ],
+      },
+      {
+        label: "2026-04-28 VLM Edge Layer-Wise + Context",
+        href: "/research-wiki/2026-04/vlm-edge-layerwise-context",
         children: [
           { label: "Landing — VLM Edge Layer-Wise + Context-Semantic", href: "/research-wiki/2026-04/vlm-edge-layerwise-context" },
           { label: "🥇 Prism (MLSys 2027)", href: "/research-wiki/2026-04/vlm-edge-layerwise-context/tier1/01-prism" },
