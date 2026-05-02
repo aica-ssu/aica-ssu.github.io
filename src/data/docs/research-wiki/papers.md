@@ -4,6 +4,52 @@
 
 ---
 
+## 2026-05-02 Mode 1 Session — VLM Scenario-Aware Optimization
+
+3 expert (ai-optimization + algorithm + legacy-system) + 5 reviewer (novelty + diff + impact + ai-impl + arch-sys) verified reference 28편. Differentiation reviewer 의 web search 로 추가 closest competitor 12편 발견 (DROP 14 / 흡수 6 의 핵심 근거).
+
+### Multi-Turn / Vision Token Prefix Cache (T1.2 Lattice)
+- **VLCache** ([arXiv:2512.12977](https://arxiv.org/abs/2512.12977), 2025-12) — vision token 2-5% compute, 1.2-16× TTFT speedup. Single-session image-patch reuse, multi-turn frame radix 미커버 (T1.2 concurrent 50-70%).
+- **PrefixKV** ([NeurIPS 2025, github.com/THU-MIG/PrefixKV](https://github.com/THU-MIG/PrefixKV)) — adaptive layer-wise KV retention, binary search.
+- **VLA-Cache** (NeurIPS 2025) — VLA static visual token caching across frames.
+- **SGLang RadixAttention** ([arXiv:2312.07104](https://arxiv.org/abs/2312.07104), ICLR 2024) — production LLM token prefix radix tree, 60-85% hit rate.
+
+### Cross-Image / Cross-Tenant KV Pool (T1.3 Bramble)
+- **PolyKV** ([arXiv:2604.24971](https://arxiv.org/abs/2604.24971)) — LLM token cross-request KV pool. Vision token 미커버.
+- **KVShare** ([arXiv:2503.16525](https://arxiv.org/abs/2503.16525)) — LLM token only.
+- **OxyGen** ([arXiv:2603.14371](https://arxiv.org/abs/2603.14371)) — agent KV management, cross-tenant vision 미커버.
+- **KVFlow** ([arXiv:2507.07400](https://arxiv.org/abs/2507.07400), 2025-07) — multi-agent workflow prefix caching.
+
+### Scenario Routing (T1.1 Mosaic)
+- **ECVL-ROUTER** ([arXiv:2510.27256](https://arxiv.org/abs/2510.27256), ICLR'26 submission) — model-tier routing. Single-model serving-stack config 미커버 (직교 axis).
+- **vLLM Prefix Caching** + **LMCache** ([arXiv:2510.09665](https://arxiv.org/abs/2510.09665)) — production prefix cache, static pin API.
+
+### Long Video Compression (Saturated)
+- **LongVU** ([arXiv:2410.17434](https://arxiv.org/abs/2410.17434), NeurIPS 2024).
+- **AdaptToken** (Microsoft Research, 2025) — entropy-based, 4 long video benchmark.
+- **PVC** (CVPR 2025) — Progressive Visual Token Compression.
+
+### Document VLM (Saturated, T2.3 Hearth — system-side L2 carveout 직교)
+- **AwaRes** ([arXiv:2603.16932](https://arxiv.org/abs/2603.16932)) — spatial on-demand 36% tokens.
+- **VisionThink** ([ICLR 2026, arXiv:2507.13348](https://arxiv.org/abs/2507.13348)).
+- **AttWarp** (ICLR 2026).
+
+### Other Critical Scoop (DROP 근거)
+- **METok** ([arXiv:2506.02850](https://arxiv.org/abs/2506.02850)).
+- **TSG (Temporal Semantic Graphs)** ([arXiv:2601.06097](https://arxiv.org/abs/2601.06097)) — 91.4% token reduction.
+- **Nova** ([arXiv:2509.21301](https://arxiv.org/abs/2509.21301)).
+- **AutoPrune** ([arXiv:2509.23931](https://arxiv.org/abs/2509.23931), NeurIPS 2025).
+
+### Benchmark (시나리오별 평가, 사용자 강조)
+- **MMBench-Video** (NeurIPS D&B 2024, 26 capabilities, multi-shot multi-turn) — T1.1 Mosaic + T1.2 Lattice 핵심 baseline
+- **MLVU** ([arXiv:2406.04264](https://arxiv.org/abs/2406.04264), CVPR 2025, 9 task long video) + **LongVideoBench** + **Video-MME** + **LVBench**
+- **MileBench** + **LLaVA-NeXT-Interleave** — multi-image agent (T1.3 Bramble)
+- **EgoSchema** — egocentric (T2.2 Compass)
+- **Q-Bench-Video** (CVPR 2025) — streaming (T2.1 Lantern)
+- **DocVQA** + **ChartQA** + **OCRBench** + **AI2D** — document (T2.3 Hearth)
+
+---
+
 ## 2026-04-28 Mode 1 Session — VLM Edge Layer-Wise + Context-Semantic Optimization (R57 신규 적용)
 
 3 expert (ai-optimization / hw-pim / legacy-system) 가 각각 15-25 paper × 3 = ~60 paper 수집. peer-reviewed 비율: AI 59% / HW 42-77% (Phase 1' 보강 후) / System 63%.

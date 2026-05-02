@@ -4,6 +4,21 @@
 
 ---
 
+## Scenario-Aware VLM Serving Dispatcher — 2026-05-02 vlm-scenario-aware 세션
+**정의**: Production VLM (vLLM/SGLang) 의 scenario diversity (image/video × single/multi-turn × document/agent 6 class) 를 lightweight classifier (DistilBERT-mini 60M) 로 사전 분류 후 scenario-conditional config table dispatch (KV budget / prefix policy / compression rate). ECVL-ROUTER ([arXiv:2510.27256](https://arxiv.org/abs/2510.27256), ICLR'26) 의 model-tier routing 과 직교 axis (single-model serving-stack config). Production hit rate 60-85% measured common case 활용.
+**관련 자료**: ECVL-ROUTER ICLR'26, vLLM Prefix Caching, SGLang RadixAttention [ICLR 2024], LMCache [arXiv:2510.09665](https://arxiv.org/abs/2510.09665)
+**관련 아이디어**: Mosaic (Tier-1, 2026-05-02)
+
+## Frame-Level Radix Tree Vision KV Cache — 2026-05-02 vlm-scenario-aware 세션
+**정의**: Per-frame perceptual hash (pHash, OpenCV `cv2.img_hash.pHash` 16-bit) 를 frame ID 로 사용 + frame ID 시퀀스를 SGLang RadixAttention pattern 의 frame-level 확장 radix tree 에 insert. Multi-turn video QA 의 turn 2+ vision tower re-run 제거 + cross-session frame prefix sharing (privacy classifier CLIP-based 95%+). VLCache ([arXiv:2512.12977](https://arxiv.org/abs/2512.12977), 2025-12) single-session 과 직교 axis (cross-session). PrefixKV ([NeurIPS 2025](https://github.com/THU-MIG/PrefixKV)) layer-wise binary search 결합.
+**관련 자료**: VLCache 2025-12, PrefixKV NeurIPS'25, SGLang RadixAttention ICLR'24, mlx-vlm Issue #832 (production gap)
+**관련 아이디어**: Lattice (Tier-1, 2026-05-02)
+
+## Cross-Image Vision Token Pool with Privacy Boundary — 2026-05-02 vlm-scenario-aware 세션
+**정의**: Multi-image agent loop (MileBench 6+ image / request) 의 cross-image redundancy (same logo / UI element) 를 image-level pHash + tenant-shared LRU pool + CLIP-based public/private classifier (95%+ accuracy) + reference counting + cuckoo filter + zeroize on evict. PolyKV ([arXiv:2604.24971](https://arxiv.org/abs/2604.24971)) / KVShare ([arXiv:2503.16525](https://arxiv.org/abs/2503.16525)) 의 LLM token cross-request 와 직교 axis (vision token cross-image).
+**관련 자료**: PolyKV [arXiv:2604.24971], KVShare [arXiv:2503.16525], OxyGen [arXiv:2603.14371](https://arxiv.org/abs/2603.14371), cuckoo filter
+**관련 아이디어**: Bramble (Tier-1, 2026-05-02)
+
 ## DeepStack-aware NVFP4 Anchor — 2026-04-28 vlm-edge-layerwise-context 세션
 **정의**: Blackwell native NVFP4 (E2M1, 16-element block scaling) 의 transformer layer 별 sensitivity 분포를 Qwen3-VL DeepStack architecture (visual_indexes=[8,16,24] inject point) 와 정합시켜 layer 별 NVFP4/FP8/INT4 mixed precision 결정. ATRIUM-R(AI) M1 LayerClassifier 의 evolution 으로 본 세션 Prism 의 unique axis. FGMP / MicroMix 의 LLM-only mixed precision 과 차별 (DeepStack 인지).
 **관련 자료**: [NVFP4 NVIDIA Tech Blog](https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/), [FGMP arXiv:2504.14152](https://arxiv.org/abs/2504.14152), [MicroMix arXiv:2508.02343](https://arxiv.org/abs/2508.02343), [Qwen3-VL arXiv:2511.21631](https://arxiv.org/abs/2511.21631)

@@ -4,6 +4,47 @@
 
 ---
 
+## Selected Ideas (2026-05-02 — VLM Scenario-Aware Optimization)
+
+### T1.1 Mosaic — Workload-Adaptive Serving Configuration Dispatcher
+- **Date**: 2026-05-02 | **Session**: [Landing](/research-wiki/2026-05/vlm-scenario-aware) / [Mosaic](/research-wiki/2026-05/vlm-scenario-aware/tier1/01-mosaic)
+- **Tier**: Tier-1 🥇 | **Target**: OSDI 2027 / ASPLOS 2027 | **Score**: novelty 6 / diff 7 / impact 9.5 → mean **7.5**
+- **5-axis Gain**: [Performance] mixed-scenario TTFT -30~-35% / throughput +30~+40% / [Memory] GPU VRAM peak -25% / [Cost eff.] $/req -35% / prefix hit 60-85%→65-90%
+- **Mechanism (3)**: ① DistilBERT-mini 60M lightweight classifier 6-class < 2ms ② scenario-conditional config dispatch (KV budget + prefix policy + compression) ③ hit-rate adaptive hot scenario GPU pinning (LMCache static 직교)
+- **Closest competitor**: ECVL-ROUTER [arXiv:2510.27256](https://arxiv.org/abs/2510.27256) ICLR'26 (model-tier 직교 axis), vLLM Prefix Caching, SGLang RadixAttention
+
+### T1.2 Lattice — Cross-Turn Frame-Indexed Radix Vision KV Cache for Multi-Turn Video QA
+- **Date**: 2026-05-02 | **Session**: [Lattice](/research-wiki/2026-05/vlm-scenario-aware/tier1/02-lattice)
+- **Tier**: Tier-1 | **Target**: MLSys 2027 / NeurIPS 2026 | **Score**: novelty 8 / diff 6 / impact 8 → mean **7.5**
+- **5-axis Gain**: [Performance] Multi-turn turn 2+ TTFT -60~-80% / [Memory] Vision KV 5-turn session 7.5GB→1.5GB (-75%) / cross-session frame prefix hit 0%→50-70% (new) / [Quality] ≤-1.0pt
+- **Mechanism (3)**: ① per-frame pHash + frame radix tree ② PrefixKV [NeurIPS 2025] 기반 layer-wise prefix retention ③ cross-session frame prefix sharing + CLIP privacy classifier 95%+
+- **Closest competitor**: VLCache [arXiv:2512.12977](https://arxiv.org/abs/2512.12977) 2025-12 (single-session, concurrent 50-70%), PrefixKV [NeurIPS 2025], SGLang RadixAttention
+
+### T1.3 Bramble — Cross-Image Vision Token Pool for Multi-Image Agent Loop
+- **Tier**: Tier-1 | **Target**: MLSys 2027 / OSDI 2027 | **Score**: novelty 8 / diff 5 / impact 8.5 → mean **7.2**
+- **5-axis Gain**: [Memory] GPU KV 24GB→14GB (-40%) / max concurrent tenants 2× / [Cost eff.] -30~-45% / [Security] privacy leakage 0
+- **Mechanism (3)**: ① image pHash + tenant-shared LRU pool ② CLIP privacy classifier (public/private) + boundary verification ③ reference counting + zeroize on evict + cuckoo filter
+- **Closest competitor**: PolyKV [arXiv:2604.24971](https://arxiv.org/abs/2604.24971), KVShare [arXiv:2503.16525](https://arxiv.org/abs/2503.16525), OxyGen [arXiv:2603.14371](https://arxiv.org/abs/2603.14371) (모두 LLM token only)
+
+### T2.1 Lantern — NVDEC-Coupled Sliding-Window KV for Streaming Video
+- **Tier**: Tier-2 | **Target**: IEEE CAL letter + vLLM upstream PR | **Score**: novelty 5 / diff 8 / impact 6 → mean **6.0**
+- **Mechanism**: NVDEC frame metadata + sliding window K=8 + eager free + memory recycle. HW co-design 0-30% scoop unique.
+
+### T2.2 Compass — Ego-Motion-Aware Compression for Egocentric Video
+- **Tier**: Tier-2 | **Target**: DATE 2027 / ISLPED 2027 | **Score**: novelty 7 / diff 7 / impact 6 → mean **6.0**
+- **Mechanism**: optical flow zero-mean ego-motion stable region detection + ego-stable region retention + ego-motion vector → MRoPE T-axis 보강. EgoSchema 50%+ token reduction.
+
+### T2.3 Hearth — Document VLM L2 Carveout + Tile Locality Boost
+- **Tier**: Tier-2 | **Target**: DATE 2027 / IEEE ESL letter | **Score**: novelty 6 / diff 6 / impact 7 → mean **6.0**
+- **Mechanism**: Mosaic dispatch hook + `cudaAccessPolicyWindow` tile residence boost + `cudaCtxResetPersistingL2Cache`. DocVQA tile latency -25%+.
+
+### Dropped / Absorbed (2026-05-02)
+
+- **DROP 14**: A3 (PrefixKV scoop) / A4 (Nova scoop) / A6 (AwaRes scoop) / B1 (VisionThink scoop) / B2 (LongVU scoop) / B3 (METok scoop) / B4 (TSG 91.4% scoop) / B6 (AttWarp scoop) / C4 (single axis weak)
+- **흡수 6**: A5→Lantern / B7→Bramble / C1→Lattice / C3→Bramble / C5→Lattice / C6→Mosaic
+
+---
+
 ## Selected Ideas (2026-04-28 — VLM Edge Layer-Wise + Context-Semantic Optimization, R57 신규 적용 첫 세션 — ATRIUM Tier-1 4번째 retain 포함)
 
 ### ATRIUM (2026-04-28 retain) — Layer-Asymmetry-aware UMA Bandwidth + L2 Partition for Dual-Track VLM Decode on AGX Thor

@@ -4,6 +4,19 @@
 
 ---
 
+### Production VLM Scenario Diversity 와 Single-Path Optimization 의 Gap — 2026-05-02 시점
+
+- **Date analyzed**: 2026-05-02
+- **Session**: [Landing](/research-wiki/2026-05/vlm-scenario-aware)
+- **요약**: vLLM v0.10+ / SGLang v0.4.x 가 production prefix hit 60-85% (agent loop / multi-tenant SaaS / repo QA / long-doc) measured 환경에서도 scenario-agnostic single-path optimization. ECVL-ROUTER ([arXiv:2510.27256](https://arxiv.org/abs/2510.27256), ICLR'26) 가 model-tier routing 으로 등장했으나 single-model serving-stack config dispatch (KV budget / prefix policy / compression rate / hot scenario pinning) 는 미커버. 6 scenario class (image-single / image-multi-turn / video-single / video-multi-turn / document / agent) 의 production diversity 가 lightweight classifier (60M) + scenario-conditional config table 로 cover 가능 axis 식별.
+- **시사점**: VLM serving optimization 의 다음 frontier 가 scenario-aware dispatcher + scenario-specific mechanism 결합. Mosaic / Lattice / Bramble paper pair (OSDI + MLSys + OSDI) 가 다음 1-2년 emergence 예상.
+
+### Vision Token Frame-Level Radix Tree — Production Multi-Turn Gap — 2026-05-02 시점
+
+- **Date analyzed**: 2026-05-02
+- **요약**: SGLang RadixAttention ([ICLR 2024, arXiv:2312.07104](https://arxiv.org/abs/2312.07104)) 의 LLM token prefix radix tree 가 production multi-turn 의 60-85% hit rate 의 backbone, 그러나 vision token frame-level radix tree 는 미커버. mlx-vlm Issue #832 (Qwen3.5 매 turn 마다 vision tower re-run + full re-prefill) 가 production gap 직접 evidence. VLCache ([arXiv:2512.12977](https://arxiv.org/abs/2512.12977), 2025-12) 가 single-session image-patch reuse 시작 (concurrent), cross-session frame radix tree + privacy boundary 는 다음 emergence axis.
+- **시사점**: vLLM PagedAttention + SGLang RadixAttention 의 vision token extension 이 MLSys/OSDI 2027 의 핵심 paper 영역.
+
 ### VLM Edge Layer-Wise + Context-Semantic 통합 트렌드 — 2026-04-28 시점 (R57 신규 적용)
 
 - **Date analyzed**: 2026-04-28
