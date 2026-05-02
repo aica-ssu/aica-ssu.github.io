@@ -19,8 +19,37 @@ type SessionCard = {
 
 const recentSessions: SessionCard[] = [
   {
+    date: "2026-05-02",
+    title: "🥇 VLM Scenario-Aware Optimization (Mosaic / Lattice / Bramble — R45 신규 적용)",
+    href: "/research-wiki/2026-05/vlm-scenario-aware",
+    keywords: ["Scenario-Aware Dispatcher (Mosaic)", "Frame-Indexed Radix Vision KV (Lattice)", "Cross-Image Vision Token Pool with Privacy (Bramble)", "NVDEC Sliding-Window KV (Lantern)", "Ego-Motion Compression (Compass)", "DocVQA L2 Carveout (Hearth)", "vLLM Prefix 60-85% hit", "mlx-vlm Issue #832 multi-turn gap", "VLCache cross-session 직교", "PolyKV/KVShare vision token 직교", "MMBench-Video / MLVU / MileBench / EgoSchema 11 benchmark", "R52.2 6-column / R53 일반 단어 / R19-α 자연어 acronym"],
+    summary:
+      "사용자 input — VLM 시나리오별 사전 분류 + multi-turn QA visual info + accuracy 보존 + 기존 benchmark 활용. R31 검증 통과 (production prefix hit 60-85% measured common case via vLLM/SGLang RadixAttention, mlx-vlm Issue #832 multi-turn gap evidence). 3 expert × 7 idea = 21 candidate × 5 reviewer dispatch — Differentiation reviewer web search 로 critical scoop 12편 발견 (ECVL-ROUTER ICLR'26 / Nova [arXiv:2509.21301](https://arxiv.org/abs/2509.21301) / VLCache [arXiv:2512.12977](https://arxiv.org/abs/2512.12977) 2025-12 / PolyKV [arXiv:2604.24971](https://arxiv.org/abs/2604.24971) / KVShare [arXiv:2503.16525](https://arxiv.org/abs/2503.16525) / VisionThink ICLR'26 / LongVU / TSG 91.4% / AwaRes / AttWarp / OxyGen / METok). **Tier-1 Top 3** (Mosaic 7.5 / Lattice 7.5 / Bramble 7.2) + **Tier-2 독립 Top 3** (Lantern / Compass / Hearth, 모두 6.0). **DROP 14** (70%+ scoop) + **흡수 6** (A5→Lantern / B7→Bramble / C1→Lattice / C3→Bramble / C5→Lattice / C6→Mosaic). 6-axis cover (Performance / Memory / Cost / Energy / Quality / Security) + 11 benchmark 분담. R52.2 6-column 강화 + R53 일반 단어 section title (동작 원리 / 기대 효과 / 구현 변경점 / 검증 시나리오) + R19-α 자연어 acronym + full title vendor-neutral.",
+    detailed: true,
+    tierTable: [
+      { tier: "🥇 Tier-1", idea: "Mosaic (Workload-Adaptive Serving Configuration Dispatcher)", venue: "OSDI 2027 / ASPLOS 2027", score: "6/7/9.5 → 7.5",
+        href: "/research-wiki/2026-05/vlm-scenario-aware/tier1/01-mosaic" },
+      { tier: "🥈 Tier-1", idea: "Lattice (Cross-Turn Frame-Indexed Radix Vision KV Cache for Multi-Turn Video QA)", venue: "MLSys 2027 / NeurIPS 2026", score: "8/6/8 → 7.5",
+        href: "/research-wiki/2026-05/vlm-scenario-aware/tier1/02-lattice" },
+      { tier: "🥉 Tier-1", idea: "Bramble (Cross-Image Vision Token Pool for Multi-Image Agent Loop)", venue: "MLSys 2027 / OSDI 2027", score: "8/5/8.5 → 7.2",
+        href: "/research-wiki/2026-05/vlm-scenario-aware/tier1/03-bramble" },
+      { tier: "T1", idea: "Lantern (NVDEC-Coupled Sliding-Window KV for Streaming Video)", venue: "IEEE CAL letter + vLLM upstream PR", score: "5/8/6 → 6.0",
+        href: "/research-wiki/2026-05/vlm-scenario-aware/tier2/01-lantern" },
+      { tier: "T2", idea: "Compass (Ego-Motion-Aware Compression for Egocentric Video)", venue: "DATE 2027 / ISLPED 2027", score: "7/7/6 → 6.0",
+        href: "/research-wiki/2026-05/vlm-scenario-aware/tier2/02-compass" },
+      { tier: "T3", idea: "Hearth (Document VLM L2 Carveout + Tile Locality Boost)", venue: "DATE 2027 / IEEE ESL letter", score: "6/6/7 → 6.0",
+        href: "/research-wiki/2026-05/vlm-scenario-aware/tier2/03-hearth" },
+    ],
+    extraLinks: [
+      { label: "📊 Landing (Inline SVG Decision Tree + Tier-1/Tier-2 link 표 + 11 benchmark 분담)",
+        href: "/research-wiki/2026-05/vlm-scenario-aware" },
+      { label: "📜 미선정 / Drop 14 + 흡수 6 로그 (VLCache / PolyKV / KVShare / VisionThink / LongVU / TSG / AwaRes / AttWarp / OxyGen scoop)",
+        href: "/research-wiki/2026-05/vlm-scenario-aware/unselected" },
+    ],
+  },
+  {
     date: "2026-04-28",
-    title: "🥇 VLM Edge Layer-Wise + Context-Semantic Optimization on Single-GPU/Jetson (R57 신규 적용 첫 세션, ATRIUM Tier-1 4번째 retain)",
+    title: "🥈 VLM Edge Layer-Wise + Context-Semantic Optimization on Single-GPU/Jetson (R57 신규 적용 첫 세션, ATRIUM Tier-1 4번째 retain)",
     href: "/research-wiki/2026-04/vlm-edge-layerwise-context",
     keywords: ["R57 Summary Entry-Friendly", "Research Questions 최상단", "Essential Reading 5편", "Glossary 맨 뒤 + CTRL+F", "RTX 5090", "Jetson Thor", "Jetson Orin NX", "NVFP4 mixed precision", "DeepStack-aware", "visual KV cluster", "cross-frame reuse", "Phase-aware LSH", "ATRIUM Tier-1 retain", "Bivouac Mosaic concurrent 잔존", "Obelisk DynaExq adjacent"],
     summary:
