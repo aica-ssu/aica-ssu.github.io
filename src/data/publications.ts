@@ -44,6 +44,16 @@ export interface Publication {
 export const publications: Publication[] = [
   // 2026
   {
+    title: "LayUp: Layer-wise Parallelization for Energy-Efficient Edge LLM Training Exploiting Unified Memory Characteristics",
+    authors: "Bang-San Lee, Young-Ho Gong",
+    venue: "IEEE/ACM International Symposium on Low Power Electronics and Design (ISLPED), Illinois, USA, Aug. 2026",
+    year: 2026, type: "conference",
+    tags: ["AI", "Edge", "Memory"],
+    selected: true,
+    bibtexKey: "lee2026islped",
+    correspondingAuthors: ["Young-Ho Gong"],
+  },
+  {
     title: "Exploring Heterogeneity-Aware Optimizations for Resource Efficient Edge Recommendation",
     authors: "Yerin Lee, Gyudong Kim, Eunjin Lee, Jeff Zhang, Young-Ho Gong, Young Geun Kim, Carole-Jean Wu",
     venue: "Design, Automation and Test in Europe Conference (DATE), Verona, Italy, Apr. 2026",

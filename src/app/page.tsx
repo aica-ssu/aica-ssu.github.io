@@ -6,7 +6,7 @@ import { news } from "@/data/news";
 import { publications } from "@/data/publications";
 
 export default function Home() {
-  const featuredKeys = ["lee2026date", "chung2026cal", "kwon2025access", "kim2025ksc", "moon2025ksc"];
+  const featuredKeys = ["lee2026islped", "lee2026date", "chung2026cal", "kwon2025access", "kim2025ksc"];
   const featuredPubs = featuredKeys
     .map((key) => publications.find((p) => p.bibtexKey === key))
     .filter((p): p is NonNullable<typeof p> => p != null);
