@@ -5,7 +5,7 @@ export interface NewsItem {
 }
 
 export const news: NewsItem[] = [
-  { date: "2026.05", content: "Paper accepted to ISLPED 2026 (LayUp): Layer-wise Parallelization for Energy-Efficient Edge LLM Training", contentKo: "ISLPED 2026에 논문이 채택되었습니다. (LayUp: Layer-wise Parallelization for Energy-Efficient Edge LLM Training)" },
+  { date: "2026.05", content: "Paper accepted to ISLPED 2026 (LayUp): Layer-wise Parallelization for Energy-Efficient Edge LLM Training Exploiting Unified Memory Characteristics", contentKo: "ISLPED 2026에 논문이 채택되었습니다. (LayUp: Layer-wise Parallelization for Energy-Efficient Edge LLM Training Exploiting Unified Memory Characteristics)" },
   { date: "2026.03", content: "Our project proposal has been chosen for funding by the 2026 NRF Core Research Program", contentKo: "핵심연구(도약형) 연구과제에 선정되었습니다." },
   { date: "2026.01", content: "One paper accepted to IEEE Computer Architecture Letters", contentKo: "IEEE CAL에 논문이 채택되었습니다." },
   { date: "2025.12", content: "Awards at KSC2025: Seok-Hwan Kim (Outstanding Paper Award), Sang-Jun Moon (Undergraduate Junior Paper Competition Award)", contentKo: "KSC2025에서 김석환 학생이 우수논문상, 문상준 학생이 학부생주니어논문경진대회 수상을 받았습니다." },
