@@ -38,9 +38,37 @@ const SIDEBAR: SidebarSection[] = [
     title: "📚 모든 Summary (역시간순)",
     items: [
       {
-        label: "⭐ 2026-05-02 VLM Scenario-Aware Optimization",
-        href: "/research-wiki/2026-05/vlm-scenario-aware",
+        label: "⭐ 2026-05-27 AI Memory Error Mitigation & Page Migration",
+        href: "/research-wiki/2026-05/ai-memory-error-mitigation",
         emphasis: true,
+        children: [
+          { label: "Landing — AI Memory Error Mitigation & Page Migration", href: "/research-wiki/2026-05/ai-memory-error-mitigation" },
+          { label: "🥇 KEEPER (ASPLOS 2027 / MICRO 2027)", href: "/research-wiki/2026-05/ai-memory-error-mitigation/tier1/01-keeper" },
+          { label: "🥈 TRIAD (MICRO 2027 / ISCA 2027)", href: "/research-wiki/2026-05/ai-memory-error-mitigation/tier1/02-triad" },
+          { label: "🥉 ROWPRESS-AI (ISCA 2027 main)", href: "/research-wiki/2026-05/ai-memory-error-mitigation/tier1/03-rowpress-ai" },
+          { label: "T1 TALLY (DAC 2027 / DATE 2027)", href: "/research-wiki/2026-05/ai-memory-error-mitigation/tier2/01-tally" },
+          { label: "T2 TEMPER (DAC 2027 / DATE 2027)", href: "/research-wiki/2026-05/ai-memory-error-mitigation/tier2/02-temper" },
+          { label: "T3 BALLAST (EuroSys-short / DAC 2027)", href: "/research-wiki/2026-05/ai-memory-error-mitigation/tier2/03-ballast" },
+          { label: "미선정 로그", href: "/research-wiki/2026-05/ai-memory-error-mitigation/unselected" },
+        ],
+      },
+      {
+        label: "2026-05-26 VLM SpecDec + Chunked Prefill Optimization",
+        href: "/research-wiki/2026-05/vlm-specdec-chunked-prefill",
+        children: [
+          { label: "Landing — VLM SpecDec + Chunked Prefill Optimization", href: "/research-wiki/2026-05/vlm-specdec-chunked-prefill" },
+          { label: "🥇 KL-Bounded Distillation (NeurIPS 2027 / ICML 2027)", href: "/research-wiki/2026-05/vlm-specdec-chunked-prefill/tier1/01-kl-bounded-distillation" },
+          { label: "🥈 Sub-2-bit Visual KV (MLSys 2027 / ASPLOS 2027)", href: "/research-wiki/2026-05/vlm-specdec-chunked-prefill/tier1/02-sub-2bit-visual-kv" },
+          { label: "🥉 KV-Stream-TBC (ASPLOS / MICRO / ISCA 2027)", href: "/research-wiki/2026-05/vlm-specdec-chunked-prefill/tier1/03-kv-stream-tbc" },
+          { label: "T1 VAST-Sched (DAC 2027 / DATE 2027)", href: "/research-wiki/2026-05/vlm-specdec-chunked-prefill/tier2/04-vast-sched" },
+          { label: "T2 SpecVerify-L2 (DAC / DATE / ICCAD 2027)", href: "/research-wiki/2026-05/vlm-specdec-chunked-prefill/tier2/05-specverify-l2" },
+          { label: "T3 Tortoise & Hare (DAC / MLSys-Industry 2027)", href: "/research-wiki/2026-05/vlm-specdec-chunked-prefill/tier2/06-tortoise-hare" },
+          { label: "미선정 로그", href: "/research-wiki/2026-05/vlm-specdec-chunked-prefill/unselected" },
+        ],
+      },
+      {
+        label: "2026-05-02 VLM Scenario-Aware Optimization",
+        href: "/research-wiki/2026-05/vlm-scenario-aware",
         children: [
           { label: "Landing — VLM Scenario-Aware Optimization", href: "/research-wiki/2026-05/vlm-scenario-aware" },
           { label: "🥇 Mosaic (OSDI 2027 / ASPLOS 2027)", href: "/research-wiki/2026-05/vlm-scenario-aware/tier1/01-mosaic" },
