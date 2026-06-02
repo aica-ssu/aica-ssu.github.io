@@ -38,9 +38,23 @@ const SIDEBAR: SidebarSection[] = [
     title: "📚 모든 Summary (역시간순)",
     items: [
       {
-        label: "⭐ 2026-05-27 AI Memory Error Mitigation & Page Migration",
-        href: "/research-wiki/2026-05/ai-memory-error-mitigation",
+        label: "⭐ 2026-06-02 VLM Edge Multi-Turn / Multi-Focus Serving",
+        href: "/research-wiki/2026-06/vlm-edge-multiturn",
         emphasis: true,
+        children: [
+          { label: "Landing — VLM Edge Multi-Turn / Multi-Focus Serving", href: "/research-wiki/2026-06/vlm-edge-multiturn" },
+          { label: "🥇 RECOVER-TIER (MLSys 2027 / ASPLOS 2027)", href: "/research-wiki/2026-06/vlm-edge-multiturn/tier1/01-recover-tier" },
+          { label: "🥈 DVFS-PILOT (MLSys 2027 / IISWC / DATE)", href: "/research-wiki/2026-06/vlm-edge-multiturn/tier1/02-dvfs-pilot" },
+          { label: "🥉 REGRET-VKV (MLSys 2027, R1 paper-pair)", href: "/research-wiki/2026-06/vlm-edge-multiturn/tier1/03-regret-vkv" },
+          { label: "T1 FOCUS-COVERAGE (NeurIPS D&B / ACL)", href: "/research-wiki/2026-06/vlm-edge-multiturn/tier2/04-focus-coverage" },
+          { label: "T2 STREAM-RECOVER (MLSys 2027 video)", href: "/research-wiki/2026-06/vlm-edge-multiturn/tier2/05-stream-recover" },
+          { label: "T3 VKV-SKIP (DAC 2027 / IEEE CAL)", href: "/research-wiki/2026-06/vlm-edge-multiturn/tier2/06-vkv-skip" },
+          { label: "미선정 로그", href: "/research-wiki/2026-06/vlm-edge-multiturn/unselected" },
+        ],
+      },
+      {
+        label: "2026-05-27 AI Memory Error Mitigation & Page Migration",
+        href: "/research-wiki/2026-05/ai-memory-error-mitigation",
         children: [
           { label: "Landing — AI Memory Error Mitigation & Page Migration", href: "/research-wiki/2026-05/ai-memory-error-mitigation" },
           { label: "🥇 KEEPER (ASPLOS 2027 / MICRO 2027)", href: "/research-wiki/2026-05/ai-memory-error-mitigation/tier1/01-keeper" },
