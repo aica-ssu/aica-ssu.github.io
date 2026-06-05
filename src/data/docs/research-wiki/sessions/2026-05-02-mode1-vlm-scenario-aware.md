@@ -11,9 +11,9 @@
 - **Ideas generated**: 21 raw → Top-M 6 (Tier-1 3 + Tier-2 3) + DROP 14 + 흡수 6
 - **R29.2 quota check**: A=7, B=7, C=7 → 모두 5+ 충족 ✅
 - **Cross-link**:
-  - Summary: [`summary/2026-05-02-mode1-vlm-scenario-aware/README.md`](../summary/2026-05-02-mode1-vlm-scenario-aware/README.md)
-  - Staging: [`2026-05-02-mode1-vlm-scenario-aware-staging.md`](2026-05-02-mode1-vlm-scenario-aware-staging.md)
-  - 이전 세션: [`2026-04-30-mode1-vlm-rtx6000-cpu-cudagraph.md`](2026-04-30-mode1-vlm-rtx6000-cpu-cudagraph.md), [`2026-05-01-mode1-vlm-rtx6000-realbottleneck.md`](2026-05-01-mode1-vlm-rtx6000-realbottleneck.md)
+  - Summary: `summary/2026-05-02-mode1-vlm-scenario-aware/README.md`
+  - Staging: `2026-05-02-mode1-vlm-scenario-aware-staging.md`
+  - 이전 세션: `2026-04-30-mode1-vlm-rtx6000-cpu-cudagraph.md`, `2026-05-01-mode1-vlm-rtx6000-realbottleneck.md`
 
 ---
 
@@ -76,7 +76,7 @@
 ## Section 1 — Phase 0/1/2/1'/2'/1'' 상세 로그
 
 ### Phase 0/1 staging
-[`2026-05-02-mode1-vlm-scenario-aware-staging.md`](2026-05-02-mode1-vlm-scenario-aware-staging.md) — R31 verification + 21 idea 후보 + workload evidence.
+`2026-05-02-mode1-vlm-scenario-aware-staging.md` — R31 verification + 21 idea 후보 + workload evidence.
 
 ### Phase 2 (3 reviewer dispatch 결과)
 
@@ -130,7 +130,7 @@ Main thread 검증:
 
 ## Section 2 — Implementation-Priority Decision Tree
 
-→ Summary [README § 4](../summary/2026-05-02-mode1-vlm-scenario-aware/README.md#4-implementation-priority-decision-tree) 참조
+→ Summary README § 4 참조
 
 ---
 

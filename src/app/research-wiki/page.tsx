@@ -19,8 +19,57 @@ type SessionCard = {
 
 const recentSessions: SessionCard[] = [
   {
+    date: "2026-06-04",
+    title: "🥇 Edge Multi-Agent Hybrid-SSM/MoE Serving — NVIDIA Nemotron 3 Nano/Super 분석 기반 (Mode 2)",
+    href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving",
+    keywords: [
+      "NVIDIA Nemotron 3 Nano 30B-A3B (Mamba-2 23층 / MoE 23층 / Attention 6층, KV-head 2)",
+      "Nemotron 3 Super 120B-A12B (LatentMoE d/ℓ=4 + MTP native spec decoding + NVFP4 25T)",
+      "agent-count scaling — expert working-set union cliff N* closed-form 예측",
+      "SSM state 48MB/agent 상수 — state-vs-KV 비대칭의 1급 swap 객체화",
+      "per-token expert read 1.84GB (batch-1 FP8) → AGX Orin ~9 tok/s 상한",
+      "SSM state quant verbosity +40% (Super Eq3) — 오차 예산 = throughput 예산",
+      "thermal 정상상태 sustainable agent-count 곡선 (cold 대비 −40~60% 가설)",
+      "LPDDR row-buffer locality of expert read (trace-driven Ramulator2/DRAMSim3)",
+      "agent workload: decode-dominated 91-98.6% / prefix reuse 84.6-99.5% / turn 12-62",
+      "AGX Orin 64GB FP8 full-resident / Orin NX 16GB는 W4(22GB)도 불가",
+      "llama.cpp hybrid 로딩 깨짐(#20570) → vLLM 단일 path (clone 검증)",
+      "MLSys/HPCA/ASPLOS/NeurIPS 2025-26 agentic serving 34편 + characterization 13편",
+      "SPENDTHRIFT × BLOAT paper pair (이론 ↔ 인과 측정)",
+    ],
+    summary:
+      "사용자 input — Nemotron 3 Nano/Super tech report 분석 + 2026 agentic AI 최적화 논문 탐색 + \"Super 대비 Nano 특이점 × agent 수 증가 × edge 리소스 특성\" ideation. **핵심 비대칭**: Nano 는 52층 중 attention 6층(KV-head 2)만 KV cache 를 갖는 hybrid Mamba-MoE → per-agent context 메모리가 사실상 상수(SSM state 48MB) 가 되고 병목이 **expert read (1.84GB/token, LPDDR BW 직격)** 로 이동 — Super 는 LatentMoE(d/ℓ=4 압축)로 응답했으나 edge 후보인 Nano 에는 압축 부재. Super 보고서가 자인한 **SSM state quant verbosity +40%** (recurrent bias accumulation) 와 long-horizon rollout batching 충돌이 hidden insight. Step 0 에서 시스템 학회 16편 + edge multi-agent 18편 + characterization 13편 검증 수집 (decode-dominated 91-98.6% / prefix reuse 84.6-99.5% / DRAM util 20-60% memory-bound / expert migration 90%+). 3 expert × 15 candidate → 5-reviewer (vLLM clone 검증 포함) + cross-review → 12 refined (NIMBLE×RELAY→**MOORING** 병합, TEMPER→GOVERNOR / FORGE→KILN rename, PILOT drop [Mamba Drafters [arXiv:2506.01206](https://arxiv.org/abs/2506.01206) 45% scoop], QUARRY trace-driven 강등 구제 +1.4) → Phase 2' 신규 scoop 0 → **Top-M 6**. **Tier-1 Top 3** (TIDEMARK 7.6 / MOORING 7.8 / SPENDTHRIFT 7.4) + **Tier-2 독립 Top 3** (KILN 6.8 / QUARRY 7.1 / BLOAT 6.6) + {SPENDTHRIFT×BLOAT} paper pair. 치명 발견 — llama.cpp hybrid GGML_ASSERT(#20570) / W4 실측 22GB > Orin NX 16GB / ncu Orin iGPU 미지원 / RTX(1.79TB/s)는 edge BW-bound proxy 불가 / cross-review \"expert 46-60GB\" 주장 재검산 30GB 정정. 구현 우선순위: KILN(인프라) → BLOAT(인과 gate) → MOORING MVP → TIDEMARK → SPENDTHRIFT → QUARRY.",
+    detailed: true,
+    tierTable: [
+      { tier: "🥇 Tier-1", idea: "TIDEMARK (Critical Agent-Count Prediction via Expert Working-Set Union Growth — 2-state Markov N* closed-form + diversity-aware admission)",
+        venue: "MLSys 2027", score: "7.6 (scoop <30% 최저)",
+        href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving/tier1/01-tidemark" },
+      { tier: "🥈 Tier-1", idea: "MOORING (LPDDR-Warm Tiered SSM-State Pool with Tool-Window Swap — state-vs-KV 비대칭 1급 객체화, NIMBLE×RELAY 병합)",
+        venue: "MLSys 2027 / EuroSys 2027", score: "7.8 (nov 8, white space)",
+        href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving/tier1/02-mooring" },
+      { tier: "🥉 Tier-1", idea: "SPENDTHRIFT (Spectral Verbosity Budget for State-Quantized Hybrid Decoding — bias-drift→verbosity closed-form + spectral allocator)",
+        venue: "ICML / NeurIPS / MLSys 2027", score: "7.4 (이론 최강)",
+        href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving/tier1/03-spendthrift" },
+      { tier: "T1", idea: "KILN (Thermal-Bounded Sustainable Agent-Count Characterization — 정상상태 천장 측정, Track-A baseline 인프라 hub)",
+        venue: "DATE / ISLPED / IISWC 2027", score: "6.8 (arch 9 최안전)",
+        href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving/tier2/01-kiln" },
+      { tier: "T2", idea: "QUARRY (Row-Buffer Locality of Expert Read on LPDDR — fused_moe trace → Ramulator2/DRAMSim3)",
+        venue: "DAC / DATE / IEEE CAL 2027", score: "7.1 (강등 구제 +1.4)",
+        href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving/tier2/02-quarry" },
+      { tier: "T3", idea: "BLOAT (Verbosity Cost of SSM-State Quantization — det vs stochastic rounding 인과 식별, SPENDTHRIFT pair)",
+        venue: "IISWC / ISPASS / IEEE CAL 2027", score: "6.6 (pair)",
+        href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving/tier2/03-bloat" },
+    ],
+    extraLinks: [
+      { label: "📊 Landing (RQ + Essential Reading 5편 + Nano vs Super 비교표 + Implementation-Priority Decision Tree)",
+        href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving" },
+      { label: "📜 미선정 / Drop 로그 (HEARTH 7.3 FineMoE 인접 / TOLLGATE stack 후보 / PILOT Mamba-Drafters scoop 등 8건)",
+        href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving/unselected" },
+    ],
+  },
+  {
     date: "2026-06-02",
-    title: "🥇 VLM Edge Multi-Turn / Multi-Focus Serving — Vision-KV Pruning Cache 재사용 취약성 (Mode 2, R69/R70/R71 적용)",
+    title: "🥈 VLM Edge Multi-Turn / Multi-Focus Serving — Vision-KV Pruning Cache 재사용 취약성 (Mode 2, R69/R70/R71 적용)",
     href: "/research-wiki/2026-06/vlm-edge-multiturn",
     keywords: [
       "Jetson Orin NX 16GB edge (primary)",
@@ -228,7 +277,7 @@ const recentSessions: SessionCard[] = [
   },
   {
     date: "2026-04-25",
-    title: "🥇 KV Cache Memory ECC + RAS for Quantized AI Serving",
+    title: "🥈 KV Cache Memory ECC + RAS for Quantized AI Serving",
     href: "/research-wiki/2026-04/kv-ecc-ras",
     keywords: ["KV cache", "ECC", "Memory RAS", "Page retirement", "Quantization-aware", "Outlier-aware", "DRAM error", "Simulator-only", "R45/R46 strict"],
     summary:

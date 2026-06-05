@@ -38,9 +38,23 @@ const SIDEBAR: SidebarSection[] = [
     title: "📚 모든 Summary (역시간순)",
     items: [
       {
-        label: "⭐ 2026-06-02 VLM Edge Multi-Turn / Multi-Focus Serving",
-        href: "/research-wiki/2026-06/vlm-edge-multiturn",
+        label: "⭐ 2026-06-04 Edge Multi-Agent Hybrid-SSM/MoE Serving (Nemotron 3)",
+        href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving",
         emphasis: true,
+        children: [
+          { label: "Landing — Edge Multi-Agent Hybrid-SSM/MoE Serving", href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving" },
+          { label: "🥇 TIDEMARK (MLSys 2027)", href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving/tier1/01-tidemark" },
+          { label: "🥈 MOORING (MLSys 2027 / EuroSys 2027)", href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving/tier1/02-mooring" },
+          { label: "🥉 SPENDTHRIFT (ICML / NeurIPS 2027, BLOAT paper-pair)", href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving/tier1/03-spendthrift" },
+          { label: "T1 KILN (DATE / ISLPED / IISWC 2027)", href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving/tier2/01-kiln" },
+          { label: "T2 QUARRY (DAC / DATE / IEEE CAL 2027)", href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving/tier2/02-quarry" },
+          { label: "T3 BLOAT (IISWC / ISPASS / IEEE CAL 2027)", href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving/tier2/03-bloat" },
+          { label: "미선정 로그", href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving/unselected" },
+        ],
+      },
+      {
+        label: "2026-06-02 VLM Edge Multi-Turn / Multi-Focus Serving",
+        href: "/research-wiki/2026-06/vlm-edge-multiturn",
         children: [
           { label: "Landing — VLM Edge Multi-Turn / Multi-Focus Serving", href: "/research-wiki/2026-06/vlm-edge-multiturn" },
           { label: "🥇 RECOVER-TIER (MLSys 2027 / ASPLOS 2027)", href: "/research-wiki/2026-06/vlm-edge-multiturn/tier1/01-recover-tier" },
