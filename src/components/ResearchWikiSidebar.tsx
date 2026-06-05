@@ -38,9 +38,31 @@ const SIDEBAR: SidebarSection[] = [
     title: "📚 모든 Summary (역시간순)",
     items: [
       {
-        label: "⭐ 2026-06-04 Edge Multi-Agent Hybrid-SSM/MoE Serving (Nemotron 3)",
-        href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving",
+        label: "⭐ 2026-06-05 Cosmos3 MoT Edge Serving (Deep)",
+        href: "/research-wiki/2026-06/cosmos3-edge-serving-deep",
         emphasis: true,
+        children: [
+          { label: "Landing — Cosmos3 MoT Edge Serving (Deep Re-Spec)", href: "/research-wiki/2026-06/cosmos3-edge-serving-deep" },
+          { label: "🥇 Q2 ANCHOR (MLSys 2027 / ICML 2027)", href: "/research-wiki/2026-06/cosmos3-edge-serving-deep/tier1/01-anchor" },
+          { label: "🥈 Q1 DRIFT (NeurIPS 2027 / ICML 2027)", href: "/research-wiki/2026-06/cosmos3-edge-serving-deep/tier1/02-drift" },
+          { label: "🥉 S1 TIDELOOM (MLSys 2027 / ASPLOS 2027)", href: "/research-wiki/2026-06/cosmos3-edge-serving-deep/tier1/03-tideloom" },
+          { label: "T1 S2 DUOCLOCK (DATE 2027 / ISLPED 2027)", href: "/research-wiki/2026-06/cosmos3-edge-serving-deep/tier2/01-duoclock" },
+          { label: "T2 L3 KEELKV (DAC 2027 / DATE 2027)", href: "/research-wiki/2026-06/cosmos3-edge-serving-deep/tier2/02-keelkv" },
+          { label: "T3 S4 SIDEPOOL (DATE 2027 / ISPASS 2027)", href: "/research-wiki/2026-06/cosmos3-edge-serving-deep/tier2/03-sidepool" },
+          { label: "미선정 로그", href: "/research-wiki/2026-06/cosmos3-edge-serving-deep/unselected" },
+        ],
+      },
+      {
+        label: "2026-06-04 Cosmos3 MoT Edge Serving [superseded]",
+        href: "/research-wiki/2026-06/cosmos3-mot-edge-serving",
+        children: [
+          { label: "Landing — Cosmos3 MoT Edge Serving (06-04 원본)", href: "/research-wiki/2026-06/cosmos3-mot-edge-serving" },
+          { label: "미선정 로그", href: "/research-wiki/2026-06/cosmos3-mot-edge-serving/unselected" },
+        ],
+      },
+      {
+        label: "2026-06-04 Edge Multi-Agent Hybrid-SSM/MoE Serving (Nemotron 3)",
+        href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving",
         children: [
           { label: "Landing — Edge Multi-Agent Hybrid-SSM/MoE Serving", href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving" },
           { label: "🥇 TIDEMARK (MLSys 2027)", href: "/research-wiki/2026-06/nemotron3-edge-agentic-serving/tier1/01-tidemark" },

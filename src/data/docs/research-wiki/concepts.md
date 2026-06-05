@@ -4,6 +4,39 @@
 
 ---
 
+## C35. MoT Dual-Tower Serving Asymmetry (phase 별 1-tower 활성) — 2026-06 cosmos3-edge-serving-deep 세션
+- **정의**: Cosmos3 MoT 는 각 decoder layer 가 Reasoner(AR) + Generator(diffusion) 두 세트 독립 파라미터를 보유하나 generation phase 마다 **한 tower 만 활성**한다 (VLM mode = generator 완전 미사용, denoising loop = reasoner FFN/proj 미사용·K_AR/V_AR 캐시만 소비). 한 요청이 AR phase(memory-bound, KV-중심, token-by-token) → DM phase(compute-bound, KV-불변, step 반복)를 단일 edge GPU 에서 직렬 traverse — 두 phase 의 자원 요구가 정반대 (G1/G2).
+- **기존 baseline**: vLLM(AR paged-KV/continuous-batch) + [vLLM-Omni (arXiv:2602.02204)](https://arxiv.org/abs/2602.02204) (DM denoising, multi-GPU cluster) **분리 스택**; [VLA-across-XPUs (arXiv:2604.24447)](https://arxiv.org/abs/2604.24447) "compute-bound backbone→memory-bound action-expert" 2-phase; DistServe/Splitwise phase disaggregation (cross-GPU).
+- **차별화 axis**: 기존 phase 이질성은 across-request 또는 동일 AR 모델 prefill-decode; MoT 는 *한 요청 내 AR↔DM tower 전환* + 16B 중 활성 8B + attention-만-공유라는 구조적 사실. cross-GPU disaggregation 은 edge 단일 가속기에서 불가 → 단일-device 변형이 신규.
+- **관련 idea**: S1 TIDELOOM (단일-device 통합 runtime), S2 DUOCLOCK (phase DVFS), S3 LEDGERMARK (phase-transition 측정).
+
+## C36. Static Conditioning KV (read-only K_AR/V_AR, one-shot quant + flow-step error bound) — 2026-06 cosmos3-edge-serving-deep 세션
+- **정의**: Cosmos3 generator 는 `O_DM = Attn_full(Q_DM, [K_AR;K_DM], [V_AR;V_DM])` 로 reasoner 의 K_AR/V_AR 을 **N denoising step × CFG 2 pass 전 기간 read-only static prefix** 로 cross-attend 한다 (reasoner-tower caching, 1회 계산·전 step 재사용·품질손실 0). decode-time KV(online·매 토큰 cheap·growing)와 정반대 — (i) 비싼 1-shot 양자화(Hadamard rotation + MSE-optimal clipping)를 amortize 가능, (ii) denoising 출력 error 를 KV quant error 의 함수로 **flow-step 수 N 에 명시 의존하는 닫힌 bound** 로 유도 가능 (`‖x̂_0−x_0‖ ≤ (Σ_n Δ_n·L_v^{(n)})·(L_softmax‖ΔK_AR‖+‖ΔV_AR‖)`, N 작을수록 tight = policy 가 저비트에 관대).
+- **기존 baseline**: [KIVI (arXiv:2402.02750)](https://arxiv.org/abs/2402.02750)/[KVQuant (arXiv:2401.18079)](https://arxiv.org/abs/2401.18079) (online growing decode-KV), [QuantKeys (arXiv:2605.26266)](https://arxiv.org/abs/2605.26266) (video diffusion KV quant + Jensen-bias, autoregressive growing-KV), [33-method study (arXiv:2603.27469)](https://arxiv.org/abs/2603.27469) (순수 실증, bound 없음), SVDQuant (weight/activation only).
+- **차별화 axis**: 정적·1회·read-only prefix 라서만 가능한 N-의존 closed-form denoising error bound — online decode-KV 엔 step 개념 자체가 없음. 경쟁 KV-quant 전부 bound 부재(WebFetch 확인).
+- **관련 idea**: Q2 ANCHOR (numeric, bound 소유), A2 Keystone (runtime layout/dedup 위임), L3 KEELKV (L2 placement 위임). G4 ownership table 계층 분리.
+- **[2026-06-05 보강]** (source-code 직접 검증, R72): (1) 코드상 serving K_AR 는 **text-only** (관측 시에는 GEN tower 에 주입 — 두 시나리오 병기). (2) policy 는 **CFG ON** (guidance 3.0 + CFG-parallelism → cached K_AR cond/uncond 2벌; guidance_scale=1.0 은 forward/inverse-dynamics·padding pass 용). (3) denoising error bound 는 단일-layer 가 아니라 **36 gen layer 누적** 항을 포함해야 valid (구 식 single-layer = optimistic-invalid). (4) cosmos3 `cached_kv` 는 **post-RoPE** 저장(L548) → Hadamard 를 RoPE 뒤에 적용해야 위치정보 보존. K_AR per-layer footprint = 16×16 patch / policy ~1,050 tok / GQA 8-head / 36 layer 기준 BF16 ~4.3MB · INT4 ~1.08MB.
+
+## C37. Phase-Deterministic Weight Residency (활성 8B/16B, FluxMoE demand-paging 대비) — 2026-06 cosmos3-edge-serving-deep 세션
+- **정의**: MoT 의 tower 활성은 **phase 로 100% 결정론적** — generation mode 가 어느 tower 를 쓰는지 컴파일-타임에 확정. 비활성 tower weight 를 UMA 에서 demote, 다음 phase weight 를 현재 phase denoise compute 와 overlap 하여 double-buffered `cudaMemcpyAsync` staging (Orin `concurrentManagedAccess=0` prefetch 미지원 대응). denoise long window(8 forward/chunk @15Hz)가 staging hiding 기회.
+- **기존 baseline**: [PowerInfer-2 (arXiv:2406.06282)](https://arxiv.org/abs/2406.06282) (neuron-level activation-predictor, 비결정 miss penalty), [FluxMoE (arXiv:2604.02715)](https://arxiv.org/abs/2604.02715) (expert paging, token-routing 비결정), [DuoServe-MoE (arXiv:2509.07379)](https://arxiv.org/abs/2509.07379) (dual-phase prefetch).
+- **차별화 axis**: 예측기 기반 demand-paging 과 달리 phase-결정성은 예측기 불필요·더 coarse·정확 — MoT 의 modality/기능-disjoint weight 가 swap 에 유리한 구조적 property. Orin UVM-prefetch 미지원 제약 정확 대응(double-buffer)이 systems novelty.
+- **관련 idea**: S1 TIDELOOM-M2 (residency full method), S1-mini (policy-only NX 16GB fit enabling).
+
+## C38. Modality Token-Density Asymmetry (video ≫ audio ≫ action, h=w=0 MRoPE) — 2026-06 cosmos3-edge-serving-deep 세션
+- **정의**: Cosmos3 의 모달리티 token 밀도 = video VAE(공간그리드×프레임, 수만) ≫ audio(48kHz hop 1920 → **25 token/s**) ≫ action(~32 future joint-position @15Hz) (G6). audio/action 토큰은 3D MRoPE 에서 **h=w=0**(temporal 축만), video 는 (t,h,w) 모두 사용 → attention 구조·layout 단순성 차등. video gen 이 image 대비 100× 에너지([arXiv:2601.22076](https://arxiv.org/abs/2601.22076)) — video token 이 edge 비용 지배하나 policy 에선 출력은 action 뿐(video-latent decode skip 하나 attention 잔존).
+- **기존 baseline**: [Modality Inflation (arXiv:2512.22695)](https://arxiv.org/abs/2512.22695) (MLLM 에너지 17-94%), [UVA (arXiv:2503.00200)](https://arxiv.org/abs/2503.00200) (video gen bypass, 이분법), MotuBrain action-only suffix, [VLA-Pruner (arXiv:2511.16449)](https://arxiv.org/abs/2511.16449) (token salience prune).
+- **차별화 axis**: 기존은 video skip 이분법(전부 skip or keep) 또는 token prune; modality 별 *연속 precision/step* 을 정보흐름 bound 로 배분(video→action attention-mass p_v)은 미개척. [UD-VLA (arXiv:2511.01718)](https://arxiv.org/abs/2511.01718) "joint > decoupled" 반증과 긴장.
+- **관련 idea**: Q5 RELAY (p_v bound 기반 modality bit/step, p_v pilot 재방문), L3/S3 modality working-set 측정, A2-M3 modality tiering.
+
+## C39. Intra-Request Dual-Regime DVFS (AR↔DM 위상 전환, J/chunk metric) — 2026-06 cosmos3-edge-serving-deep 세션
+- **정의**: 한 inference **내부**에서 AR(memory-bound, EMC-freq 민감) ↔ DM(compute-bound, GPU-freq 민감)이 교대 — Jetson 의 EMC(memory) clock 과 GPU clock 을 phase 에 맞춰 **물리적으로 분리 제어**(AR: EMC max + GPU↓ / DM: GPU max + EMC↓, chunk-granularity 전환으로 freq settle 흡수). tegrastats 33-50ms < step → J/step 직접 측정 불가 → **J/chunk(policy 15Hz 2.1s) + J/inference-phase 재정의**가 측정 방법론 기여.
+- **기존 baseline**: [DualScale (arXiv:2602.18755)](https://arxiv.org/abs/2602.18755) (disaggregated LLM phase-DVFS, across-request), [GreenLLM (arXiv:2508.16449)](https://arxiv.org/abs/2508.16449) (prefill/decode GPU-freq, EMC 무, LLM-only), [SparseDVFS (arXiv:2603.21908)](https://arxiv.org/abs/2603.21908) (CPU/GPU/EMC triplet, edge, operator-sparsity), [DynamoLLM (arXiv:2408.00741)](https://arxiv.org/abs/2408.00741) (cluster GPU-freq).
+- **차별화 axis**: 데이터센터 DVFS 에 EMC 분리 개념 자체가 없음; SparseDVFS 가 EMC-triplet+edge 도달했으나 operator-sparsity 기반이지 AR↔DM modality-regime 전환 아님 → (a)intra-request dual-regime + (c)J/chunk 재정의 두 축만 유일 (Tier-2 강등 정당).
+- **관련 idea**: S2 DUOCLOCK (governor + J/chunk LUT), S3 LEDGERMARK (J/phase 측정 producer).
+
+---
+
 ## Scenario-Aware VLM Serving Dispatcher — 2026-05-02 vlm-scenario-aware 세션
 **정의**: Production VLM (vLLM/SGLang) 의 scenario diversity (image/video × single/multi-turn × document/agent 6 class) 를 lightweight classifier (DistilBERT-mini 60M) 로 사전 분류 후 scenario-conditional config table dispatch (KV budget / prefix policy / compression rate). ECVL-ROUTER ([arXiv:2510.27256](https://arxiv.org/abs/2510.27256), ICLR'26) 의 model-tier routing 과 직교 axis (single-model serving-stack config). Production hit rate 60-85% measured common case 활용.
 **관련 자료**: ECVL-ROUTER ICLR'26, vLLM Prefix Caching, SGLang RadixAttention [ICLR 2024], LMCache [arXiv:2510.09665](https://arxiv.org/abs/2510.09665)

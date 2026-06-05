@@ -4,6 +4,56 @@
 
 ---
 
+### Trend M1 (R72): Document-Depth Discipline 도입 — ideation 산출물의 source-code-anchored 깊이 표준화 — 2026-06-05 cosmos3-edge-serving-deep 세션
+- **Period**: 2026-06-05 (harness 규칙 진화)
+- **배경**: 직전 2026-06-04 cosmos3 세션 tier 문서가 ~80줄 압축으로 R52.2(코드 anchor)/R70(완료 판정)/pseudo-code/preliminary 누락 → 구현 가능성 검증 불가.
+- **내용**: tier 문서를 **350-400줄** 깊이로 표준화 (길이상한 금지·per-document 전담 agent·문서 agent 의 source-code 직접 검증·depth-gate). 적용 결과 **anchor 검증율 98%** (47/48), depth-gate 가 1차 4 FAIL(github 링크 0건) 포착 → 규칙이 실제 결함을 잡아내는 효과 입증.
+- **핵심 관찰 (코드-수준 발견이 ideation 정정을 유발)**: 문서 agent 가 repo 를 직접 검증하자 ideation 단계의 가정이 코드로 반증·정정됨 — (1) **serving K_AR text-only** (관측은 GEN tower 주입 → 두 시나리오 병기), (2) **policy CFG ON** (구 문서 일부 OFF 기술 → guidance 3.0 + CFG-parallelism = cond/uncond 2벌). 즉 "ideation→문서화→실측" 직렬 대신 "문서화 단계에서 소스 검증을 당겨" 가정 오류를 조기 차단하는 흐름이 표준화됨.
+
+### Trend T10: Omnimodal MoT(Mixture-of-Transformers) dual/multi-tower 아키텍처의 부상 (2024 H2 - 2026 H1) — 2026-06 cosmos3 세션
+- **Period**: 2024 H2 - 2026 H1
+- **Backbone**:
+  - MoT 원논문 [arXiv:2411.04996](https://arxiv.org/abs/2411.04996) — modality별 FFN/proj/LN 분리 + global attention 공유 (sparse multimodal)
+  - [BAGEL (arXiv:2505.14683)](https://arxiv.org/abs/2505.14683) — 7B active/14B total MoT-experts decoder-only
+  - **Cosmos 3** (NVIDIA 2026-06-01) — Reasoner AR + Generator diffusion dual-tower, Qwen3-VL co-init, language/image/video/audio/action 5-modality
+  - [MotuBrain (arXiv:2604.27792)](https://arxiv.org/abs/2604.27792) — three-stream MoT world-action (video/action/text)
+  - π0/GR00T action-expert, [Transfusion (arXiv:2408.11039)](https://arxiv.org/abs/2408.11039), [Show-o2 (arXiv:2506.15564)](https://arxiv.org/abs/2506.15564)
+- **Key axis 진화**:
+  - ~2024: 단일 transformer 통합(Transfusion/Chameleon, AR+diffusion 한 파라미터)
+  - 2024 H2: MoT 패턴 정립 — 파라미터 분리 + attention 만 공유 (간섭 최소화, VLM weight 보존)
+  - 2025-2026: 8B×2급 dual-tower 가 omnimodal 사실상 표준 (BAGEL/Cosmos3 동형) + action 을 core modality 로
+- **본 세션 white space**: MoT 가 신규 카테고리가 아니라 *기존 MoT 계열의 dual-tower 특화 인스턴스* → 서빙 연구 일반화 가능성 높음. tower 가 modality/기능-disjoint → phase 별 1-tower 만 활성(AR memory-bound vs DM compute-bound).
+
+### Trend T11: AR + Diffusion 이중 체제(dual-regime) 서빙의 분리 스택 문제 (2026) — 2026-06 cosmos3 세션
+- **Period**: 2026 H1
+- **Backbone**: [vLLM-Omni (arXiv:2602.02204)](https://arxiv.org/abs/2602.02204) (any-to-any stage disaggregation, 2026-02), [GenServe (arXiv:2604.04335)](https://arxiv.org/abs/2604.04335) (이종 diffusion co-serve, 2026-04), [VLA-across-XPUs (arXiv:2604.24447)](https://arxiv.org/abs/2604.24447) (2-phase 특성화+가속, 2026-04)
+- **Key axis 진화**:
+  - AR(reasoner)은 paged-KV/continuous-batch(vLLM), DM(generator)은 denoising few-step(vLLM-Omni) — 서로 다른 엔진
+  - 2026: 서빙 시스템이 "AR+diffusion 혼합 disaggregation" 정조준 (diffusion step 경계 preemptibility 가 공통 무기)
+  - **모두 multi-GPU 클러스터 전제** — edge(단일 가속기) 시나리오 미개척
+- **본 세션 white space**: cross-GPU disaggregation 을 **단일 edge GPU 내 시분할/weight-streaming/메모리공유**로 내리는 연구 부재 (S1 TIDELOOM). MoT 의 attention-공유(KV 공유) 구조를 stage 경계로 끊지 않고 살리는 cross-tower 최적화 부재.
+
+### Trend T12: Edge 디바이스 세대 교체 — Orin(sm_87) → Thor(Blackwell) (2025-2026) — 2026-06 cosmos3 세션
+- **Period**: 2025 H2 - 2026 H1
+- **Key axis 진화**:
+  - Orin(Ampere sm_87): `concurrentManagedAccess=0`(UVM prefetch 미지원), L2 4MB(set-aside ~3MB), **ncu(Nsight Compute) ga10b 미지원**(커널 카운터 측정 불가), Green Context soft(isolation 비보장), 204.8GB/s LPDDR5
+  - Thor(Blackwell, JetPack 7.x): cMA=1(prefetch 지원), native FP4 TE, Green Context 정식, 273GB/s, **TensorRT Edge-LLM(2026-01, NVFP4/EAGLE-3/chunked prefill)**
+- **본 세션 함의**: Thor = 16B dual-tower 의 유일한 "정공법" edge 타깃(forward-looking primary), Orin = constrained(INT8/INT4 + active-tower 관리, 측정은 RTX/Thor 이전). 측정 idea(S3)는 ncu Orin 미지원 → 2-tier 측정(Orin=timeline/전력, Thor/RTX=커널 카운터) 필수. Cosmos3-Nano BF16-only(저비트 비공식).
+
+### Trend T13: CFG·step-cache 계열 근사 캐시의 포화 (red ocean, 2024-2026) — 2026-06 cosmos3 세션
+- **Period**: 2024 H2 - 2026 H1
+- **Backbone**: [FasterCache (arXiv:2410.19355)](https://arxiv.org/abs/2410.19355) (cond/uncond residual redundancy), [TeaCache (arXiv:2411.19108)](https://arxiv.org/abs/2411.19108) (CVPR'25 timestep cache), [AGD (arXiv:2503.07274)](https://arxiv.org/abs/2503.07274) (adapter CFG distill), [DISK (arXiv:2602.00440)](https://arxiv.org/abs/2602.00440) (cross-modal step-skip), Adaptive Guidance/LinearAG, X-Cache/WorldCache
+- **Key axis 진화**: training-free step caching + uncond-branch 캐시/skip 이 2024-2026 폭발 → DiT 가속의 red ocean
+- **본 세션 함의**: **Q3 PRISM(CFG attention decomposition) DROP** (FasterCache 영역 선점), **A5 Herald(cross-tower step-skip) DROP** (DISK scoop). exact-CFG-sharing 시도(A2-M2)도 Phase 2' Task1 에서 layer-recursion 누락으로 layer-1-only 붕괴 → 근사 캐시 영역으로 환원되어 차별축 소멸. 정적 K_AR *block dedup*(저장 −50%)만 layer-recursion 무관하게 생존.
+
+### Trend T14: 특성화 공백 — MoT dual-regime J/chunk 통합 측정 (2026) — 2026-06 cosmos3 세션
+- **Period**: 2026 H1
+- **Backbone**: [EdgeReasoning (arXiv:2511.01866)](https://arxiv.org/abs/2511.01866) (IISWC'25, AR-only edge), [Generative-AI-Beyond-LLMs (arXiv:2312.14385)](https://arxiv.org/abs/2312.14385) (ISPASS'24, diffusion-only), MLPerf v5.1 (SDXL+LLM SLO), [VLA-XPU (arXiv:2604.24447)](https://arxiv.org/abs/2604.24447) (server 2-phase)
+- **Key axis 진화**: phase 이질성(prefill compute / decode memory)은 정설+프로덕션 인프라(DistServe/Splitwise → Dynamo/vLLM 표준). 모달리티가 에너지 1차 변수(video=image 100×, [arXiv:2601.22076](https://arxiv.org/abs/2601.22076)).
+- **본 세션 white space**: **diffusion+AR 을 한 요청이 같은 edge GPU 에서 직렬 traverse 하는 omnimodal MoT 통합 특성화는 부재** (S3 LEDGERMARK). tegrastats 33-50ms < step → J/step 직접 측정 불가 → **J/chunk + J/inference-phase 재정의**가 측정 방법론 기여. MoT-특유(co-loc K_DM→K_AR L2 pollution, phase-transition stall, EMC sensitivity) 한정 "최초 통합 ledger".
+
+---
+
 ### Production VLM Scenario Diversity 와 Single-Path Optimization 의 Gap — 2026-05-02 시점
 
 - **Date analyzed**: 2026-05-02

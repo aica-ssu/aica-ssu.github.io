@@ -4,6 +4,59 @@
 
 ---
 
+## Selected Ideas (2026-06-05 — Cosmos 3 MoT 단일 edge GPU 서빙 DEEP re-spec, R72) ⭐featured
+
+- **Date**: 2026-06-05 | **Mode**: 1 (개선 모드 — 재이데이션 없음, source-code-anchored deep re-spec) | **Session**: `sessions/2026-06-05-mode1-cosmos3-edge-serving-deep.md` (로컬 wiki, 미publish) | **Summary**: [Landing](/research-wiki/2026-06/cosmos3-edge-serving-deep)
+- **요지**: 직전 2026-06-04 cosmos3 세션의 Top-6 idea 6편의 **idea 내용 자체는 불변**. 본 entry 는 그 6 idea 를 **2026-06-05 deep 번들로 갱신**한다. 적용 작업 = R72 deep re-spec (tier 문서 ~80줄 → 363-404줄), **anchor 검증 47/48**, **정정 5건** (K_AR 16×16 재산정 / policy CFG ON / ANCHOR bound 36-layer 누적 / KEELKV L2-fit 출처 / serving K_AR text-only 발견 → 두 시나리오 병기). 신규 must-cite 2편: [arXiv:2602.02110](https://arxiv.org/abs/2602.02110), [arXiv:2511.11418](https://arxiv.org/abs/2511.11418).
+
+1. **ANCHOR (Q2)** (Tier-1, **7.6**) — [최신 deep 문서](/research-wiki/2026-06/cosmos3-edge-serving-deep/tier1/01-anchor) (388줄). idea 불변; post-RoPE K 캐시(L548) + serving K_AR text-only + bound 36-layer 누적 항 보강.
+2. **DRIFT (Q1)** (Tier-1, **7.4**) — [최신 deep 문서](/research-wiki/2026-06/cosmos3-edge-serving-deep/tier1/02-drift) (404줄). idea 불변; quant 메뉴(int8/mxfp8/mxfp4/...) + qwen3_omni tower-prefix quant routing 선례(L1150-1151) 보강.
+3. **TIDELOOM (S1)** (Tier-1, **7.4**) — [최신 deep 문서](/research-wiki/2026-06/cosmos3-edge-serving-deep/tier1/03-tideloom) (404줄). idea 불변; dual hook(`_forward_local` L648 / `_forward_sp` L675) + stream/staging greenfield 입증 보강.
+4. **DUOCLOCK (S2)** (Tier-2, **7.4**) — [최신 deep 문서](/research-wiki/2026-06/cosmos3-edge-serving-deep/tier2/01-duoclock) (363줄). idea 불변; Orin EMC = BPMP debugfs experimental → nvpmodel fallback 보강.
+5. **KEELKV (L3)** (Tier-2, **6.6**) — [최신 deep 문서](/research-wiki/2026-06/cosmos3-edge-serving-deep/tier2/02-keelkv) (380줄). idea 불변; L2-fit 수치 출처(GQA 8-head/36-layer/1,050-tok) 명기. **Q2×L3 pair** 유지.
+6. **SIDEPOOL (S4)** (Tier-2, **6.2**) — [최신 deep 문서](/research-wiki/2026-06/cosmos3-edge-serving-deep/tier2/03-sidepool) (372줄). idea 불변; DLA 비호환 op(CausalConv3d/RMS_norm/AttentionBlock) + NVDLA v2.0 정정 보강.
+
+- **미선정 9**: 직전 세션 계승 (재이데이션 없음). 상세: [2026-06-04 cosmos3 unselected](/research-wiki/2026-06/cosmos3-mot-edge-serving/unselected).
+
+---
+
+## Selected Ideas (2026-06-04 — Cosmos 3 MoT Edge Omnimodal Serving) `[summary tier 문서 superseded by 2026-06-05 deep]`
+
+- **Date**: 2026-06-04 | **Mode**: 2+1 하이브리드 (local PDF + 문장 ideation) | **Session**: `sessions/2026-06-04-mode2-cosmos3-mot-edge-serving.md` (로컬 wiki, 미publish) | **Summary**: [Landing](/research-wiki/2026-06/cosmos3-mot-edge-serving)
+- **Experts**: ai-optimization (systems/serving), legacy-system (memory/HW-hierarchy), algorithm (quant/numerics/theory) | **Reviewer**: novelty + differentiation+impact + ai-implementation + arch-system-implementation (Phase 2) + integrated re-reviewer (Phase 2')
+- **Source PDF**: *Cosmos 3: Omnimodal World Models for Physical AI* (NVIDIA, 2026-06-01). MoT dual-tower(Reasoner AR 8B + Generator diffusion 8B, attention만 공유, Qwen3-VL-8B co-init), Cosmos3-Nano 16B/Policy-DROID.
+- **핵심**: 한 요청이 AR(memory-bound)→DM(compute-bound)을 단일 edge GPU 직렬 traverse 하나 vLLM(AR)+vLLM-Omni(DM) **분리 multi-GPU 스택**. 8 GAP(G1-G8). Scoop 위험 = [MotuBrain arXiv:2604.27792](https://arxiv.org/abs/2604.27792) ~70% / [vLLM-Omni arXiv:2602.02204](https://arxiv.org/abs/2602.02204) ~55-60% / [VLA-XPU arXiv:2604.24447](https://arxiv.org/abs/2604.24447) ~55% — 전부 edge/UMA/tower-aware residency·static-K_AR·co-init divergence 미커버. 치명 발견 4종 (ncu Orin 미지원 / VAE DLA 비호환 / Cosmos3 BF16-only / Green Context Orin 미확인).
+
+### Top-M 6 (final, post-Phase 2')
+
+1. **ANCHOR (Q2)** (Tier-1, **7.6**, nov 8 최강) — static K_AR/V_AR(read-only N step 전 기간) 1-shot Hadamard 양자화(INT4/INT3) + **flow-matching denoising error bound** `‖x̂_0−x_0‖ ≤ (Σ_n Δ_n·L_v^{(n)})·(L_softmax‖ΔK_AR‖+‖ΔV_AR‖)` — N 작을수록(policy N=4) bound tight = policy 가 저비트에 관대. conditioning-KV 2-4× 압축, 품질손실 <1%. Closest: [QuantKeys arXiv:2605.26266](https://arxiv.org/abs/2605.26266) (growing-KV, bound 부재), [33-method KV-quant arXiv:2603.27469](https://arxiv.org/abs/2603.27469). [summary](/research-wiki/2026-06/cosmos3-mot-edge-serving)
+2. **DRIFT (Q1)** (Tier-1, **7.4**, diff 8) — co-init 두 tower(동일 Qwen3-VL, AR-CE vs flow-MSE objective)의 quant-sensitivity 발산 **ρ_ℓ = S_ℓ^R/S_ℓ^G** (Hutchinson HVP) 측정 + UMA 예산 하 per-tower 비대칭 bit allocation. 균일-W4 대비 품질 0.5-1.5%p 회복 또는 footprint 10-18% 절감 (ρ_ℓ material 시만, conditional-gain 정직). Closest: [Mix-QViT arXiv:2501.06357](https://arxiv.org/abs/2501.06357), [KL-Lens arXiv:2604.13440](https://arxiv.org/abs/2604.13440). Q4 SIEVE = M1 흡수. [summary](/research-wiki/2026-06/cosmos3-mot-edge-serving)
+3. **TIDELOOM (S1)** (Tier-1, **7.4**, impact 8) — 단일 edge GPU MoT 통합 서빙 runtime (TowerPhaseFSM, plain-PyTorch 단일-process) + **phase-결정적 active-8B weight residency** (double-buffered `cudaMemcpyAsync`, Orin prefetch 미지원 대응) + AR∥DM chunk overlap (MPS). peak resident −35~45%, **RTX Pro 6000 ×2→×1 단일화** + Orin NX fit enabling. A1+L1+A3 merge(9→3). Closest: [vLLM-Omni arXiv:2602.02204](https://arxiv.org/abs/2602.02204) (multi-GPU), [FluxMoE arXiv:2604.02715](https://arxiv.org/abs/2604.02715) (비결정 expert paging). [summary](/research-wiki/2026-06/cosmos3-mot-edge-serving)
+4. **DUOCLOCK (S2)** (Tier-2, **7.4**, ai-impl 8) — intra-request AR(memory)↔DM(compute) dual-regime 의 **EMC(memory) clock ↔ GPU clock 물리 분리 phase-DVFS governor** + J/chunk·J/phase 재정의(tegrastats 33-50ms 한계). J/chunk −25~38% (AR GPU↓ + DM EMC↓, chunk-granularity 전환). Closest: [DualScale arXiv:2602.18755](https://arxiv.org/abs/2602.18755), [GreenLLM arXiv:2508.16449](https://arxiv.org/abs/2508.16449), [SparseDVFS arXiv:2603.21908](https://arxiv.org/abs/2603.21908) (EMC축 선점→Tier-2 강등). L2→reposition. [summary](/research-wiki/2026-06/cosmos3-mot-edge-serving)
+5. **KEELKV (L3)** (Tier-2, **6.6**, ai-impl 8 최견고) — static cross-tower K_AR/V_AR(read-only)을 denoise loop 동안 **per-layer L2 set-aside pin** (`cudaAccessPolicyWindow`, AGX Orin 3MB 확정 지원, policy per-layer BF16 1.2MB/INT4 0.3MB fit) + video-K_DM streaming demote. per-step DRAM read −10~20%. vLLM/SGLang/llama.cpp/TRT 전부 L2 set-aside 미사용. Closest: [Async KV→L2 arXiv:2504.06319](https://arxiv.org/abs/2504.06319) (growing-KV prefetch), ShadowKV. **Q2×L3 paper-pair**. [summary](/research-wiki/2026-06/cosmos3-mot-edge-serving)
+6. **SIDEPOOL (S4)** (Tier-2, **6.2**, arch-impl 7 ncu 불요) — frozen VAE decode ∥ next-chunk denoise **GPU stream-priority overlap** (DLA 무관) + accelerator-complex placement LUT (iGPU/DLA-2Dsubgraph/PVA/CPU, 3D conv DLA 미지원 정직화). e2e chunk latency −15~30% (generation-mode only). L5 rescope (R-S5 a+b). Closest: [PipeDiT arXiv:2511.12056](https://arxiv.org/abs/2511.12056), [DeDiVAE arXiv:2512.07350](https://arxiv.org/abs/2512.07350) (multi-GPU group). [summary](/research-wiki/2026-06/cosmos3-mot-edge-serving)
+
+### Phase 2 → Phase 2' score deltas (refinement 효과)
+| Idea | Phase 2 | Phase 2' | Δ | Driver |
+|---|---|---|---|---|
+| Q2 ANCHOR | 7.8 (anchor avg) | **7.6** | −0.2 | bound-tightness gate 정직화 (nov 8 유지) |
+| Q1 DRIFT | 7.4 | **7.4** | 0 | Q4 흡수, conditional-gain 명시 |
+| S1 TIDELOOM | A1 5/L1 7 (split) | **7.4** | merge | A1+L1+A3 통합, CF-E 로 22wk→14wk 해소 |
+| S2 DUOCLOCK | L2 7.2 (T1) | **7.4** | reposition | Tier-1→2 강등 + J/chunk 재정의 (arch-impl 4→8) |
+| L3 KEELKV | 6.6 | **6.6** | 0 | L2 set-aside Orin 지원 확정(risk 해소, ai-impl 8) |
+| S4 SIDEPOOL | L5 5 (DLA fragile) | **6.2** | rescope | GPU stream-overlap 핵심화, DLA 강등 (5→6) |
+| A2 Keystone | 7 | **6.6** (미선정) | −0.4 | **Phase 2' Task1: exact-CFG layer-1-only 붕괴** (diff 7→6, nov 7→6) |
+
+### 미선정 (9: net drop 3 + 6 흡수)
+**drop 3 (standalone)**: A5 Herald (killing: [DISK arXiv:2602.00440](https://arxiv.org/abs/2602.00440) cross-modal step-skip concurrent ~55-60%), A6 Switchback (DROP-PARK: [GenServe arXiv:2604.04335](https://arxiv.org/abs/2604.04335) scoop + Green Context Orin 미가용 + NX swap thrash), Q3 PRISM ([FasterCache arXiv:2410.19355](https://arxiv.org/abs/2410.19355) uncond-cache red ocean + kernel overhead). **흡수 6**: A2 Keystone (M2 exact-share 붕괴→S1-M1 layout feature), Q5 RELAY ([UD-VLA arXiv:2511.01718](https://arxiv.org/abs/2511.01718) joint-우월 반증, p_v pilot 재방문 조건), A3 Cascade (→S1-M3 cross-regime overlap), A4 Compass+L4 LEDGERLINE (→S3 LEDGERMARK producer-letter 통합 후 Top-6 미진입), Q4 SIEVE (→Q1-M1 측정 핵심). 상세: [README](/research-wiki/2026-06/cosmos3-mot-edge-serving).
+
+### 유사 연구 대응 요약
+- Scoop 위험 3건 전부 정면 scoop 아님 — MotuBrain(server GPU, edge/UMA 미커버) / vLLM-Omni(multi-GPU cluster) / VLA-XPU(dual-tower param-separation·CFG·world-model 미커버). 생존 차별화 = 단일 edge GPU runtime + static cross-tower K_AR + co-init divergence (전부 단일 LLM/단일 DiT 문헌에 부재 metric).
+- ⚠️ Publish gate: 미래(2026) arxiv ID (MotuBrain 2604.27792, vLLM-Omni 2602.02204, DISK 2602.00440, QuantKeys 2605.26266, PipeDiT 2511.12056 등) → Phase 3 publish 전 re-WebFetch. Bullet 라벨-번호 정정: Bullet=[arXiv:2504.19516](https://arxiv.org/abs/2504.19516) (2507.06608 은 Nexus).
+- BAGEL fallback "×2/vLLM 지원" = 부분 hallucination 정정 (14B/7B-active 단일 MoT-experts, vLLM upstream 미지원 → Diffusers path). Cosmos3-Nano BF16-only (저비트 비공식 fork).
+
+---
+
 ## Selected Ideas (2026-05-02 — VLM Scenario-Aware Optimization)
 
 ### T1.1 Mosaic — Workload-Adaptive Serving Configuration Dispatcher

@@ -4,6 +4,93 @@
 
 ---
 
+## 2026-06-05 Mode-1 Cosmos 3 MoT 단일 edge GPU 서빙 — DEEP re-spec (R72, step0-refresh 신규 + repo source)
+
+> Mode 1 개선 모드. step0-refresh 결과 **판정 변동 0**, 신규 must-cite 2편 + source-of-truth repo 4종(코드 소스로서 SHA-pinned). ⚠️ 미래(2026) arxiv ID 는 Phase 3 publish 전 re-WebFetch 의무.
+
+### 신규 must-cite (step0-refresh, Q2 ANCHOR 보강)
+- **World Model Quantization** [arXiv:2602.02110](https://arxiv.org/abs/2602.02110) — world model(생성형) 양자화 → ANCHOR 의 static conditioning-KV 1-shot quant 인접 prior, Q1(Q→Q1) 보강 인용.
+- **Optimal-Transport Quant for Flow Matching** [arXiv:2511.11418](https://arxiv.org/abs/2511.11418) — flow-matching velocity field 의 OT 기반 양자화 → ANCHOR 의 flow-step N-의존 denoising error bound 와 직접 인접 (Q2 보강 인용).
+
+### Source-of-truth repo (코드 소스, R72.3 직접 검증 대상, SHA-pinned)
+- **nvidia/cosmos** `@7f5797f` — Cosmos3 모델 본체. anchor: `cached_kv` post-RoPE K 저장(L548), CFG 2-call(L1497/L1511), dual forward hook(`_forward_local` L648 / `_forward_sp` L675), serving K_AR text-only 경로.
+- **cosmos-framework** `@003d66d` — 학습/serving 프레임. anchor: `action_policy_robolab_server.md` L22/L53 (guidance 3.0, 4 denoising steps → policy CFG ON).
+- **vllm-project/vllm-omni** `@95d56cf` — diffusion serving 스택. anchor: quant 메뉴(int8/mxfp8/mxfp4/mxfp4_dualscale/inc/auto-round/gguf), diffusion stream/staging greenfield(구현 부재) 입증.
+- **vllm-project/vllm** `@063ce98` — upstream. anchor: qwen3_omni thinker tower-prefix quant routing 선례(L1150-1151).
+
+---
+
+## 2026-06-04 Mode-2+1 Cosmos 3 MoT Edge Omnimodal Serving (검증 완료, arxiv WebFetch + GitHub/HF clone-verify) `[superseded by 2026-06-05 deep]`
+
+> Step 0 3-agent 탐색 ~50편 + tech report (Mode 2 PDF) + Phase 2/2' 신규 발굴. ⚠️ 미래(2026) arxiv ID 는 Phase 3 publish 전 re-WebFetch 의무. Bullet 라벨-번호 정정 반영.
+
+### Primary source (Mode 2 local PDF, 정독 verified)
+- **Cosmos 3: Omnimodal World Models for Physical AI** (NVIDIA, 2026-06-01) — MoT dual-tower(Reasoner AR + Generator diffusion, attention만 공유, Qwen3-VL co-init). Nano 16B(8B/tower)/Super 64B/Edge 4B(미공개). GQA KV-heads 8. dual-stream joint attention(`O_DM=Attn_full(Q_DM,[K_AR;K_DM],[V_AR;V_DM])`), 3D MRoPE+절대시간 modulation, reasoner-tower caching(K_AR 1회→전 step 재사용). Policy-DROID: 4 step+CFG3, video-decode skip, RTX Pro 6000 ×2 배포. **Hidden insight**: 전 idea 의 8 GAP(G1-G8) 토대. GitHub nvidia/cosmos + HF nvidia/Cosmos3-Nano(BF16-only) verified.
+
+### A. Unified AR + Diffusion 아키텍처 (Cosmos3 조상/형제)
+- [Mixture-of-Transformers, arXiv:2411.04996](https://arxiv.org/abs/2411.04996) — modality별 FFN/proj/LN 분리 + global attention 공유. Chameleon 55.8% FLOPs 동등. **Hidden**: Cosmos3 dual-tower 정의 그 자체, modality-disjoint weight = tower swap 유리(→S1/L1).
+- [Transfusion, arXiv:2408.11039](https://arxiv.org/abs/2408.11039) — next-token+image diffusion 단일 transformer. **Hidden**: AR+diffusion 같은 KV 공유 → cross-attend 경로가 dual-tower 서빙 1차 레버(→A2/Q2).
+- [BAGEL (Emerging Properties), arXiv:2505.14683](https://arxiv.org/abs/2505.14683) — 7B active/14B total MoT-experts decoder-only. **Hidden**: Cosmos3-Nano 동형 fallback (단 "×2/vLLM 지원" 표기 정정 — 14B 단일 모델, vLLM upstream 미지원, Diffusers path).
+- [Show-o2, arXiv:2506.15564](https://arxiv.org/abs/2506.15564) — LM head(AR)+flow head dual. **Hidden**: flow-matching 은 step 적어 edge 친화, step-reduction ROI 큼(→Q2).
+- [MammothModa2, arXiv:2511.18262](https://arxiv.org/abs/2511.18262) — coupled AR-Diffusion, AR=plan/diffusion=render. **Hidden**: 이질 SLO 분리 근거(→A6 reposition).
+
+### B. DiT inference 가속 (generator tower)
+- [TeaCache, arXiv:2411.19108](https://arxiv.org/abs/2411.19108) — CVPR'25, timestep-embedding diff 로 step 출력 캐싱, 4.41×. **Hidden**: Cosmos3 는 generator 가 AR cross-attend → 캐시 무효화에 AR 변화 추가 필요(→A5, drop).
+- [SVDQuant, arXiv:2411.05007](https://arxiv.org/abs/2411.05007) — ICLR'25 Spotlight, W4A4 low-rank outlier 흡수, FLUX 3×. **Hidden**: Q1 generator-tower 경로 baseline (ρ_ℓ 분모, reasoner 분자 없음).
+- [FasterCache, arXiv:2410.19355](https://arxiv.org/abs/2410.19355) — cond/uncond residual redundancy uncond-branch 캐시. **Hidden**: **Q3 PRISM/A2-M2 killing paper** — uncond 근사 캐시 영역 선점(A2 는 exact 주장으로 차별화 시도했으나 Task1 에서 layer-1-only 붕괴).
+
+### C. 멀티모달 서빙 시스템
+- [vLLM-Omni, arXiv:2602.02204](https://arxiv.org/abs/2602.02204) — any-to-any stage disaggregation, per-stage batching, Cache-DiT/CFG-Parallel. **Hidden**: **scoop ~55-60%** — Cosmos3 dual-tower 를 stage 분해하는 거의 완성 프레임워크, 단 `total=ulysses×ring×cfg×tp` **multi-GPU 전제** → single-Jetson 미해결(S1 차별화).
+- [GenServe, arXiv:2604.04335](https://arxiv.org/abs/2604.04335) — 이종 diffusion co-serve, step-boundary preemption. **Hidden**: A6 Switchback killing paper (diffusion-only, cloud).
+
+### D. VLA / world-action edge (Step 0 search-vla, 전부 verified)
+- [MotuBrain, arXiv:2604.27792](https://arxiv.org/abs/2604.27792) — three-stream MoT world-action, step-reduction+FP8+DiT-cache+action-only+chunked 50×/11Hz. **Hidden**: **최강 scoop ~70%** — 추론 메뉴 선점, 단 edge/Jetson/UMA·tower-aware residency 미커버(전 idea 차별화 좌표).
+- [VLA-across-XPUs, arXiv:2604.24447](https://arxiv.org/abs/2604.24447) — compute-bound backbone→memory-bound action-expert 2-phase, V-AEFusion, edge NPU 6×. **Hidden**: **scoop ~55%** — G1 dual-regime 진입로 점유, dual-tower param-separation·CFG·world-model 미커버(S1-M3 정면 baseline).
+- [Char. VLA Edge bottleneck, arXiv:2603.02271](https://arxiv.org/abs/2603.02271) — MolmoAct-7B Orin/Thor profiling, action-gen memory-bound 최대 75%. **Hidden**: G1 직접 증거 baseline.
+- [RTC, arXiv:2506.07339](https://arxiv.org/abs/2506.07339) — NeurIPS'25, action chunk freeze+inpaint, 재학습 불요. **Hidden**: composable baseline (경쟁 아님), 절대시간 MRoPE 와 시너지(→S1-M3).
+- [FASTER, arXiv:2603.19199](https://arxiv.org/abs/2603.19199) — horizon-aware step, near-term 1-step. **Hidden**: chunk 내 시간 step 차등 — modality 축(Q5)과 직교.
+- [BitVLA, arXiv:2506.07530](https://arxiv.org/abs/2506.07530) — ternary VLA, mem 11×/lat 4.4×. **Hidden**: Q1 균일-ternary baseline (tower 차등 양자화 미개척).
+- [UVA, arXiv:2503.00200](https://arxiv.org/abs/2503.00200) — joint video-action, decoupled head, video gen bypass. **Hidden**: Q5 video-skip 선행 (단 attention 잔존 token prune 미적용 = 공통 빈틈).
+- [LiteVLA-Edge, arXiv:2603.03380](https://arxiv.org/abs/2603.03380) — 4-bit GGUF Jetson AGX Orin 150ms. **Hidden**: GGUF/llama.cpp = AR backbone only, diffusion generator 못 다룸 → S4 차별.
+- [UD-VLA, arXiv:2511.01718](https://arxiv.org/abs/2511.01718) — "joint denoising > decoupled" 실증. **Hidden**: **Q5 RELAY 반증** — modality-asymmetric 절감 전제와 긴장.
+
+### E. Workload characterization (R17 Step 0-α, IISWC/ISPASS)
+- [EdgeReasoning, arXiv:2511.01866](https://arxiv.org/abs/2511.01866) — **IISWC 2025** (NVIDIA), Jetson AGX Orin reasoning LLM Pareto, decode 192-569× 지배, 1.5B 9.3 tok/s. **Hidden**: Reasoner tower edge 배치 직접 baseline (AR측 anchor).
+- [Generative AI Beyond LLMs, arXiv:2312.14385](https://arxiv.org/abs/2312.14385) — **ISPASS 2024** (Harvard/Meta), TTI/TTV Diffusion vs Transformer 양분. **Hidden**: Generator(diffusion) 측 anchor (S3 cross-ref).
+- [Generative AI in Embodied Systems, arXiv:2504.18945](https://arxiv.org/abs/2504.18945) — **ISPASS 2025**, embodied agent perception/cognition/action 특성화.
+- [LLM Inference on CPU-GPU Coupled, arXiv:2504.11750](https://arxiv.org/abs/2504.11750) — **ISPASS 2025**, GH200 unified-ish 메모리 prefill/decode.
+- [Energy-Performance Tradeoffs, arXiv:2501.08219](https://arxiv.org/abs/2501.08219) — decode = 77-91% inference time, GPU freq 2842→180MHz 에너지 42%↓ latency 1-6%↑. **Hidden**: S2 DUOCLOCK DVFS baseline.
+- [Modality Inflation, arXiv:2512.22695](https://arxiv.org/abs/2512.22695) — MLLM 에너지 17-94%, 3715 token prefill 95.78J. **Hidden**: G6 modality 비대칭 근거.
+- [Where Do Joules Go, arXiv:2601.22076](https://arxiv.org/abs/2601.22076) — video gen = image 100× 에너지 (H100/B200, 46 모델). **Hidden**: G6/S3 video 비대칭 핵심 수치.
+- [GPU Resource Interference, arXiv:2501.16909](https://arxiv.org/abs/2501.16909) — co-location mem-BW 1.55×/L2 pollution 2.15×/bank conflict 3.75×, Green Context SM 분할. **Hidden**: S1-M3/L3/S3 co-residency baseline.
+- [Concurrent Vision on Jetson, arXiv:2508.08430](https://arxiv.org/abs/2508.08430) — Orin Nano GPU util 100%여도 issue-slot 25-40%/TC 25%, 8-process 95% 붕괴. **Hidden**: edge SM headroom + co-location 붕괴 근거.
+- [DynamoLLM, arXiv:2408.00741](https://arxiv.org/abs/2408.00741) — HPCA'25 Best Paper, energy-perf profile DVFS 에너지 52%↓. **Hidden**: S2 DVFS baseline.
+- [DistServe, arXiv:2401.09670](https://arxiv.org/abs/2401.09670) (OSDI'24) / [Splitwise, arXiv:2311.18677](https://arxiv.org/abs/2311.18677) (ISCA'24) — prefill/decode phase disaggregation. **Hidden**: phase 이질성 motif (단 cross-GPU, edge 단일-device 변형이 신규).
+- [PowerInfer-2, arXiv:2406.06282](https://arxiv.org/abs/2406.06282) — 47B phone 11.68 tok/s, FFN 50-75% flash offload. **Hidden**: S1/L1 coarse offload baseline (단 activation-predictor 비결정 vs phase-결정론 차별).
+
+### F. Quantization / numerics + 양자화 도구 (Q-track)
+- [QuantKeys "Quantized Keys Steal Attention", arXiv:2605.26266](https://arxiv.org/abs/2605.26266) — video diffusion KV quant + Jensen-bias 보정. **Hidden**: **Q2 ANCHOR worst-overlap ~40-45%** — growing/online KV, flow-step-N 닫힌 bound 부재(WebFetch 확인) = ANCHOR scoop 회피.
+- [33-Method KV-Quant for Self-Forcing Video, arXiv:2603.27469](https://arxiv.org/abs/2603.27469) — 순수 실증, closed-form/denoising bound 일절 없음 (WebFetch 확인, ANCHOR 차별 확정).
+- [QuaRot, arXiv:2404.00456](https://arxiv.org/abs/2404.00456) — Hadamard rotation outlier 분산. **Hidden**: Q2 1-shot rotation 도구 (MRoPE 순서규칙 준수).
+- [KIVI, arXiv:2402.02750](https://arxiv.org/abs/2402.02750) / [KVQuant, arXiv:2401.18079](https://arxiv.org/abs/2401.18079) — online decode-KV quant. **Hidden**: Q2 정반대(static) baseline.
+- [AWQ, arXiv:2306.00978](https://arxiv.org/abs/2306.00978) / [HAWQ, arXiv:1905.03696](https://arxiv.org/abs/1905.03696) — Q1 reasoner 경로 + Hessian mixed-precision 계보.
+- [Mix-QViT, arXiv:2501.06357](https://arxiv.org/abs/2501.06357) / [KL-Lens, arXiv:2604.13440](https://arxiv.org/abs/2604.13440) — layer-importance/sensitivity mixed-precision. **Hidden**: Q1 worst-overlap (단 co-init divergence 측정각 신규).
+
+### G. 시스템 (Phase 2/2' 신규 발굴)
+- [FluxMoE, arXiv:2604.02715](https://arxiv.org/abs/2604.02715) — expert paging, vLLM 위 3.0× throughput. **Hidden**: S1 worst-overlap (단 비결정 token-routing vs MoT phase-결정론).
+- [DuoServe-MoE, arXiv:2509.07379](https://arxiv.org/abs/2509.07379) — dual-phase expert prefetch/cache.
+- [DualScale, arXiv:2602.18755](https://arxiv.org/abs/2602.18755) — disaggregated LLM phase-aware placement+DVFS (across-request). **Hidden**: S2 worst-overlap.
+- [GreenLLM, arXiv:2508.16449](https://arxiv.org/abs/2508.16449) — prefill/decode GPU-freq 분리 (EMC 무, LLM-only).
+- [SparseDVFS, arXiv:2603.21908](https://arxiv.org/abs/2603.21908) — CPU/GPU/EMC freq triplet, edge, intra-inference. **Hidden**: **S2 EMC분리 축 선점 → Tier-2 강등 정당** (단 operator-sparsity 기반, AR↔DM modality-regime 전환 아님).
+- [DISK, arXiv:2602.00440](https://arxiv.org/abs/2602.00440) — 두 coupled diffusion transformer dual-branch cross-modal skip, training-free 2×/1.6×. **Hidden**: **A5 Herald killing paper** (concurrent ~55-60%).
+- [Bullet, arXiv:2504.19516](https://arxiv.org/abs/2504.19516) — spatial-temporal GPU resource sharing PD-multiplexing. **Hidden**: A3/S1-M3 PD-multiplex 경합 (라벨 정정: 2507.06608 은 Nexus, Bullet=2504.19516).
+- [Nexus, arXiv:2507.06608](https://arxiv.org/abs/2507.06608) — proactive intra-GPU prefill/decode disaggregation. [DuetServe, arXiv:2511.04791](https://arxiv.org/abs/2511.04791) — intra-GPU SM split.
+- [PipeDiT, arXiv:2511.12056](https://arxiv.org/abs/2511.12056) / [DeDiVAE, arXiv:2512.07350](https://arxiv.org/abs/2512.07350) — VAE/denoise task-pipelining decouple (multi-GPU group). **Hidden**: **S4 SIDEPOOL 신규 scoop ~45-55%** → placement LUT(M2) 1차 기여로 재정위.
+- [Async KV Prefetch→L2, arXiv:2504.06319](https://arxiv.org/abs/2504.06319) — KV 를 L2 로 prefetch, attention 2.15×. **Hidden**: L3 worst-overlap (단 growing-KV prefetch vs static cross-tower pin).
+- HW/측정 도구 (verified): Green Context (`cuDevSmResourceSplit`, Orin soft·Thor 헤드라인), `cudaAccessPolicyWindow` (Orin sm_87 `l2_max_perst_spc≈3MB` 확정), cuDLA/TensorRT DLA (`--useDLACore`, 3D conv/GroupNorm 미지원), vLLM `gpu_model_runner.execute_model`/`capture_model`, llm-compressor/pyhessian, ncu(Orin ga10b 미지원), INA3221/tegrastats (~33-50ms sampling).
+
+---
+
 ## 2026-05-02 Mode 1 Session — VLM Scenario-Aware Optimization
 
 3 expert (ai-optimization + algorithm + legacy-system) + 5 reviewer (novelty + diff + impact + ai-impl + arch-sys) verified reference 28편. Differentiation reviewer 의 web search 로 추가 closest competitor 12편 발견 (DROP 14 / 흡수 6 의 핵심 근거).
