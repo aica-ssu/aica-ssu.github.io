@@ -128,8 +128,10 @@ export const members: Member[] = [
     role: "B.S. Student (2025~)",
     category: "undergraduate",
     image: "/images/members/Yoon Hong Min.png",
+    email: "picomin1027@gmail.com",
     researchShort: "Edge AI",
     research: "Edge AI",
+    background: "B.S. School of AI Software, Soongsil University (Expected 2029)",
   },
 /*  {
     name: "Jun-Hyeok Lee",
