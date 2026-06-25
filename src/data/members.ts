@@ -122,6 +122,15 @@ export const members: Member[] = [
     research: "Layer-wise model quantization",
     background: "B.S. Software, Soongsil University (Expected 2026)",
   },
+  {
+    name: "Yoon Hong Min",
+    nameKo: "민윤홍",
+    role: "B.S. Student (2025~)",
+    category: "undergraduate",
+    image: "/images/members/Yoon Hong Min.png",
+    researchShort: "Edge AI",
+    research: "Edge AI",
+  },
 /*  {
     name: "Jun-Hyeok Lee",
     nameKo: "이준혁",
