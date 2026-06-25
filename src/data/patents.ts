@@ -14,6 +14,7 @@ export const internationalPatents: Patent[] = [
 ];
 
 export const domesticPatents: Patent[] = [
+  { title: "하드웨어 제약을 고려한 인공신경망 양자화 학습 방법, 추론 방법 및 그 장치", inventors: "Young-Ho Gong, Seok-Hwan Kim, Dong Gyu Sim", number: "10-2026-0106452", date: "Jun. 2026", status: "Applied" },
   { title: "객체 감지 모델 최적화 장치 및 방법", inventors: "Young-Ho Gong, Seok-Hwan Kim, Dong Gyu Sim", number: "10-2026-0059664", date: "Dec. 2025", status: "Applied" },
   { title: "비전 트랜스포머 모델의 최적화 장치 및 방법", inventors: "Young-Ho Gong, Sang-Jun Moon", number: "10-2026-0052641", date: "Dec. 2025", status: "Applied" },
   { title: "이기종 프로세싱이 적용된 통합 메모리 시스템 기반의 인공지능 모델 훈련 방법 및 이를 수행하는 장치", inventors: "Young-Ho Gong, Bang-San Lee, Dong Gyu Sim", number: "10-2025-0082144", date: "Jun. 2025", status: "Applied" },
