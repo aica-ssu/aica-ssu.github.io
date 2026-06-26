@@ -123,11 +123,11 @@ export const members: Member[] = [
     background: "B.S. Software, Soongsil University (Expected 2026)",
   },
   {
-    name: "Yoon Hong Min",
+    name: "Yun Hong Min",
     nameKo: "민윤홍",
     role: "B.S. Student (2025~)",
     category: "undergraduate",
-    image: "/images/members/Yoon Hong Min.png",
+    image: "/images/members/Yun Hong Min.png",
     email: "picomin1027@gmail.com",
     researchShort: "Edge AI",
     research: "Edge AI",
