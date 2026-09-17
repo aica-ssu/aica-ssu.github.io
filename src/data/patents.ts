@@ -14,6 +14,8 @@ export const internationalPatents: Patent[] = [
 ];
 
 export const domesticPatents: Patent[] = [
+  { title: "대형 페이지 메모리의 캐시 라인 단위 결함 격리 방법 및 장치", inventors: "Young-Ho Gong, Jun-Hyeok Ha, Dong Gyu Sim", number: "10-2026-0159196", date: "Aug. 2026", status: "Applied" },
+  { title: "시간 예산 기반 전문가 스키핑과 정확도 핵심 전문가 캐싱을 통한 MoE 모델의 추론 방법 및 그 장치", inventors: "Young-Ho Gong, Bang-San Lee, Dong Gyu Sim", number: "10-2026-0116743", date: "Jun. 2026", status: "Applied" },
   { title: "하드웨어 제약을 고려한 인공신경망 양자화 학습 방법, 추론 방법 및 그 장치", inventors: "Young-Ho Gong, Seok-Hwan Kim, Dong Gyu Sim", number: "10-2026-0106452", date: "Jun. 2026", status: "Applied" },
   { title: "객체 감지 모델 최적화 장치 및 방법", inventors: "Young-Ho Gong, Seok-Hwan Kim, Dong Gyu Sim", number: "10-2026-0059664", date: "Dec. 2025", status: "Applied" },
   { title: "비전 트랜스포머 모델의 최적화 장치 및 방법", inventors: "Young-Ho Gong, Sang-Jun Moon", number: "10-2026-0052641", date: "Dec. 2025", status: "Applied" },
