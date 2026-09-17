@@ -133,6 +133,17 @@ export const members: Member[] = [
     research: "Edge AI",
     background: "B.S. School of AI Software, Soongsil University (Expected 2029)",
   },
+  {
+    name: "Da Eun Kim",
+    nameKo: "김다은",
+    role: "B.S. Student (2024~)",
+    category: "undergraduate",
+    image: "/images/members/Da Eun Kim.png",
+    email: "d4eun0603@soongsil.ac.kr",
+    researchShort: "AI Optimization",
+    research: "AI Optimization",
+    background: "B.S., Soongsil University (Expected 2028)",
+  },
 /*  {
     name: "Jun-Hyeok Lee",
     nameKo: "이준혁",
