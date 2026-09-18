@@ -1,0 +1,143 @@
+.page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 34px 30px 48px;
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 30px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+.navigation > div { display: flex; align-items: center; gap: 16px; }
+.navigation button {
+  border: 1px solid var(--border);
+  padding: 5px 10px;
+  border-radius: 6px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.navigation a:focus-visible,
+.navigation button:focus-visible,
+.note a:focus-visible,
+.note summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+.note {
+  --note-accent: #256347;
+  --note-tint: #edf3eb;
+  --note-amber: #87582d;
+  --note-read: #f4f0e8;
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--text-primary);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+:global(.dark) .note {
+  --note-accent: #9bd4ac;
+  --note-tint: #203d30;
+  --note-amber: #e4bd82;
+  --note-read: #3c3326;
+}
+.note a { color: var(--note-accent); text-underline-offset: 4px; }
+.note a:hover { text-decoration: underline; }
+.note h1 { font-size: clamp(29px, 3.5vw, 42px); line-height: 1.42; letter-spacing: -1.4px; font-weight: 750; }
+.note h2 { font-size: 24px; line-height: 1.5; letter-spacing: -.7px; font-weight: 700; }
+.note h3 { font-size: 17px; line-height: 1.65; letter-spacing: -.25px; font-weight: 650; }
+.note p + p { margin-top: 10px; }
+.note strong, .note b { font-weight: 680; }
+.note ul, .note ol { margin: 9px 0; padding-left: 22px; }
+.note ul { list-style: disc; }
+.note ol { list-style: decimal; }
+.note li + li { margin-top: 8px; }
+.note :global(.hero) { max-width: 870px; }
+.note :global(.eyebrow) { font-size: 11px; font-weight: 700; letter-spacing: 1.4px; color: var(--note-accent); margin-bottom: 14px; }
+.note :global(.lead) { margin-top: 20px; color: var(--text-secondary); font-size: 16px; max-width: 790px; }
+.note :global(.principle) { margin-top: 25px; padding: 16px 20px; border-left: 3px solid var(--note-accent); background: var(--note-tint); border-radius: 0 9px 9px 0; font-size: 14px; }
+.note :global(.meta) { font-size: 12px; color: var(--text-secondary); margin-top: 13px; }
+.note :global(.section) { margin-top: 43px; scroll-margin-top: 90px; }
+.note :global(.section-title) { display: flex; gap: 12px; align-items: baseline; }
+.note :global(.num) { font-size: 12px; font-weight: 700; color: var(--note-accent); }
+.note :global(.intro) { margin-top: 9px; margin-bottom: 20px; color: var(--text-secondary); font-size: 14px; }
+.note :global(.paper-grid) { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.note :global(.paper) { border: 1px solid var(--border); background: var(--bg-card); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+.note :global(.paper-main) { padding: 22px 22px 17px; flex: 1; }
+.note :global(.paper-top) { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px 12px; margin-bottom: 10px; }
+.note :global(.paper-title) a { font-size: 19px; font-weight: 730; text-decoration: none; }
+.note :global(.pill) { display: inline-block; font-size: 10px; font-weight: 600; background: var(--note-tint); color: var(--note-accent); padding: 3px 8px; border-radius: 4px; }
+.note :global(.pill.read) { background: var(--note-read); color: var(--note-amber); }
+.note :global(.reason) { font-size: 14px; margin-top: 10px; color: var(--text-secondary); }
+.note :global(.reason) b { color: var(--text-primary); }
+.note :global(.paper) details { border-top: 1px solid var(--border); }
+.note summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 12px 22px; color: var(--note-accent); font-size: 12px; font-weight: 650; }
+.note summary::-webkit-details-marker { display: none; }
+.note :global(.arrow) { flex: 0 0 25px; height: 25px; border: 1px solid var(--border); border-radius: 50%; display: grid; place-items: center; font-size: 16px; font-weight: 400; line-height: 1; transition: transform .18s; background: var(--bg-card); }
+.note details[open] > summary :global(.arrow) { transform: rotate(90deg); }
+.note summary:hover { background: var(--bg-secondary); }
+.note :global(.detail) { padding: 0 22px 20px; font-size: 13px; color: var(--text-secondary); }
+.note :global(.detail) h4 { font-size: 12px; color: var(--note-accent); margin: 15px 0 4px; font-weight: 650; }
+.note :global(.source) { font-size: 12px; margin-top: 13px; }
+.note :global(.note) { font-size: 12px; color: var(--text-secondary); margin-top: 12px; }
+.note :global(.optional) { border: 1px dashed var(--border); border-radius: 10px; background: var(--bg-secondary); margin-top: 15px; }
+.note :global(.optional) > details > summary { padding: 16px 20px; font-size: 13px; }
+.note :global(.reference) { padding: 14px 0; border-bottom: 1px solid var(--border); }
+.note :global(.reference):last-child { border-bottom: 0; padding-bottom: 0; }
+.note :global(.reference) strong { color: var(--text-primary); }
+.note :global(.references-label) { font-size: 11px; color: var(--text-secondary); margin-left: 8px; }
+.note :global(.experiment-list) { display: grid; gap: 13px; }
+.note :global(.experiment) { border: 1px solid var(--border); border-radius: 11px; background: var(--bg-card); overflow: hidden; }
+.note :global(.experiment-main) { display: grid; grid-template-columns: 30px 1fr; gap: 13px; padding: 19px 22px 13px; }
+.note :global(.step) { font-size: 12px; color: var(--note-accent); font-weight: 700; padding-top: 4px; }
+.note :global(.experiment-main) p { font-size: 14px; color: var(--text-secondary); margin-top: 5px; }
+.note :global(.experiment) > details > summary { padding-top: 4px; padding-left: 65px; padding-bottom: 13px; }
+.note :global(.experiment .detail) { padding-left: 65px; }
+.note :global(.result) { border-left: 2px solid var(--note-accent); margin: 14px 0 0; padding: 8px 12px; background: var(--note-tint); }
+.note :global(.table-scroll) { overflow-x: auto; margin: 13px 0; border: 1px solid var(--border); border-radius: 6px; }
+.note table { border-collapse: collapse; width: 100%; font-size: 12px; min-width: 430px; }
+.note th, .note td { padding: 9px 11px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+.note th { background: var(--note-tint); font-weight: 650; }
+.note tr:last-child td { border-bottom: 0; }
+.note :global(.first) { margin-top: 27px; background: var(--note-tint); border-radius: 10px; padding: 21px 24px; }
+.note :global(.first) h3 { font-size: 15px; margin-bottom: 6px; }
+.note :global(.first) p { font-size: 14px; color: var(--text-secondary); }
+.note footer { margin-top: 36px; border-top: 1px solid var(--border); padding-top: 18px; color: var(--text-secondary); font-size: 11px; }
+
+@media (max-width: 1100px) {
+  .note :global(.paper-grid) { grid-template-columns: 1fr; }
+}
+@media (max-width: 767px) {
+  .page { padding: 76px 20px 35px; }
+  .navigation { font-size: 11px; }
+  .navigation > div { gap: 12px; }
+  .note h1 { font-size: 30px; }
+  .note h2 { font-size: 21px; }
+  .note :global(.lead) { font-size: 15px; }
+  .note :global(.section) { margin-top: 33px; }
+  .note :global(.paper-main) { padding: 19px; }
+  .note :global(.experiment-main) { grid-template-columns: 22px 1fr; padding: 17px; gap: 9px; }
+  .note :global(.experiment) > details > summary { padding-left: 48px; padding-right: 17px; }
+  .note :global(.experiment .detail) { padding-left: 20px; padding-right: 20px; }
+  .note summary, .note :global(.detail) { padding-left: 19px; padding-right: 19px; }
+  .note :global(.first) { padding: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .note :global(.arrow) { transition: none; }
+}
+@media print {
+  .page { padding: 0; max-width: none; }
+  .navigation { display: none; }
+  .note { font-size: 10pt; }
+  .note h1 { font-size: 24pt; }
+  .note h2 { font-size: 17pt; }
+  .note :global(.paper-grid) { grid-template-columns: 1fr; }
+  .note :global(.paper), .note :global(.experiment), .note :global(.reference) { break-inside: avoid; }
+  .note :global(.arrow) { display: none; }
+  .note :global(.table-scroll) { overflow: visible; }
+  .note table { min-width: 0; }
+}

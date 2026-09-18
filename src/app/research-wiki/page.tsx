@@ -19,6 +19,14 @@ type SessionCard = {
 
 const recentSessions: SessionCard[] = [
   {
+    date: "2026-09-19",
+    title: "ROSTER 연구 보완 노트 — 읽을 논문과 다음 실험",
+    href: "/research-wiki/2026-09/roster-review",
+    keywords: ["Multi-turn VLM", "Visual KV", "MixKV · ReKV", "Baseline · Ablation"],
+    summary:
+      "현재 full turn 0·cold KV 보관·질문별 재선택·압축 구조를 유지하면서 살펴볼 논문 4편과 보완 실험 5개를 정리했습니다. 항목마다 필요한 이유를 제시하고 세부 방법은 화살표로 펼칩니다. SparseVILA는 필수 구현 대상에서 제외하고 개념·novelty 참고로 둡니다.",
+  },
+  {
     date: "2026-06-05",
     title: "🥇 Cosmos3 옴니모달 MoT Dual-Tower 의 단일 Edge GPU 효율 서빙 (Deep Re-Spec)",
     href: "/research-wiki/2026-06/cosmos3-edge-serving-deep",

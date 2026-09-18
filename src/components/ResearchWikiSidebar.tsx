@@ -38,6 +38,11 @@ const SIDEBAR: SidebarSection[] = [
     title: "📚 모든 Summary (역시간순)",
     items: [
       {
+        label: "2026-09-19 ROSTER 연구 보완 노트",
+        href: "/research-wiki/2026-09/roster-review",
+        emphasis: true,
+      },
+      {
         label: "⭐ 2026-06-05 Cosmos3 MoT Edge Serving (Deep)",
         href: "/research-wiki/2026-06/cosmos3-edge-serving-deep",
         emphasis: true,
