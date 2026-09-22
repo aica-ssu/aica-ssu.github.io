@@ -43,6 +43,19 @@ const SIDEBAR: SidebarSection[] = [
         emphasis: true,
       },
       {
+        label: "⭐ 2026-09-22 Generation caching 연구",
+        href: "/research-wiki/2026-09/generation-cache",
+        emphasis: true,
+        children: [
+          { label: "Landing — Generation Caching Build-up", href: "/research-wiki/2026-09/generation-cache" },
+          { label: "🥇 S2 — Predictor history retention + rebuild cost", href: "/research-wiki/2026-09/generation-cache/tier1/01-s2" },
+          { label: "🥈 A2 — Cache policy quality-tail evaluation", href: "/research-wiki/2026-09/generation-cache/tier1/02-a2" },
+          { label: "A4 — Supporting history recovery diagnosis", href: "/research-wiki/2026-09/generation-cache/tier2/01-a4" },
+          { label: "학생용 HTML 길잡이", href: "/research-cache-guide-2026-09.html" },
+          { label: "미선정 로그", href: "/research-wiki/2026-09/generation-cache/unselected" },
+        ],
+      },
+      {
         label: "⭐ 2026-06-05 Cosmos3 MoT Edge Serving (Deep)",
         href: "/research-wiki/2026-06/cosmos3-edge-serving-deep",
         emphasis: true,

@@ -19,6 +19,25 @@ type SessionCard = {
 
 const recentSessions: SessionCard[] = [
   {
+    date: "2026-09-22",
+    title: "Generation caching — image/video generation 반복 연산과 cache memory 최적화",
+    href: "/research-wiki/2026-09/generation-cache",
+    keywords: ["Diffusion / DiT", "Cache history", "24–32GB single GPU", "Undergraduate build-up"],
+    summary:
+      "S2 predictor history retention을 주력 질문으로 두고, A4 history recovery diagnosis와 A2 cache policy quality-tail evaluation을 연결한 proposal-stage 연구 번들입니다. Accept는 실행할 가치가 있다는 평가이며 실제 성능은 아직 측정하지 않았습니다.",
+    detailed: true,
+    tierTable: [
+      { tier: "🥇 Tier-1", idea: "S2 — Predictor history retention + marginal rebuild cost", venue: "MLSys / ASPLOS 후보", score: "7.64 · WARN", href: "/research-wiki/2026-09/generation-cache/tier1/01-s2" },
+      { tier: "🥈 Tier-1", idea: "A2 — Cache policy quality-tail evaluation", venue: "CVPR / ICCV 후보", score: "7.51 · WARN", href: "/research-wiki/2026-09/generation-cache/tier1/02-a2" },
+      { tier: "A4", idea: "History recovery diagnosis (S2 supporting variant)", venue: "지원 진단", score: "7.52 · supporting-only", href: "/research-wiki/2026-09/generation-cache/tier2/01-a4" },
+    ],
+    extraLinks: [
+      { label: "학생용 HTML 연구 길잡이", href: "/research-cache-guide-2026-09.html" },
+      { label: "보정 전후 scoring과 교수님용 판단", href: "/research-wiki/2026-09/generation-cache/scoring-calibration" },
+      { label: "전체 후보·미선정 로그", href: "/research-wiki/2026-09/generation-cache/unselected" },
+    ],
+  },
+  {
     date: "2026-09-19",
     title: "ROSTER 연구 보완 노트 — 읽을 논문과 다음 실험",
     href: "/research-wiki/2026-09/roster-review",
