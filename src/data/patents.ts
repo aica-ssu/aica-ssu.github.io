@@ -7,6 +7,8 @@ export interface Patent {
 }
 
 export const internationalPatents: Patent[] = [
+  { title: "Apparatus and Method for Optimizing Object Detection Model", inventors: "Young-Ho Gong, Seok-Hwan Kim, Dong Gyu Sim", number: "US (Priority: KR 10-2026-0059664)", date: "Sep. 2026", status: "Applied" },
+  { title: "Vision Transformer Model Optimization Apparatus and Method", inventors: "Young-Ho Gong, Sang-Jun Moon", number: "US (Priority: KR 10-2026-0052641)", date: "Sep. 2026", status: "Applied" },
   { title: "Apparatus for Compensating for Training Operation Variation of Computation-in-Memory Based Artificial Neural Network", inventors: "Young-Ho Gong, Woo Hyuck Park, Ye Bin Kwon", number: "US18/472145", date: "Sep. 2023", status: "Applied" },
   { title: "Apparatus of Interconnect with On-the-Fly Quantization and Operating Method Thereof", inventors: "Young-Ho Gong, Woo Hyuck Park, Ye Bin Kwon, Dong Gyu Sim", number: "US18/472137", date: "Apr. 2024", status: "Applied" },
   { title: "Storage Device and Operating Method Thereof", inventors: "Hyunjin Park, Young-Ho Gong, Hoyoung Kim, Sunghan Ahn", number: "US17/067698 / EU 20217748.1", date: "Jul. 2021", status: "Applied" },
