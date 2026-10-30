@@ -12,6 +12,22 @@ export interface PhotoAlbumFull {
 }
 
 const photosByFolder: Record<string, string[]> = {
+  "2026-08-ISLPED-2026,-Evanston": [
+    "01_KakaoTalk_20260807_010305870.jpg",
+    "02_KakaoTalk_20260814_151829136.jpg",
+    "03_KakaoTalk_20260807_010305870_01.jpg",
+    "04_KakaoTalk_20260814_145233390.jpg",
+    "05_KakaoTalk_20260814_145233390_01.jpg",
+    "06_KakaoTalk_20260814_145233390_03.jpg",
+    "07_KakaoTalk_20260814_145233390_07.jpg",
+    "08_KakaoTalk_20260814_145233390_09.jpg",
+    "09_KakaoTalk_20260814_145233390_11.jpg",
+    "10_KakaoTalk_20260814_145233390_12.jpg",
+    "11_KakaoTalk_20260814_145233390_13.jpg",
+    "12_KakaoTalk_20260814_145233390_14.jpg",
+    "13_KakaoTalk_20260814_145233390_15.jpg",
+    "14_KakaoTalk_20260814_145233390_16.jpg"
+  ],
   "2026-01-컴퓨터시스템소사이어티-동계학술대회,-용평": [
     "KakaoTalk_20260122_103716450_01.jpg",
     "KakaoTalk_20260122_103716450_02.jpg",

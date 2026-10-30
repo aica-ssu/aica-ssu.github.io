@@ -8,6 +8,11 @@ export interface PhotoAlbum {
 // 메타데이터만 관리. photos 파일 목록은 빌드 시 자동 생성됨 (npm run gen-photos)
 export const albumMeta: PhotoAlbum[] = [
   {
+    title: "ISLPED 2026, Evanston",
+    date: "2026.08",
+    folder: "2026-08-ISLPED-2026,-Evanston",
+  },
+  {
     title: "컴퓨터시스템소사이어티 동계학술대회, 용평",
     date: "2026.01",
     folder: "2026-01-컴퓨터시스템소사이어티-동계학술대회,-용평",
