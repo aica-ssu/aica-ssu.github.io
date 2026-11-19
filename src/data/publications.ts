@@ -37,6 +37,7 @@ export interface Publication {
   award?: string;
   selected?: boolean;
   doi?: string;
+  github?: string;
   bibtexKey: string;
   correspondingAuthors: string[];
 }
@@ -61,6 +62,8 @@ export const publications: Publication[] = [
     year: 2026, type: "conference",
     tags: ["AI", "Edge", "Memory"],
     selected: true,
+    doi: "10.1145/3816440.3818526",
+    github: "https://github.com/aica-ssu/LayUp",
     bibtexKey: "lee2026islped",
     correspondingAuthors: ["Young-Ho Gong"],
   },
@@ -70,6 +73,7 @@ export const publications: Publication[] = [
     venue: "Design, Automation and Test in Europe Conference (DATE), Verona, Italy, Apr. 2026",
     year: 2026, type: "conference",
     tags: ["AI", "Edge"],
+    doi: "10.23919/DATE69613.2026.11539170",
     bibtexKey: "lee2026date",
     correspondingAuthors: ["Young-Ho Gong", "Young Geun Kim"],
   },

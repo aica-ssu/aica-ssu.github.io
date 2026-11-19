@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { publications, allTags, tagColors, aicaMembers, type Tag } from "@/data/publications";
+import PaperLinks from "@/components/PaperLinks";
 
 const years = [...new Set(publications.map((p) => p.year))].sort((a, b) => b - a);
 
@@ -134,77 +135,71 @@ export default function PublicationsPage() {
             </h2>
             <div className="space-y-1">
               {group.pubs.map((pub) => (
-                <div key={pub.bibtexKey} className="py-4 border-b" style={{ borderColor: "var(--border)" }}>
-                  {/* Badges */}
-                  <div className="flex flex-wrap items-center gap-1.5 mb-1.5">
-                    <span className="text-[10px] font-semibold px-1.5 py-0.5 uppercase tracking-wide" style={{ color: "var(--text-muted)", backgroundColor: "var(--bg-secondary)" }}>
-                      {typeLabel[pub.type]}
-                    </span>
-                    {pub.award && (
-                      <span className="text-[10px] font-semibold px-1.5 py-0.5" style={{ backgroundColor: "rgba(245,158,11,0.15)", color: "#f59e0b" }}>
-                        🏆 {pub.award}
+                <div key={pub.bibtexKey} className="py-4 border-b flex gap-4" style={{ borderColor: "var(--border)" }}>
+                  <div className="flex-1 min-w-0">
+                    {/* Badges */}
+                    <div className="flex flex-wrap items-center gap-1.5 mb-1.5">
+                      <span className="text-[10px] font-semibold px-1.5 py-0.5 uppercase tracking-wide" style={{ color: "var(--text-muted)", backgroundColor: "var(--bg-secondary)" }}>
+                        {typeLabel[pub.type]}
                       </span>
-                    )}
-                  </div>
-                  {/* Title */}
-                  <h3 className="font-semibold text-[15px] leading-snug mb-1" style={{ color: "var(--text-primary)" }}>
-                    {pub.title}
-                  </h3>
-                  {/* Authors */}
-                  <p className="text-sm mb-1" style={{ color: "var(--text-secondary)" }}>
-                    {renderAuthors(pub.authors, pub.correspondingAuthors)}
-                  </p>
-                  {/* Venue */}
-                  <p className="text-sm mb-2" style={{ color: "var(--text-muted)" }}>{pub.venue}</p>
-                  {/* Tags + Actions */}
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    {pub.tags.map((tag) => {
-                      const colors = tagColors[tag];
-                      return (
-                        <span
-                          key={tag}
-                          className="text-[10px] font-medium px-1.5 py-0.5"
-                          style={{ backgroundColor: colors.bg, color: colors.text }}
-                        >
-                          {tag}
+                      {pub.award && (
+                        <span className="text-[10px] font-semibold px-1.5 py-0.5" style={{ backgroundColor: "rgba(245,158,11,0.15)", color: "#f59e0b" }}>
+                          🏆 {pub.award}
                         </span>
-                      );
-                    })}
-                    <span className="flex-1" />
-                    {/* <button
-                      onClick={() => setExpandedBib(expandedBib === pub.bibtexKey ? null : pub.bibtexKey)}
-                      className="text-[11px] font-medium px-1.5 py-0.5 hover:underline"
-                      style={{ color: "var(--accent)" }}
-                    >
-                      BibTeX
-                    </button> */}
-                    {pub.doi && (
-                      <a
-                        href={`https://doi.org/${pub.doi}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      )}
+                    </div>
+                    {/* Title */}
+                    <h3 className="font-semibold text-base leading-snug mb-1" style={{ color: "var(--text-primary)" }}>
+                      {pub.title}
+                    </h3>
+                    {/* Authors */}
+                    <p className="text-sm mb-1" style={{ color: "var(--text-secondary)" }}>
+                      {renderAuthors(pub.authors, pub.correspondingAuthors)}
+                    </p>
+                    {/* Venue */}
+                    <p className="text-sm mb-2" style={{ color: "var(--text-secondary)" }}>{pub.venue}</p>
+                    {/* Tags + Actions */}
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      {pub.tags.map((tag) => {
+                        const colors = tagColors[tag];
+                        return (
+                          <span
+                            key={tag}
+                            className="text-[10px] font-medium px-1.5 py-0.5"
+                            style={{ backgroundColor: colors.bg, color: colors.text }}
+                          >
+                            {tag}
+                          </span>
+                        );
+                      })}
+                      <span className="flex-1" />
+                      {/* <button
+                        onClick={() => setExpandedBib(expandedBib === pub.bibtexKey ? null : pub.bibtexKey)}
                         className="text-[11px] font-medium px-1.5 py-0.5 hover:underline"
                         style={{ color: "var(--accent)" }}
                       >
-                        DOI
-                      </a>
-                    )}
-                  </div>
-                  {/* BibTeX expanded - disabled
-                  {expandedBib === pub.bibtexKey && (
-                    <pre
-                      className="mt-2 p-3 text-xs overflow-x-auto"
-                      style={{ backgroundColor: "var(--bg-secondary)", color: "var(--text-secondary)", fontFamily: "monospace" }}
-                    >
+                        BibTeX
+                      </button> */}
+                    </div>
+                    {/* BibTeX expanded - disabled
+                    {expandedBib === pub.bibtexKey && (
+                      <pre
+                        className="mt-2 p-3 text-xs overflow-x-auto"
+                        style={{ backgroundColor: "var(--bg-secondary)", color: "var(--text-secondary)", fontFamily: "monospace" }}
+                      >
 {`@${pub.type === "conference" ? "inproceedings" : "article"}{${pub.bibtexKey},
   title   = {${pub.title}},
   author  = {${pub.authors.split(", ").map((n) => { const parts = n.trim().split(" "); const last = parts.pop(); return `${last}, ${parts.join(" ")}`; }).join(" and ")}},
   ${pub.type === "conference" ? "booktitle" : "journal"} = {${pub.venue.split(",")[0]}},
   year    = {${pub.year}}${pub.doi ? `,\n  doi     = {${pub.doi}}` : ""}
 }`}
-                    </pre>
-                  )}
-                  */}
+                      </pre>
+                    )}
+                    */}
+                  </div>
+                  <div className="self-center">
+                    <PaperLinks pub={pub} />
+                  </div>
                 </div>
               ))}
             </div>

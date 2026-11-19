@@ -1,6 +1,7 @@
 import { members } from "@/data/members";
 import { publications } from "@/data/publications";
 import { internationalPatents, domesticPatents, type Patent } from "@/data/patents";
+import PaperLinks from "@/components/PaperLinks";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -203,7 +204,7 @@ export default async function MemberPage({ params }: { params: Promise<{ id: str
                     <span className="text-[10px] font-medium px-1.5 py-0.5 shrink-0 mt-0.5" style={{ backgroundColor: "var(--bg-secondary)", color: "var(--text-muted)" }}>
                       {pub.type === "conference" ? "Conf." : pub.type === "journal" ? "Journal" : "Domestic"}
                     </span>
-                    <div>
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         {pub.award && (
                           <span className="text-[10px] font-semibold px-1.5 py-0.5" style={{ backgroundColor: "rgba(245,158,11,0.15)", color: "#f59e0b" }}>
@@ -213,12 +214,10 @@ export default async function MemberPage({ params }: { params: Promise<{ id: str
                       </div>
                       <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>{pub.title}</p>
                       <p className="text-xs mt-0.5" style={{ color: "var(--text-secondary)" }}>{pub.authors}</p>
-                      <p className="text-xs mt-0.5 font-medium" style={{ color: "var(--accent)" }}>
-                        {pub.venue}
-                        {pub.doi && (
-                          <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noopener noreferrer" className="ml-2 hover:underline">[DOI]</a>
-                        )}
-                      </p>
+                      <p className="text-xs mt-0.5 font-medium" style={{ color: "var(--accent)" }}>{pub.venue}</p>
+                    </div>
+                    <div className="self-center">
+                      <PaperLinks pub={pub} />
                     </div>
                   </div>
                 </div>
