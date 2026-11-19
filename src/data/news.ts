@@ -5,6 +5,7 @@ export interface NewsItem {
 }
 
 export const news: NewsItem[] = [
+  { date: "2026.11", content: "Paper accepted to DATE 2027 — ACE-MoE: Skip Late Experts, Cache Critical Ones for Fast MoE Inference on Memory-Limited GPUs", contentKo: "DATE 2027에 논문이 채택되었습니다. ACE-MoE: Skip Late Experts, Cache Critical Ones for Fast MoE Inference on Memory-Limited GPUs" },
   { date: "2026.05", content: "Paper accepted to ISLPED 2026 — LayUp: Layer-wise Parallelization for Energy-Efficient Edge LLM Training Exploiting Unified Memory Characteristics", contentKo: "ISLPED 2026에 논문이 채택되었습니다. LayUp: Layer-wise Parallelization for Energy-Efficient Edge LLM Training Exploiting Unified Memory Characteristics" },
   { date: "2026.03", content: "Our project proposal has been chosen for funding by the 2026 NRF Core Research Program", contentKo: "핵심연구(도약형) 연구과제에 선정되었습니다." },
   { date: "2026.01", content: "One paper accepted to IEEE Computer Architecture Letters", contentKo: "IEEE CAL에 논문이 채택되었습니다." },
