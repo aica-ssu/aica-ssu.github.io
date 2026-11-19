@@ -47,7 +47,7 @@ export const publications: Publication[] = [
   {
     title: "ACE-MoE: Skip Late Experts, Cache Critical Ones for Fast MoE Inference on Memory-Limited GPUs",
     authors: "Bang-San Lee, Young Geun Kim, Young-Ho Gong",
-    venue: "Design, Automation and Test in Europe Conference (DATE), Dresden, Germany, Mar. 2027",
+    venue: "Design, Automation and Test in Europe Conference (DATE), Dresden, Germany, Mar. 2027 (To appear)",
     year: 2027, type: "conference",
     tags: ["AI", "Memory"],
     selected: true,
