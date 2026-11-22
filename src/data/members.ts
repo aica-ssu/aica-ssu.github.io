@@ -7,6 +7,8 @@ export interface Member {
   email?: string;
   linkedin?: string;        // LinkedIn 프로필 URL
   googleScholar?: string;   // Google Scholar 프로필 URL
+  github?: string;          // GitHub 프로필 URL
+  interests?: string[];     // CV용 연구 관심사 (없으면 research 를 쪼개서 씀)
   research?: string;       // 개별 페이지용 (상세)
   researchShort?: string;  // Members 목록용 (요약)
   background?: string;
@@ -30,6 +32,13 @@ export const members: Member[] = [
     email: "yhgong@ssu.ac.kr",
     linkedin: "https://www.linkedin.com/in/young-ho-gong-453b86118/",
     googleScholar: "https://scholar.google.com/citations?user=j_7MT9kAAAAJ&hl=en",
+    interests: [
+      "Edge AI System Design/Optimization",
+      "Robust Memory Systems",
+      "Next-generation Memory Technologies (FeRAM, MRAM, ReRAM, PRAM)",
+      "Application-specific Performance Optimization",
+      "Thermal-aware System Optimization",
+    ],
     //research: "Edge AI System Design/Optimization\nRobust Memory Systems\nNext-generation Memory Technologies (FeRAM, MRAM, ReRAM, PRAM)\nApplication-specific Performance Optimization\nThermal-aware System Optimization",
     background: "School of Software, Soongsil University",
     education: [
@@ -120,12 +129,12 @@ export const members: Member[] = [
     email: "moonsangjun.bizz@gmail.com",
     researchShort: "Model Quantization",
     research: "Layer-wise model quantization",
-    background: "B.S. Software, Soongsil University (Expected 2026)",
+    background: "B.S. Software, Soongsil University (2026)",
   },
   {
     name: "Yun Hong Min",
     nameKo: "민윤홍",
-    role: "B.S. Student (2025~)",
+    role: "Undergraduate Intern (2025~)",
     category: "undergraduate",
     image: "/images/members/Yun Hong Min.png",
     email: "picomin1027@gmail.com",
@@ -136,7 +145,7 @@ export const members: Member[] = [
   {
     name: "Da Eun Kim",
     nameKo: "김다은",
-    role: "B.S. Student (2024~)",
+    role: "Undergraduate Intern (2024~)",
     category: "undergraduate",
     image: "/images/members/Da Eun Kim.png",
     email: "d4eun0603@soongsil.ac.kr",
@@ -175,9 +184,10 @@ export const members: Member[] = [
   {
     name: "Jun-Hyeok Lee",
     nameKo: "이준혁",
-    role: "B.S. 2027 (Expected)",
+    role: "B.S. 2026",
     category: "alumni",
     year: "2026",
+    current: "POSTECH",
   },
   {
     name: "Ryoonki Hong",

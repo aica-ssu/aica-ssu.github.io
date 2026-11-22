@@ -38,6 +38,7 @@ export interface Publication {
   selected?: boolean;
   doi?: string;
   github?: string;
+  underReview?: boolean;
   bibtexKey: string;
   correspondingAuthors: string[];
 }
@@ -399,5 +400,30 @@ export const publications: Publication[] = [
     doi: "10.1109/ISQED.2013.6523661",
     bibtexKey: "gong2013isqed",
     correspondingAuthors: ["Sung Woo Chung"],
+  },
+];
+
+// 심사 중인 논문. Publications 목록·홈 화면에는 나오지 않고 저자의 개인 페이지(CV)에만 "(under review)"로 표시된다.
+// 게재가 확정되면 여기서 지우고 위 publications 배열로 옮긴다.
+export const underReviewPapers: Publication[] = [
+  {
+    title: "PagePatch: Keeping Hugepages Reliable at Low Cost with Fine-Grained Fault Quarantine",
+    authors: "Jun-Hyeok Ha, Young-Ho Gong",
+    venue: "Journal of Systems Architecture (JSA)",
+    year: 2026, type: "journal",
+    tags: ["Memory", "ECC"],
+    underReview: true,
+    bibtexKey: "ha2026jsa-review",
+    correspondingAuthors: ["Young-Ho Gong"],
+  },
+  {
+    title: "PRISM: Decompose-then-Merge Crossbar-wise Scaling Factors for Accurate and Energy-Efficient BNN CiM Inference",
+    authors: "Seok-Hwan Kim, Young-Ho Gong",
+    venue: "Journal of Systems Architecture (JSA)",
+    year: 2026, type: "journal",
+    tags: ["PIM/CIM", "Quantization"],
+    underReview: true,
+    bibtexKey: "kim2026jsa-review",
+    correspondingAuthors: ["Young-Ho Gong"],
   },
 ];
