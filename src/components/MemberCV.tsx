@@ -3,7 +3,7 @@ import Image from "next/image";
 import type { Publication } from "@/data/publications";
 import PaperLinks from "@/components/PaperLinks";
 import { ScholarIcon, LinkedInIcon, GitHubIcon, MailIcon } from "@/components/Icons";
-import { type CvData, type LinkKind, isMe, isCorresponding, venueLabel, venueShort } from "@/lib/cv";
+import { type CvData, type LinkKind, isMe, isCorresponding, pubLabel, patentRegion, patentNumber } from "@/lib/cv";
 
 const typeColor: Record<Publication["type"], string> = {
   conference: "#2563eb",
@@ -54,14 +54,15 @@ function SocialIcons({ cv }: { cv: CvData }) {
   );
 }
 
-function Authors({ pub, me }: { pub: Publication; me: string[] }) {
+// markCorr: 교신저자 * 표시 (교수 CV에만 쓴다)
+function Authors({ pub, me, markCorr }: { pub: Publication; me: string[]; markCorr: boolean }) {
   const names = pub.authors.split(", ");
   return (
     <>
       {names.map((n, i) => (
         <span key={i}>
           {isMe(n, me) ? <strong>{n}</strong> : n}
-          {isCorresponding(n, pub) && <sup>*</sup>}
+          {markCorr && isCorresponding(n, pub) && <sup>*</sup>}
           {i < names.length - 1 && ", "}
         </span>
       ))}
@@ -82,7 +83,7 @@ function MoreLink({ cv, kind }: { cv: CvData; kind: "pubs" | "patents" }) {
 
 function H({ children, right }: { children: React.ReactNode; right?: React.ReactNode }) {
   return (
-    <div className="mt-7 mb-2.5 pb-1 border-b flex items-end justify-between gap-3" style={{ borderColor: "var(--text-primary)" }}>
+    <div className="cv-h mt-7 mb-2.5 pb-1 border-b flex items-end justify-between gap-3" style={{ borderColor: "var(--text-primary)" }}>
       <h2 className="text-[0.78rem] font-bold uppercase tracking-[0.14em]">{children}</h2>
       {right}
     </div>
@@ -91,7 +92,7 @@ function H({ children, right }: { children: React.ReactNode; right?: React.React
 
 function Row({ title, detail, period }: { title: string; detail?: string; period: string }) {
   return (
-    <div className="flex justify-between gap-4 mb-1.5">
+    <div className="cv-row flex justify-between gap-4 mb-1.5">
       <div>
         <span className="font-semibold">{title}</span>
         {detail && <div style={{ color: "var(--text-secondary)" }}>{detail}</div>}
@@ -154,16 +155,16 @@ export default function MemberCV({ cv }: { cv: CvData }) {
       <ul>
         {cv.pubs.map((p) => (
           <li key={p.bibtexKey} className={`${ITEM_ROW} mb-3 sm:mb-2`}>
-            <span className={LABEL_COL} style={{ color: typeColor[p.type] }}>{p.underReview ? venueShort(p) : venueLabel(p)}</span>
+            <span className={LABEL_COL} style={{ color: typeColor[p.type] }}>{pubLabel(p)}</span>
             <span className="flex-1 min-w-0">
-              <Authors pub={p} me={cv.nameVariants} />, &ldquo;{p.title},&rdquo; <em style={{ color: "var(--text-secondary)" }}>{p.venue}</em>{p.underReview && " (under review)"}.
+              <Authors pub={p} me={cv.nameVariants} markCorr={cv.isPI} />, &ldquo;{p.title},&rdquo; <em style={{ color: "var(--text-secondary)" }}>{p.venue}</em>{p.underReview && " (under review)"}.
               {p.award && <strong style={{ color: "var(--award)" }}> ({p.award})</strong>}
             </span>
             <span className="shrink-0 sm:self-center mt-1 sm:mt-0"><PaperLinks pub={p} /></span>
           </li>
         ))}
       </ul>
-      {cv.pubs.length > 0 && <p className="text-[0.75rem] mt-1" style={{ color: "var(--text-muted)" }}>* Corresponding author</p>}
+      {cv.isPI && cv.pubs.length > 0 && <p className="text-[0.75rem] mt-1" style={{ color: "var(--text-muted)" }}>* Corresponding author</p>}
 
       {cv.patents.length > 0 && (
         <>
@@ -172,11 +173,11 @@ export default function MemberCV({ cv }: { cv: CvData }) {
             {cv.patents.map((p, i) => (
               <li key={i} className={`${ITEM_ROW} mb-2.5 sm:mb-1.5`}>
                 <span className={LABEL_COL} style={{ color: "var(--text-secondary)" }}>
-                  {p.region === "KR" ? "KR" : p.number.slice(0, 2)}{" "}
+                  {patentRegion(p)}{" "}
                   <span className="font-medium" style={{ color: p.status === "Registered" ? "#16a34a" : "var(--text-muted)" }}>{p.status}</span>
                 </span>
                 <span>
-                  {p.inventors}, &ldquo;{p.title},&rdquo; {p.region === "KR" ? "KR " : ""}{p.number}, {p.date}.
+                  {p.inventors}, &ldquo;{p.title},&rdquo; {patentNumber(p)}, {p.date}.
                 </span>
               </li>
             ))}

@@ -254,3 +254,37 @@ a:hover {
 .md-content details summary::marker {
   color: var(--text-muted);
 }
+
+/* CV 개인 페이지 인쇄(PDF 저장): 사이트 메뉴·푸터·버튼을 숨기고 CV 본문만 A4에 맞춘다 */
+@page {
+  size: A4;
+  margin: 14mm 13mm;
+}
+@media print {
+  html:has(.cv-sheet),
+  html.dark:has(.cv-sheet) {
+    color-scheme: light;
+    font-size: 93.75%;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f3f4f6;
+    --bg-card: #ffffff;
+    --text-primary: #000000;
+    --text-secondary: #374151;
+    --text-muted: #6b7280;
+    --border: #d1d5db;
+    --accent: #1d4ed8;
+    --award: #b45309;
+  }
+  html:has(.cv-sheet) body { background: #ffffff !important; }
+  html:has(.cv-sheet) nav,
+  html:has(.cv-sheet) footer,
+  html:has(.cv-sheet) .no-print { display: none !important; }
+  html:has(.cv-sheet) main { min-height: 0 !important; }
+  .cv-page { max-width: none !important; padding: 0 !important; }
+  .cv-sheet { border: none !important; }
+  .cv-sheet > div { padding: 0 !important; }
+  .cv-sheet * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .cv-sheet li,
+  .cv-sheet .cv-row { break-inside: avoid; }
+  .cv-sheet .cv-h { break-after: avoid; }
+}

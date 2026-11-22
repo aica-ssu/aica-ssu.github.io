@@ -1,6 +1,7 @@
 import { members } from "@/data/members";
-import { buildCv, slugify } from "@/lib/cv";
+import { buildCv, cvFileBase, slugify } from "@/lib/cv";
 import MemberCV from "@/components/MemberCV";
+import CvActions from "@/components/CvActions";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -22,14 +23,18 @@ export default async function MemberPage({ params }: { params: Promise<{ id: str
   const { id } = await params;
   const member = members.find((m) => m.category !== "alumni" && slugify(m.name) === id);
   if (!member) notFound();
+  const cv = buildCv(member);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      <Link href="/members" className="text-sm mb-6 inline-block" style={{ color: "var(--accent)" }}>
-        &larr; Back to Members
-      </Link>
-      <article className="border" style={{ borderColor: "var(--border)", backgroundColor: "var(--bg-card)" }}>
-        <MemberCV cv={buildCv(member)} />
+    <div className="cv-page max-w-4xl mx-auto px-4 py-12">
+      <div className="no-print mb-6 flex flex-wrap items-center justify-between gap-3">
+        <Link href="/members" className="text-sm" style={{ color: "var(--accent)" }}>
+          &larr; Back to Members
+        </Link>
+        <CvActions fileBase={cvFileBase(cv)} />
+      </div>
+      <article className="cv-sheet border" style={{ borderColor: "var(--border)", backgroundColor: "var(--bg-card)" }}>
+        <MemberCV cv={cv} />
       </article>
     </div>
   );

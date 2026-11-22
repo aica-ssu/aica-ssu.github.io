@@ -9,7 +9,9 @@
     "start": "next start",
     "lint": "eslint",
     "validate-wiki": "node scripts/validate-research-wiki-links.mjs",
-    "fix-wiki-links": "node scripts/fix-research-wiki-links.mjs"
+    "fix-wiki-links": "node scripts/fix-research-wiki-links.mjs",
+    "gen-cv": "npm run build && tsx scripts/gen-cv.ts",
+    "gen-cv:force": "npm run build && tsx scripts/gen-cv.ts --force"
   },
   "dependencies": {
     "next": "16.1.6",
@@ -31,6 +33,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }

@@ -62,6 +62,19 @@ function dateKey(date: string) {
   return m ? Number(m[2]) * 100 + MONTHS.indexOf(m[1]) + 1 : 0;
 }
 
+// 심사 중 논문은 연도 없이 약어만 ("JSA")
+export function pubLabel(pub: Publication) {
+  return pub.underReview ? venueShort(pub) : venueLabel(pub);
+}
+
+export function patentRegion(p: CvPatent) {
+  return p.region === "KR" ? "KR" : p.number.slice(0, 2);
+}
+
+export function patentNumber(p: CvPatent) {
+  return `${p.region === "KR" ? "KR " : ""}${p.number}`;
+}
+
 export function isMe(name: string, variants: string[]) {
   return variants.includes(name.trim());
 }
@@ -229,4 +242,79 @@ export function buildCv(member: Member): CvData {
     totalPatents: allPatents.length,
     awards,
   };
+}
+
+// ── 내보내기 (PDF 파일명, Markdown) ─────────────────────────────
+
+export const SITE_URL = "https://aica-ssu.github.io";
+
+// "Bang-San Lee" → "Bang-San_Lee_CV" (PDF 기본 파일명과 .md 파일명)
+export function cvFileBase(cv: CvData) {
+  return `${cv.member.name.replace(/[^A-Za-z0-9-]+/g, "_")}_CV`;
+}
+
+const linkLabel: Record<LinkKind, string> = { scholar: "Google Scholar", linkedin: "LinkedIn", github: "GitHub" };
+
+// 개인 페이지 CV와 같은 내용을 Markdown 으로 만든다
+export function cvToMarkdown(cv: CvData) {
+  const m = cv.member;
+  const out: string[] = [];
+  const section = (title: string) => out.push("", `## ${title}`, "");
+  const entry = (title: string, period: string, detail?: string) => {
+    out.push(`- **${title}**${period ? ` (${period})` : ""}${detail ? "  " : ""}`);
+    if (detail) out.push(`  ${detail}`);
+  };
+
+  out.push(`# ${cv.isPI ? "Prof. " : ""}${m.name} (${m.nameKo})`, "");
+  out.push(`${cv.headline}  `);
+  const contact = [cv.email && `Email: ${cv.email}`, ...cv.links.map((l) => `[${linkLabel[l.kind]}](${l.href})`)].filter(Boolean);
+  if (contact.length) out.push(contact.join(" · "));
+
+  if (cv.interests.length) {
+    section("Research Interests");
+    out.push(cv.interests.join(" · "));
+  }
+  if (cv.education.length) {
+    section("Education");
+    cv.education.forEach((e) => entry(e.title, e.period, e.detail));
+  }
+  if (cv.experience.length) {
+    section(cv.isPI ? "Professional Experience" : "Research Experience");
+    cv.experience.forEach((e) => entry(e.title, e.period, e.detail));
+  }
+
+  section(cv.pubsSelected ? "Selected Publications" : "Publications");
+  if (cv.pubs.length === 0) out.push("To be added.");
+  for (const p of cv.pubs) {
+    const authors = p.authors
+      .split(", ")
+      .map((n) => `${isMe(n, cv.nameVariants) ? `**${n}**` : n}${cv.isPI && isCorresponding(n, p) ? "\\*" : ""}`)
+      .join(", ");
+    const links = [p.doi && `[Paper](https://doi.org/${p.doi})`, p.github && `[Code](${p.github})`].filter(Boolean).join(" · ");
+    out.push(
+      `- [${pubLabel(p)}] ${authors}, "${p.title}," *${p.venue}*${p.underReview ? " (under review)" : ""}.` +
+        `${p.award ? ` **(${p.award})**` : ""}${links ? ` ${links}` : ""}`,
+    );
+  }
+  if (cv.isPI && cv.pubs.length) out.push("", "\\* Corresponding author");
+  if (cv.pubsSelected) out.push("", `Full list (${cv.totalPubs} papers): ${SITE_URL}/publications`);
+
+  if (cv.patents.length) {
+    section("Patents");
+    cv.patents.forEach((p) => out.push(`- [${patentRegion(p)} ${p.status}] ${p.inventors}, "${p.title}," ${patentNumber(p)}, ${p.date}.`));
+    if (cv.totalPatents > cv.patents.length) out.push("", `Full list (${cv.totalPatents} patents): ${SITE_URL}/patents`);
+  }
+  if (cv.awards.length) {
+    section("Honors & Awards");
+    cv.awards.forEach((a) => out.push(`- **${a.title}**${a.detail ? `, ${a.detail}` : ""} (${a.year})`));
+  }
+  if (m.teaching) {
+    section("Teaching");
+    m.teaching.forEach((t) => entry(t.university, t.period, t.courses.join(", ")));
+  }
+  if (m.services) {
+    section("Professional Services");
+    m.services.forEach((s) => out.push(`- ${s}`));
+  }
+  return out.join("\n") + "\n";
 }
