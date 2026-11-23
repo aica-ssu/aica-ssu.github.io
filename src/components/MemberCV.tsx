@@ -160,7 +160,7 @@ export default function MemberCV({ cv }: { cv: CvData }) {
               <Authors pub={p} me={cv.nameVariants} markCorr={cv.isPI} />, &ldquo;{p.title},&rdquo; <em style={{ color: "var(--text-secondary)" }}>{p.venue}</em>{p.underReview && " (under review)"}.
               {p.award && <strong style={{ color: "var(--award)" }}> ({p.award})</strong>}
             </span>
-            <span className="shrink-0 sm:self-center mt-1 sm:mt-0"><PaperLinks pub={p} /></span>
+            <span className="shrink-0 sm:self-center mt-1 sm:mt-0"><PaperLinks pub={p} iconOnly /></span>
           </li>
         ))}
       </ul>

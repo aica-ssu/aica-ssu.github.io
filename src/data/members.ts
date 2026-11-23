@@ -94,6 +94,7 @@ export const members: Member[] = [
     category: "graduate",
     image: "/images/members/Bang-San Lee.png",
     email: "atks990210@gmail.com",
+    googleScholar: "https://scholar.google.com/citations?user=Ira5gicAAAAJ&hl=en",
     researchShort: "Edge LLM Training, MoE Architecture Optimization",
     research: "Edge LLM Training, MoE Architecture Optimization",
     background: "B.S. Computer and Information Engineering, Kwangwoon University (2025)",

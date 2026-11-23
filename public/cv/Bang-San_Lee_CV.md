@@ -1,7 +1,7 @@
 # Bang-San Lee (이방산)
 
 Integrated M.S./Ph.D. Student, AICA Lab, Soongsil University  
-Email: atks990210@gmail.com
+Email: atks990210@gmail.com · [Google Scholar](https://scholar.google.com/citations?user=Ira5gicAAAAJ&hl=en)
 
 ## Research Interests
 
